@@ -22,4 +22,6 @@ Abrir el proyecto en InteliJ y abrir build.gradle. Luego buscar Lwjgl3Launcher.j
 Finalizando las configuraciones iniciales y la estructura básica.
 Investigando como realizar y aplicar las funciones principales de movimiento (acelerar y palanca de cambios)
 
-
+## Documentación del Proyecto
+* [Ver el Historial de Cambios (Changelog)](CHANGELOG.md)
+* [Ver la Propuesta Detallada en la Wiki](https://github.com/Martin079/Proyecto-Final---PSR---DragBits/wiki/Propuesta-del-Proyecto-‐-DragBITS-‐-Anza-Findlay-Sambon)
