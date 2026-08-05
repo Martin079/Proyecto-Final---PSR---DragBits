@@ -19,8 +19,8 @@ Ide: InteliJ, con motor LibGDX, y desarrollado para PC
 Abrir el proyecto en InteliJ y abrir build.gradle. Luego buscar Lwjgl3Launcher.java y darle a RUN.
 
 # Estado Actual
-Finalizando las configuraciones iniciales y la estructura básica.
-Investigando como realizar y aplicar las funciones principales de movimiento (acelerar y palanca de cambios)
+Cuadros simples basicos para la písta y el auto, seguimiento de la camara, sistema de aceleracion,
+sistema de cambio de marcha, HUD simple para comprobar las funciones.
 
 ## Documentación del Proyecto
 * [Ver el Historial de Cambios (Changelog)](CHANGELOG.md)
