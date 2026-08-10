@@ -20,7 +20,7 @@ public class GameScreen implements Screen {
     private AutoJugador autoJugador;
     private SeguimientoJugador camaraJugador;
 
-    // Funcionalidades y HUD
+    // funcionalidades y HUD
     private Acelerador acelerador;
     private CajaDeCambios cajaDeCambios;
     private Basicos hudBasicos;
@@ -36,7 +36,7 @@ public class GameScreen implements Screen {
         autoJugador = new AutoJugador(50f, 100f);
         camaraJugador = new SeguimientoJugador(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        // Inicializar transmisión y HUD
+        // inicializar transmisión y HUD
         acelerador = new Acelerador();
         cajaDeCambios = new CajaDeCambios();
         hudBasicos = new Basicos(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -44,23 +44,23 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // 1. ENTRADA Y LÓGICA
+        // entrada y logica
         cajaDeCambios.actualizar(autoJugador, delta);
         acelerador.actualizar(autoJugador, delta);
         autoJugador.actualizar(delta);
         camaraJugador.actualizar(autoJugador);
 
-        // 2. RENDERING
+        //rendering
         ScreenUtils.clear(0, 0, 0, 1);
 
         batch.begin();
 
-        // A) Dibujar el juego (Mundo con cámara móvil)
+        // dibujar el juego
         camaraJugador.aplicarACamara(batch);
         picodromo.dibujar(batch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         autoJugador.dibujar(batch);
 
-        // B) Dibujar la Interfaz (HUD estático abajo a la derecha)
+        //dibujar HUD
         hudBasicos.dibujar(batch, autoJugador, Gdx.graphics.getWidth());
 
         batch.end();

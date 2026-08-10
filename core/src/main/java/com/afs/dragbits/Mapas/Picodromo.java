@@ -26,15 +26,12 @@ public class Picodromo {
         pixmapLinea.dispose();
     }
 
-    /**
-     * Dibuja la pista y las líneas divisorias.
-     * Genera líneas desde la izquierda de la pantalla hasta más adelante en la pista.
-     */
+    /**dibuja la pista y las líneas divisorias*/
     public void dibujar(SpriteBatch batch, float ancho, float alto) {
-        // Dibuja el fondo abarcando un tramo largo (ej. 20,000 px de largo)
+        // dibuja el fondo abarcando un tramo largo (ej. 20,000 px de largo)
         batch.draw(texturaFondo, 0, 0, 20000f, alto);
 
-        // Dibuja líneas verticales cada 150 píxeles para referencia visual de movimiento
+        // dibuja líneas verticales cada 150px para referencia visual de movimiento
         float anchoLinea = 8f;
         float paso = 150f;
         for (float x = 0; x < 20000f; x += paso) {
