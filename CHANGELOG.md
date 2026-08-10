@@ -20,3 +20,8 @@
 ### Updated 10/8/2026
 
 - Diseño basico de un primer auto con spritesheet, y reaciona segun la situacion (cambio, aceleracion, estatico).
+
+### Added 10/8/2026
+
+- HUD basico de la palanca y diseño preliminar de la palanca de cambios
+- movimiento de la palanca en el HUD siguiendo las flechas
