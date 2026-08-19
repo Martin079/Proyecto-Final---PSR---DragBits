@@ -25,3 +25,8 @@
 
 - HUD basico de la palanca y diseño preliminar de la palanca de cambios
 - movimiento de la palanca en el HUD siguiendo las flechas
+
+### Added 19/8/2026
+
+- Secuencia del semaforo y penalizacion al arrancar antes.
+

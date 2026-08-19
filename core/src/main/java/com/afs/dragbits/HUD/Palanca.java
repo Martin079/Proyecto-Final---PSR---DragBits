@@ -25,7 +25,7 @@ public class Palanca {
         camaraHUD = new OrthographicCamera();
         camaraHUD.setToOrtho(false, anchoPantalla, altoPantalla);
 
-        spriteSheet = new Texture(Gdx.files.internal("sprites/palanca -sheet.png"));
+        spriteSheet = new Texture(Gdx.files.internal("sprites/HUD/palanca -sheet.png"));
         spriteSheet.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         TextureRegion[][] tmp = TextureRegion.split(spriteSheet, 120, 60);

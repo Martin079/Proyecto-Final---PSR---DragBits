@@ -188,4 +188,6 @@ public abstract class Auto {
     public void setEmbraguePresionado(boolean embrague) { this.embraguePresionado = embrague; }
     public boolean isNitroActivo() { return nitroActivo; }
     public void setNitroActivo(boolean nitroActivo) { this.nitroActivo = nitroActivo; }
+    public void setPosX(float posX) { this.posX = posX; }
+    public void setVelocidad(float velocidad) { this.velocidad = velocidad; }
 }

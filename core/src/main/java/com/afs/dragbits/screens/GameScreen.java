@@ -11,6 +11,7 @@ import com.afs.dragbits.autos.AutoJugador;
 import com.afs.dragbits.camara.SeguimientoJugador;
 import com.afs.dragbits.funcionalidades.Acelerador;
 import com.afs.dragbits.funcionalidades.CajaDeCambios;
+import com.afs.dragbits.funcionalidades.Semaforo;
 import com.afs.dragbits.mapas.Picodromo;
 
 public class GameScreen implements Screen {
@@ -24,6 +25,7 @@ public class GameScreen implements Screen {
     // funcionalidades y HUD
     private Acelerador acelerador;
     private CajaDeCambios cajaDeCambios;
+    private Semaforo semaforo;
     private Basicos hudBasicos;
     private Palanca hudPalanca;
 
@@ -38,9 +40,10 @@ public class GameScreen implements Screen {
         autoJugador = new AutoJugador(50f, 100f);
         camaraJugador = new SeguimientoJugador(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        // inicializar transmision y elementos del HUD
+        // inicializar transmision, semaforo y elementos del HUD
         acelerador = new Acelerador();
         cajaDeCambios = new CajaDeCambios();
+        semaforo = new Semaforo(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         hudBasicos = new Basicos(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         hudPalanca = new Palanca(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
@@ -51,6 +54,7 @@ public class GameScreen implements Screen {
         cajaDeCambios.actualizar(autoJugador, delta);
         acelerador.actualizar(autoJugador, delta);
         autoJugador.actualizar(delta);
+        semaforo.actualizar(autoJugador, delta);
         camaraJugador.actualizar(autoJugador);
 
         // rendering
@@ -58,14 +62,15 @@ public class GameScreen implements Screen {
 
         batch.begin();
 
-        // dibujar el juego
+        // dibujar el juego (Mundo)
         camaraJugador.aplicarACamara(batch);
         picodromo.dibujar(batch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         autoJugador.dibujar(batch);
 
-        // dibujar HUD
+        // dibujar HUD y Semáforo (Interfaz fija)
         hudBasicos.dibujar(batch, autoJugador, Gdx.graphics.getWidth());
         hudPalanca.dibujar(batch, cajaDeCambios, Gdx.graphics.getWidth());
+        semaforo.dibujar(batch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         batch.end();
     }
@@ -75,6 +80,7 @@ public class GameScreen implements Screen {
         if (camaraJugador != null) camaraJugador.resize(width, height);
         if (hudBasicos != null) hudBasicos.resize(width, height);
         if (hudPalanca != null) hudPalanca.resize(width, height);
+        if (semaforo != null) semaforo.resize(width, height);
     }
 
     @Override public void pause() {}
@@ -88,5 +94,6 @@ public class GameScreen implements Screen {
         if (autoJugador != null) autoJugador.dispose();
         if (hudBasicos != null) hudBasicos.dispose();
         if (hudPalanca != null) hudPalanca.dispose();
+        if (semaforo != null) semaforo.dispose();
     }
 }
