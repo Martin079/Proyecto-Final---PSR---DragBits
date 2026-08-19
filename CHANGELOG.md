@@ -29,4 +29,6 @@
 ### Added 19/8/2026
 
 - Secuencia del semaforo y penalizacion al arrancar antes.
+- Añadido del mapa y los globos/iconos en su posicion correspondiente
+- Al tocar el icono de carrera legal se inicia la carrera
 

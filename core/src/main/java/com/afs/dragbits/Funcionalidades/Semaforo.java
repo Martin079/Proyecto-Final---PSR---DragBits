@@ -1,4 +1,4 @@
-package com.afs.dragbits.Funcionalidades;
+package com.afs.dragbits.funcionalidades;
 
 /*IMPORTANTE!!!!!! ahora reinicia el auto a la posicion original, cuando este hecho lo demas se pierde la carrera*/
 
