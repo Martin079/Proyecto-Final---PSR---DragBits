@@ -23,7 +23,7 @@ public class Basicos {
     public void dibujar(SpriteBatch batch, Auto auto, float anchoPantalla) {
         batch.setProjectionMatrix(camaraHUD.combined);
 
-        int velKmH = (int) (auto.getVelocidad() * 0.5f);
+        int velKmH = (int) auto.getVelocidad();
         int rpm = (int) auto.getRpm();
         String marchaStr = (auto.getMarchaActual() == 0) ? "N" : String.valueOf(auto.getMarchaActual());
         String embragueStr = auto.isEmbraguePresionado() ? " [EMBRAGUE]" : "";

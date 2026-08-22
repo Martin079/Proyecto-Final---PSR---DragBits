@@ -32,3 +32,9 @@
 - Añadido del mapa y los globos/iconos en su posicion correspondiente
 - Al tocar el icono de carrera legal se inicia la carrera
 
+### Updated 22/8/2026
+
+- Cambiado el sistema de aceleracion traccion y velocidad maxima.
+- Implementada la base para el nitro
+- Ventana forzada en pantalla completa y sin bordes
+
