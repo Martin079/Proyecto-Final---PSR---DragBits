@@ -31,8 +31,8 @@ public class Semaforo {
     private TextureRegion[] frames;
 
     // Dimensiones visuales en pantalla
-    private final float ancho = 60f;
-    private final float alto = 180f;
+    private final float ancho = 120f;
+    private final float alto = 360f;
 
     // Temporizadores
     private float tiempoParaSiguienteLuz;

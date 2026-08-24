@@ -38,3 +38,7 @@
 - Implementada la base para el nitro
 - Ventana forzada en pantalla completa y sin bordes
 
+### Updated 24/8/2026
+
+- Aumentado el tamaño del semaforo
+- Reducido las estadisticas del auto del jugador al inicio
