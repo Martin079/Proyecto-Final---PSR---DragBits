@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.afs.dragbits.Main;
 import com.afs.dragbits.Ciudad.Burbuja;
+import com.afs.dragbits.Ciudad.HUD;
+import com.afs.dragbits.Jugador.Jugador;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +31,17 @@ public class MapaScreen implements Screen {
     private List<Burbuja> burbujas;
     private Vector3 mouseCoordsVirtuales;
 
+    // Integración de Jugador y HUD
+    private Jugador jugador;
+    private HUD hudCiudad;
+
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
 
     public MapaScreen(Main game) {
         this.game = game;
+        // Instancia temporal del jugador si no viene de 'game'
+        this.jugador = new Jugador();
     }
 
     @Override
@@ -44,6 +52,9 @@ public class MapaScreen implements Screen {
         viewport = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camara);
 
         mouseCoordsVirtuales = new Vector3();
+
+        // Carga del HUD de la Ciudad
+        hudCiudad = new HUD(batch, jugador);
 
         // Carga de Texturas
         mapaTexture = new Texture(Gdx.files.internal("Sprites/Ciudad/Mapa.png"));
@@ -112,22 +123,29 @@ public class MapaScreen implements Screen {
         viewport.apply();
         batch.setProjectionMatrix(camara.combined);
 
+        // --- 1. DIBUJADO DE LA CIUDAD Y OBJETOS ---
         batch.begin();
 
-        // 1. Dibujar Mapa de Fondo
+        // Dibujar Mapa de Fondo
         batch.draw(mapaTexture, 0, 0, ANCHO_VIRTUAL, ALTO_VIRTUAL);
 
-        // 2. Dibujar Burbujas
+        // Dibujar Burbujas
         for (Burbuja b : burbujas) {
             b.dibujar(batch);
         }
 
         batch.end();
+
+        // --- 2. DIBUJADO DEL HUD (SUPERPUESTO) ---
+        hudCiudad.render();
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
+        if (hudCiudad != null) {
+            hudCiudad.resize(width, height);
+        }
     }
 
     @Override public void pause() {}
@@ -139,5 +157,6 @@ public class MapaScreen implements Screen {
         if (batch != null) batch.dispose();
         if (mapaTexture != null) mapaTexture.dispose();
         if (burbujasSheet != null) burbujasSheet.dispose();
+        if (hudCiudad != null) hudCiudad.dispose();
     }
 }

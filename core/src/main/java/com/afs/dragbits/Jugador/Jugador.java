@@ -1,5 +1,7 @@
 package com.afs.dragbits.Jugador;
 
+import com.badlogic.gdx.Gdx;
+
 public class Jugador {
 
     private int nivel;
