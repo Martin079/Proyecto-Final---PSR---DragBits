@@ -1,28 +1,37 @@
 package com.afs.dragbits.Jugador;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 
 public class Jugador {
+
+    private static final String PREFS_NAME = "dragbits_save_data";
 
     private int nivel;
     private long experienciaActual;
     private long experienciaSiguienteNivel;
     private long dinero;
 
+    // Constructor por defecto (nuevo jugador)
     public Jugador() {
-        this.nivel = 1;
-        this.experienciaActual = 0;
-        this.dinero = 0;
+        this(1, 0, 0);
+    }
+
+    // Constructor parametrizado (útil para pruebas o cargar partidas)
+    public Jugador(int nivelInicial, long experienciaInicial, long dineroInicial) {
+        this.nivel = Math.max(1, nivelInicial);
+        this.experienciaActual = Math.max(0, experienciaInicial);
+        this.dinero = Math.max(0, dineroInicial);
         this.experienciaSiguienteNivel = calcularExperienciaRequerida(this.nivel);
     }
 
-    /**calculo para pasar de nivel     */
-    private long calcularExperienciaRequerida(int nivelActual) {
-        // calculo: Experiencia Base (vivel 1 a 2), nivel actual del jugador, curva/dificultad.
+    /** Cálculo de XP requerida para pasar del nivel actual al siguiente */
+    public long calcularExperienciaRequerida(int nivelActual) {
+        // Nivel 1: 200 XP | Nivel 2: 800 XP | Nivel 3: 1800 XP | Nivel 4: 3200 XP
         return (long) (200 * Math.pow(nivelActual, 2));
     }
 
-    /** * Añade experiencia al jugador y revisa si sube de nivel. */
+    /** Añade experiencia al jugador y revisa si sube de nivel */
     public boolean sumarExperiencia(long cantidad) {
         if (cantidad <= 0) return false;
 
@@ -42,7 +51,7 @@ public class Jugador {
         return subioDeNivel;
     }
 
-    // dinero
+    // --- MANEJO DE DINERO ---
 
     public void sumarDinero(long cantidad) {
         if (cantidad > 0) {
@@ -53,15 +62,60 @@ public class Jugador {
     public boolean restarDinero(long cantidad) {
         if (cantidad > 0 && this.dinero >= cantidad) {
             this.dinero -= cantidad;
-            return true; // compra exitosa
+            return true; // Compra exitosa
         }
-        return false; // dinero insuficiente
+        return false; // Dinero insuficiente
     }
 
-    // getters y setters
+    // --- SITEMA DE GUARDADO Y CARGA (LibGDX Preferences) ---
+
+    /** Guardar estado actual del jugador en disco */
+    public void guardarProgreso() {
+        Preferences prefs = Gdx.app.getPreferences(PREFS_NAME);
+        prefs.putInteger("nivel", this.nivel);
+        prefs.putLong("experienciaActual", this.experienciaActual);
+        prefs.putLong("dinero", this.dinero);
+        prefs.flush(); // Fuerza la escritura física en archivo
+        Gdx.app.log("Jugador", "Progreso guardado correctamente.");
+    }
+
+    /** Cargar estado guardado previamente. Si no existe, mantiene los valores por defecto. */
+    public void cargarProgreso() {
+        Preferences prefs = Gdx.app.getPreferences(PREFS_NAME);
+        if (prefs.contains("nivel")) {
+            this.nivel = prefs.getInteger("nivel", 1);
+            this.experienciaActual = prefs.getLong("experienciaActual", 0);
+            this.dinero = prefs.getLong("dinero", 0);
+            this.experienciaSiguienteNivel = calcularExperienciaRequerida(this.nivel);
+            Gdx.app.log("Jugador", "Progreso cargado con éxito.");
+        }
+    }
+
+    /** Borra el archivo de guardado */
+    public void borrarProgreso() {
+        Preferences prefs = Gdx.app.getPreferences(PREFS_NAME);
+        prefs.clear();
+        prefs.flush();
+    }
+
+    // --- GETTERS Y SETTERS ---
 
     public int getNivel() { return nivel; }
     public long getExperienciaActual() { return experienciaActual; }
     public long getExperienciaSiguienteNivel() { return experienciaSiguienteNivel; }
     public long getDinero() { return dinero; }
+
+    // Setters manuales por si necesitas forzar valores específicos
+    public void setNivel(int nivel) {
+        this.nivel = Math.max(1, nivel);
+        this.experienciaSiguienteNivel = calcularExperienciaRequerida(this.nivel);
+    }
+
+    public void setExperienciaActual(long experienciaActual) {
+        this.experienciaActual = Math.max(0, experienciaActual);
+    }
+
+    public void setDinero(long dinero) {
+        this.dinero = Math.max(0, dinero);
+    }
 }

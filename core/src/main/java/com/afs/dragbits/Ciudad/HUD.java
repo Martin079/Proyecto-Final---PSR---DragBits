@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -21,19 +22,31 @@ public class HUD implements Disposable {
     private Stage stage;
     private Jugador jugador;
 
-    // Texturas
+    // Texturas y Frames
     private Texture fondoGrisTexture;
     private Texture billeteTexture;
     private Texture nivelSheetTexture;
-    private TextureRegion iconoNivel;
+    private TextureRegion[] framesNivel;
 
     // Elementos UI
+    private Image imgIconoNivel;
     private Label labelDinero;
     private Label labelNivel;
     private BitmapFont font;
 
+    // Variables para control de Animación de Level Up
+    private int nivelAnterior;
+    private boolean animandoSubidaNivel = false;
+    private float tiempoAnimacion = 0f;
+
+    // Tiempos de animación
+    private static final float DURACION_CICLO_XP = 0.3f; // 0.3s para recorrer frames 0 a 7
+    private static final float DURACION_PAUSA_FRAME9 = 0.5f; // Pausa mostrando el frame 8 (icono 9)
+    private static final float DURACION_TOTAL_ANIM = DURACION_CICLO_XP + DURACION_PAUSA_FRAME9;
+
     public HUD(SpriteBatch batch, Jugador jugador) {
         this.jugador = jugador;
+        this.nivelAnterior = jugador.getNivel();
         this.stage = new Stage(new ScreenViewport(), batch);
 
         cargarRecursos();
@@ -41,33 +54,34 @@ public class HUD implements Disposable {
     }
 
     private void cargarRecursos() {
-        // 1. Fondo gris oscuro semitransparente (1x1 pixeles escalado)
+        // 1. Fondo gris oscuro semitransparente
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(0.15f, 0.15f, 0.15f, 0.75f)); // Gris oscuro 75% opacidad
+        pixmap.setColor(new Color(0.15f, 0.15f, 0.15f, 0.75f));
         pixmap.fill();
         fondoGrisTexture = new Texture(pixmap);
         pixmap.dispose();
 
-        // 2. Cargar Texturas desde la carpeta assets/Ciudad/
+        // 2. Cargar Texturas
         billeteTexture = new Texture(Gdx.files.internal("Sprites/Ciudad/Billete.png"));
         nivelSheetTexture = new Texture(Gdx.files.internal("Sprites/Ciudad/Nivel-sheet.png"));
-        // Nota: Asegúrate de que la imagen en assets se llame NivelSheet.png o ajusta la ruta
 
-        // Tomamos el primer frame del sheet de nivel (41x41 px)
+        // Extraer los 9 frames de 41x41 px (asumiendo que están en fila horizontal)
         TextureRegion[][] tmp = TextureRegion.split(nivelSheetTexture, 41, 41);
-        iconoNivel = tmp[0][0];
+        framesNivel = new TextureRegion[9];
+        for (int i = 0; i < 9; i++) {
+            framesNivel[i] = tmp[0][i];
+        }
 
-        // Font por defecto para el texto
+        // Font por defecto
         font = new BitmapFont();
-        font.getData().setScale(1.2f); // Escala para legibilidad
+        font.getData().setScale(1.2f);
     }
 
     private void crearInterfaz() {
         Table tablaPrincipal = new Table();
         tablaPrincipal.setFillParent(true);
-        tablaPrincipal.top(); // Alinear al tope de la pantalla
+        tablaPrincipal.top();
 
-        // Tabla del fondo del HUD (Largo completo de pantalla, 50px de alto)
         Table barraHud = new Table();
         barraHud.setBackground(new Image(fondoGrisTexture).getDrawable());
 
@@ -79,52 +93,86 @@ public class HUD implements Disposable {
         labelDinero.setAlignment(Align.left);
 
         // --- SECCIÓN NIVEL ---
-        Image imgIconoNivel = new Image(iconoNivel);
+        imgIconoNivel = new Image(framesNivel[0]);
         labelNivel = new Label(String.valueOf(jugador.getNivel()), estiloTexto);
         labelNivel.setAlignment(Align.center);
 
-        // Contenedor que encierra el icono del nivel y el número superpuesto en el centro
         Table contenedorNivel = new Table();
         contenedorNivel.add(imgIconoNivel).size(41, 41);
-        // Colocamos el texto del nivel flotando encima del icono
+
         Table overlayTextoNivel = new Table();
         overlayTextoNivel.add(labelNivel).center();
 
-        // Estructura de contenido dentro del HUD
         Table contenido = new Table();
-
-        // 1. Billete
         contenido.add(imgBillete).size(30, 30).padRight(8);
-
-        // 2. Dinero (espacio fijo calculado para $9.999.999 aprox)
         contenido.add(labelDinero).width(110).padRight(40);
-
-        // 3. Icono de Nivel con texto centrado
         contenido.stack(contenedorNivel, overlayTextoNivel).size(41, 41);
 
-        // Añadir el contenido al HUD con un leve desplazamiento hacia la derecha (padLeft 80px)
         barraHud.add(contenido).expandX().center().padLeft(80);
-
-        // Añadir la barra a la tabla principal
         tablaPrincipal.add(barraHud).growX().height(50);
 
         stage.addActor(tablaPrincipal);
     }
 
-    public void actualizar() {
-        // Sincroniza los valores visuales con la clase Jugador
+
+    public void actualizar(float delta) {
+        // Actualizar dinero siempre
         labelDinero.setText("$" + jugador.getDinero());
-        labelNivel.setText(String.valueOf(jugador.getNivel()));
+
+        // Detección de subida de nivel
+        if (jugador.getNivel() > nivelAnterior && !animandoSubidaNivel) {
+            animandoSubidaNivel = true;
+            tiempoAnimacion = 0f;
+        }
+
+        if (animandoSubidaNivel) {
+            tiempoAnimacion += delta;
+
+            if (tiempoAnimacion < DURACION_CICLO_XP) {
+                // Paso 1: Reproducir frames 0 al 7 rápido en 0.3 segundos
+                float progreso = tiempoAnimacion / DURACION_CICLO_XP;
+                int frameIndex = (int) (progreso * 8); // Mapea a valores de 0 a 7
+                if (frameIndex > 7) frameIndex = 7;
+
+                imgIconoNivel.setDrawable(new TextureRegionDrawable(framesNivel[frameIndex]));
+            }
+            else if (tiempoAnimacion < DURACION_TOTAL_ANIM) {
+                // Paso 2: Mostrar frame 8 (indicador de subida de nivel) con una pausa
+                imgIconoNivel.setDrawable(new TextureRegionDrawable(framesNivel[8]));
+            }
+            else {
+                // Paso 3: Finalizar animación y actualizar nivel visualmente
+                animandoSubidaNivel = false;
+                nivelAnterior = jugador.getNivel();
+                labelNivel.setText(String.valueOf(jugador.getNivel()));
+            }
+        } else {
+            // Estado Normal: Calcular frame (0 a 7) basado en el porcentaje de XP actual
+            labelNivel.setText(String.valueOf(jugador.getNivel()));
+
+            float porcentaje = (float) jugador.getExperienciaActual() / jugador.getExperienciaSiguienteNivel();
+            int frameIndex = (int) (porcentaje * 8);
+
+            // Evitar desbordamiento de índice
+            if (frameIndex < 0) frameIndex = 0;
+            if (frameIndex > 7) frameIndex = 7;
+
+            imgIconoNivel.setDrawable(new TextureRegionDrawable(framesNivel[frameIndex]));
+        }
     }
 
     public void render() {
-        actualizar();
+        actualizar(Gdx.graphics.getDeltaTime());
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
     }
 
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 
     @Override
