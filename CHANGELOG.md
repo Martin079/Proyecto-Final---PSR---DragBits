@@ -42,3 +42,7 @@
 
 - Aumentado el tamaño del semaforo
 - Reducido las estadisticas del auto del jugador al inicio
+
+### Added 24/8/2026 
+
+- Clase jugador con dinero, experiencia, nivel, y el calculo para la progresión 
