@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.afs.dragbits.Main;
 import com.afs.dragbits.Ciudad.Burbuja;
 import com.afs.dragbits.Ciudad.HUD;
+import com.afs.dragbits.MenuRivales.VentanaSeleccionRival;
 import com.afs.dragbits.Jugador.Jugador;
 
 import java.util.ArrayList;
@@ -35,12 +36,14 @@ public class MapaScreen implements Screen {
     private Jugador jugador;
     private HUD hudCiudad;
 
+    // Integración Ventana Seleccionar Rival
+    private VentanaSeleccionRival ventanaRival;
+
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
 
     public MapaScreen(Main game) {
         this.game = game;
-        // Instancia temporal del jugador si no viene de 'game'
         this.jugador = new Jugador();
     }
 
@@ -55,6 +58,9 @@ public class MapaScreen implements Screen {
 
         // Carga del HUD de la Ciudad
         hudCiudad = new HUD(batch, jugador);
+
+        // Instancia de la Ventana de Selección de Rival (se agrega 'game' como primer parámetro)
+        ventanaRival = new VentanaSeleccionRival(game, viewport, () -> ventanaRival.ocultar());
 
         // Carga de Texturas
         mapaTexture = new Texture(Gdx.files.internal("Sprites/Ciudad/Mapa.png"));
@@ -78,14 +84,14 @@ public class MapaScreen implements Screen {
         float offsetX = anchoBurbuja / 2f;
         float offsetY = altoBurbuja / 2f;
 
-        // 1. Carreras Legales -> Cambia a la pantalla de la carrera (GameScreen)
+        // 1. Carreras Legales -> Abre ventana con rivales LEGALES (hasta el índice 0 desbloqueado como prueba)
         burbujas.add(new Burbuja(100f - offsetX, 170f - offsetY, anchoBurbuja, altoBurbuja, frameLegales, () -> {
-            game.setScreen(new GameScreen(game));
+            abrirVentanaRival(VentanaSeleccionRival.TipoCarrera.LEGAL, 0);
         }));
 
-        // 2. Carreras Ilegales
+        // 2. Carreras Ilegales -> Abre ventana con rivales ILEGALES
         burbujas.add(new Burbuja(580f - offsetX, 590f - offsetY, anchoBurbuja, altoBurbuja, frameIlegales, () -> {
-            System.out.println("Entrando a Carreras Ilegales...");
+            abrirVentanaRival(VentanaSeleccionRival.TipoCarrera.ILEGAL, 0);
         }));
 
         // 3. Tienda de Mejoras
@@ -104,16 +110,28 @@ public class MapaScreen implements Screen {
         }));
     }
 
+    private void abrirVentanaRival(VentanaSeleccionRival.TipoCarrera tipo, int maxDesbloqueado) {
+        ventanaRival.mostrar(tipo, maxDesbloqueado);
+        Gdx.input.setInputProcessor(ventanaRival.getStage());
+    }
+
     @Override
     public void render(float delta) {
-        // Actualizar coordenadas traducidas del ratón para detectar clics
-        mouseCoordsVirtuales.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-        viewport.unproject(mouseCoordsVirtuales);
+        // Manejo del procesador de entrada cuando se cierra la ventana
+        if (!ventanaRival.isVisible() && Gdx.input.getInputProcessor() == ventanaRival.getStage()) {
+            Gdx.input.setInputProcessor(hudCiudad.getStage());
+        }
 
-        if (Gdx.input.justTouched()) {
-            for (Burbuja b : burbujas) {
-                if (b.verificarClic(mouseCoordsVirtuales.x, mouseCoordsVirtuales.y)) {
-                    break;
+        // Solo procesar clics en el mapa si la ventana NO está abierta
+        if (!ventanaRival.isVisible()) {
+            mouseCoordsVirtuales.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            viewport.unproject(mouseCoordsVirtuales);
+
+            if (Gdx.input.justTouched()) {
+                for (Burbuja b : burbujas) {
+                    if (b.verificarClic(mouseCoordsVirtuales.x, mouseCoordsVirtuales.y)) {
+                        break;
+                    }
                 }
             }
         }
@@ -125,27 +143,25 @@ public class MapaScreen implements Screen {
 
         // --- 1. DIBUJADO DE LA CIUDAD Y OBJETOS ---
         batch.begin();
-
-        // Dibujar Mapa de Fondo
         batch.draw(mapaTexture, 0, 0, ANCHO_VIRTUAL, ALTO_VIRTUAL);
 
-        // Dibujar Burbujas
         for (Burbuja b : burbujas) {
             b.dibujar(batch);
         }
-
         batch.end();
 
-        // --- 2. DIBUJADO DEL HUD (SUPERPUESTO) ---
+        // --- 2. DIBUJADO DEL HUD ---
         hudCiudad.render();
+
+        // --- 3. DIBUJADO DE LA VENTANA (SI ESTÁ ACTIVA) ---
+        ventanaRival.render(delta);
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
-        if (hudCiudad != null) {
-            hudCiudad.resize(width, height);
-        }
+        if (hudCiudad != null) hudCiudad.resize(width, height);
+        if (ventanaRival != null) ventanaRival.resize(width, height);
     }
 
     @Override public void pause() {}
@@ -158,5 +174,6 @@ public class MapaScreen implements Screen {
         if (mapaTexture != null) mapaTexture.dispose();
         if (burbujasSheet != null) burbujasSheet.dispose();
         if (hudCiudad != null) hudCiudad.dispose();
+        if (ventanaRival != null) ventanaRival.dispose();
     }
 }

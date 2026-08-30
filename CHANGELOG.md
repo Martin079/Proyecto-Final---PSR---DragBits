@@ -47,3 +47,5 @@
 
 - Clase jugador con dinero, experiencia, nivel, y el calculo para la progresión
 - HUD en la ciudad indicando dinero y nivel
+
+
