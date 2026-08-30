@@ -48,4 +48,5 @@
 - Clase jugador con dinero, experiencia, nivel, y el calculo para la progresión
 - HUD en la ciudad indicando dinero y nivel
 
-
+### Added 30/8/2026
+- Añadido de menu para elegir rival para las carreras legales e ilegales
