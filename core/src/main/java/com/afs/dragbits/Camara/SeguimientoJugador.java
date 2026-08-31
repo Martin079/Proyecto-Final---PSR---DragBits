@@ -31,4 +31,5 @@ public class SeguimientoJugador {
     public void resize(float ancho, float alto) {
         camara.setToOrtho(false, ancho, alto);
     }
+
 }

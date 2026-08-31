@@ -39,7 +39,12 @@ public class Semaforo {
     private float temporizador;
     private float tiempoVerdeEnPantalla = 1.0f; // en verde antes de desaparecer
 
-    public Semaforo(float anchoPantalla, float altoPantalla) {
+    // Guarda la posición X exacta donde debe reiniciarse el auto
+    private float posXInicialAuto;
+
+    public Semaforo(float anchoPantalla, float altoPantalla, float posXInicialAuto) {
+        this.posXInicialAuto = posXInicialAuto;
+
         camaraHUD = new OrthographicCamera();
         camaraHUD.setToOrtho(false, anchoPantalla, altoPantalla);
 
@@ -76,7 +81,7 @@ public class Semaforo {
         if (estadoActual != EstadoSemaforo.VERDE && estadoActual != EstadoSemaforo.SALIDA_FALSO) {
             if (auto.getVelocidad() > 0) {
                 estadoActual = EstadoSemaforo.SALIDA_FALSO;
-                // Resetear auto a la posición de salida original (X = 50) y velocidad 0
+                // Resetear auto a la posición de salida configurada dinámicamente y velocidad 0
                 resetearAuto(auto);
                 return;
             }
@@ -86,7 +91,7 @@ public class Semaforo {
         temporizador += delta;
 
         if (estadoActual == EstadoSemaforo.VERDE) {
-            // en verde se mantiene 1 segundo y luego desaparece
+            // en verde se mantiene 1 segundo y luego desaparecer
             if (temporizador >= tiempoVerdeEnPantalla) {
                 estadoActual = EstadoSemaforo.FINALIZADO;
             }
@@ -151,8 +156,12 @@ public class Semaforo {
 
     private void resetearAuto(Auto auto) {
         auto.setVelocidad(0f);
-        auto.setPosX(50f); // Posición inicial de salida
+        auto.setPosX(posXInicialAuto); // Ahora reinicia en la posición calculada por Picodromo
         auto.setMarchaActual(0);
+    }
+
+    public void setPosXInicialAuto(float posX) {
+        this.posXInicialAuto = posX;
     }
 
     public void resize(float ancho, float alto) {

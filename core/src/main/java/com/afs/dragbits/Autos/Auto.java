@@ -295,4 +295,21 @@ public abstract class Auto {
     public float getNitroRestante() { return nitroRestante; }
     public boolean isPatinando() { return patinando; }
     public void setZonaSincronizacion(float zona) { this.zonaSincronizacion = zona; }
+
+    // Métodos alias para integración con LibGDX y detección de colisiones / meta
+    public float getX() {
+        return posX;
+    }
+
+    public float getY() {
+        return posY;
+    }
+
+    /**
+     * Retorna la posición X de la trompa/frente del auto.
+     * Útil para validar con precisión el cruce de la línea de meta.
+     */
+    public float getFrenteX() {
+        return posX + ancho;
+    }
 }

@@ -50,3 +50,10 @@
 
 ### Added 30/8/2026
 - Añadido de menu para elegir rival para las carreras legales e ilegales
+
+### Updated 31/8/2026
+- Actualizacion sprites de la pista
+
+### Added 31/8/2026
+- Posicion de largada y meta, y vuelta al menu al llegar a la meta
+

@@ -8,3 +8,6 @@ public class AutoJugador extends Auto {
         super(posX, posY, 160f, 80f, 75f, "Sprites/Autos/auto 1-sheet.png");
     }
 }
+
+
+
