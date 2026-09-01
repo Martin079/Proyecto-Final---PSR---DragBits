@@ -91,7 +91,7 @@ public class GameScreen implements Screen {
             45f,
             70f,
             800,
-            "Sprites/Autos/auto 1-sheet.png"
+            "Sprites/Autos/gol-sheet.png"
         );
 
         camaraJugador = new SeguimientoJugador(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

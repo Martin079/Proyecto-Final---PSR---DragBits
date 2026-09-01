@@ -23,15 +23,15 @@ public abstract class Auto {
     protected float ancho = 200f;
     protected float alto = 80f;
 
-    // estadisticas del auto
+    // Estadísticas del auto
     protected float velocidad;
     protected float velocidadMaxima;
     protected float aceleracion;       // fuerza del motor
     protected float traccion;          // evita que las ruedas patinen en marchas bajas o arranque
-    protected float potenciaNitro;     // multiplicador extra de aceleracion
-    protected float capacidadNitro;    // tiempo util de nitro en segundos (ej. 3.0s)
+    protected float potenciaNitro;     // multiplicador extra de aceleración
+    protected float capacidadNitro;    // tiempo útil de nitro en segundos (ej. 3.0s)
     protected float nitroRestante;
-    protected float zonaSincronizacion;// ampliacion de la zona de cambio de marcha
+    protected float zonaSincronizacion;// ampliación de la zona de cambio de marcha
 
     protected float rpm;
     protected float rpmMaximas;
@@ -40,36 +40,30 @@ public abstract class Auto {
     protected int marchaActual; // 0 = Neutral, 1..5
     protected boolean embraguePresionado;
     protected boolean nitroActivo;
-    // relaciones ajustadas para llegar al 100% de la velocidad maxima
+    // relaciones ajustadas para llegar al 100% de la velocidad máxima
     protected float[] relacionesTransmision = {0f, 0.30f, 0.50f, 0.70f, 0.85f, 1.0f};
 
-    // indicadores físicos
+    // Indicadores físicos
     protected boolean patinando;
 
-    // sprites y animaciones
+    // Sprites y animaciones
     private Texture spriteSheet;
-    private TextureRegion frameEstatico;
-    private TextureRegion frameAvance;
-    private Animation<TextureRegion> animCambio;
-    private Animation<TextureRegion> animNitro;
+    private TextureRegion frameEstatico;           // Frame 1 (Índice 0)
+    private Animation<TextureRegion> animAvanzando; // Frames 2 y 3 (Índices 1 y 2)
+    private Animation<TextureRegion> animCambio;    // Frames 4 y 5 (Índices 3 y 4)
+    private Animation<TextureRegion> animNitro;     // Frames 6 y 7 (Índices 5 y 6)
 
     private float stateTime;
     private Texture texturaFallback;
 
-    // multiplicador visual para desplazar mas pixeles en pantalla por cada km/h
-    // (no afecta la velocidad real ni el HUD, solo que tan rapido se ve avanzar el auto)
+    // Multiplicador visual para desplazar más píxeles en pantalla por cada km/h
     private static final float FACTOR_MOVIMIENTO = 4.2f;
 
-    // umbral de velocidad por debajo del cual se aplica un impulso de arranque,
-    // simulando el mayor torque disponible en bajas revoluciones
+    // Umbrales físicos y de aceleración
     private static final float UMBRAL_ARRANQUE = 25f;
     private static final float FACTOR_ARRANQUE = 1.25f;
-
-    // margen minimo de aceleracion que se conserva al acercarse al techo de la marcha,
-    // para evitar que el auto "choque contra una pared" invisible al llegar al limite
     private static final float PISO_CURVA_ACELERACION = 0.4f;
 
-    // relacion potencia/traccion a partir de la cual el auto empieza a patinar
     private static final float UMBRAL_PATINAJE = 1.2f;
     private static final float PERDIDA_MIN_PATINAJE = 0.45f;
     private static final float PERDIDA_MAX_PATINAJE = 0.85f;
@@ -96,11 +90,10 @@ public abstract class Auto {
         this.aceleracion = aceleracion;
         this.traccion = traccion;
 
-        // valores base predeterminados de Nitro y Sincronización
-        this.potenciaNitro = 1.5f;     // 50% más de aceleración con Nitro
-        this.capacidadNitro = 3.0f;    // 3 segundos de carga
+        this.potenciaNitro = 1.5f;
+        this.capacidadNitro = 3.0f;
         this.nitroRestante = capacidadNitro;
-        this.zonaSincronizacion = 400f; // 400 RPM de margen aceptable
+        this.zonaSincronizacion = 400f;
 
         this.velocidad = 0f;
         this.rpm = 800f;
@@ -116,37 +109,40 @@ public abstract class Auto {
         spriteSheet = new Texture(Gdx.files.internal(ruta));
         spriteSheet.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-        TextureRegion[][] tmp = TextureRegion.split(spriteSheet, 100, 40);
+        // Divide la textura en una fila horizontal con sub-imágenes
+        int anchoFrame = spriteSheet.getWidth() / 7;
+        int altoFrame = spriteSheet.getHeight();
+        TextureRegion[][] tmp = TextureRegion.split(spriteSheet, anchoFrame, altoFrame);
 
+        // 1. Primer frame (Índice 0): Estático
         frameEstatico = tmp[0][0];
-        frameAvance   = tmp[0][1];
-        animCambio = new Animation<>(0.15f, tmp[0][2], tmp[0][3]);
-        animNitro = new Animation<>(0.10f, tmp[0][4], tmp[0][5]);
+
+        // 2. Segundo y tercer frame (Índices 1 y 2): En movimiento
+        animAvanzando = new Animation<>(0.12f, tmp[0][1], tmp[0][2]);
+
+        // 3. Cuarto y quinto frame (Índices 3 y 4): Cambio de marcha
+        animCambio = new Animation<>(0.15f, tmp[0][3], tmp[0][4]);
+
+        // 4. Sexto y séptimo frame (Índices 5 y 6): Nitro
+        animNitro = new Animation<>(0.10f, tmp[0][5], tmp[0][6]);
     }
 
     public void acelerar(float delta) {
         if (!embraguePresionado && marchaActual > 0) {
-            // aseguramos que el indice no se desborde
             int marchaValida = Math.min(marchaActual, relacionesTransmision.length - 1);
             float velMaxMarcha = velocidadMaxima * relacionesTransmision[marchaValida];
 
             float aceleracionEfectiva = aceleracion * calcularFactorTraccion(marchaValida);
 
-            // impulso de arranque: mas respuesta al salir desde velocidades bajas,
-            // simulando el pico de torque de un motor real en las primeras marchas
             if (velocidad < UMBRAL_ARRANQUE) {
                 aceleracionEfectiva *= FACTOR_ARRANQUE;
             }
 
-            // curva de acercamiento al techo de la marcha: la aceleracion se atenua
-            // de forma progresiva a medida que la velocidad se acerca al limite,
-            // en vez de cortarse en seco (se siente mas fluido y natural)
             if (velMaxMarcha > 0f) {
                 float margen = MathUtils.clamp((velMaxMarcha - velocidad) / velMaxMarcha, PISO_CURVA_ACELERACION, 1f);
                 aceleracionEfectiva *= margen;
             }
 
-            // sistema nitro (base lista para expandir mas adelante)
             if (nitroActivo && nitroRestante > 0) {
                 aceleracionEfectiva *= potenciaNitro;
                 velMaxMarcha *= 1.15f;
@@ -157,14 +153,12 @@ public abstract class Auto {
                 }
             }
 
-            // aplicar velocidad
             if (velocidad < velMaxMarcha) {
                 velocidad += aceleracionEfectiva * delta;
                 if (velocidad > velMaxMarcha) velocidad = velMaxMarcha;
             }
         }
 
-        // subida de RPM
         if (embraguePresionado || marchaActual == 0) {
             rpm += 5500f * delta;
             if (rpm > rpmMaximas) rpm = rpmMaximas;
@@ -179,13 +173,6 @@ public abstract class Auto {
         }
     }
 
-    /**
-     * Calcula cuanto de la aceleracion del motor logra transmitirse realmente al piso,
-     * segun la relacion entre la potencia (aceleracion) y el agarre disponible (traccion).
-     * Solo aplica en marchas bajas (1 y 2), donde el patinaje es mas probable.
-     * A diferencia de un corte fijo, la perdida crece de forma progresiva cuanto mas
-     * se pasa la potencia del motor respecto a la traccion disponible.
-     */
     private float calcularFactorTraccion(int marchaValida) {
         if (marchaValida > 2 || traccion <= 0f) {
             patinando = false;
@@ -201,8 +188,6 @@ public abstract class Auto {
 
         patinando = true;
         float exceso = relacionPotenciaAgarre - UMBRAL_PATINAJE;
-        // cuanto mayor el exceso de potencia sobre la traccion, mayor la perdida de agarre,
-        // pero siempre dentro de un rango acotado para que nunca se sienta "trabado"
         return MathUtils.clamp(1f - exceso * 0.5f, PERDIDA_MIN_PATINAJE, PERDIDA_MAX_PATINAJE);
     }
 
@@ -224,7 +209,6 @@ public abstract class Auto {
         stateTime += delta;
     }
 
-    /** Evalua la sincronización del cambio */
     public boolean esCambioPerfecto() {
         return (rpm >= (rpmMaximas - zonaSincronizacion));
     }
@@ -253,7 +237,7 @@ public abstract class Auto {
                     frameActual = animCambio.getKeyFrame(stateTime, true);
                     break;
                 case AVANZANDO:
-                    frameActual = frameAvance;
+                    frameActual = animAvanzando.getKeyFrame(stateTime, true);
                     break;
                 case ESTATICO:
                 default:
@@ -296,19 +280,9 @@ public abstract class Auto {
     public boolean isPatinando() { return patinando; }
     public void setZonaSincronizacion(float zona) { this.zonaSincronizacion = zona; }
 
-    // Métodos alias para integración con LibGDX y detección de colisiones / meta
-    public float getX() {
-        return posX;
-    }
+    public float getX() { return posX; }
+    public float getY() { return posY; }
 
-    public float getY() {
-        return posY;
-    }
-
-    /**
-     * Retorna la posición X de la trompa/frente del auto.
-     * Útil para validar con precisión el cruce de la línea de meta.
-     */
     public float getFrenteX() {
         return posX + ancho;
     }

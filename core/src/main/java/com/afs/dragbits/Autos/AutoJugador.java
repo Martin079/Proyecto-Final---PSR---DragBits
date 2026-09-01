@@ -5,7 +5,7 @@ public class AutoJugador extends Auto {
 
     public AutoJugador(float posX, float posY) {
         // (posX, posY, velocidadMaxima, aceleracion, traccion, rutaSpriteSheet)
-        super(posX, posY, 160f, 80f, 75f, "Sprites/Autos/auto 1-sheet.png");
+        super(posX, posY, 160f, 80f, 75f, "Sprites/Autos/gol-sheet.png");
     }
 }
 

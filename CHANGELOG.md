@@ -63,3 +63,6 @@
 - Primer bot rival de carreras legales con dificultad facil
 - Otorgamiento de recompensas al finalizar la carrera
 
+### Updated 1/9/2026
+- Sprite del primer auto y mejores efectos de velocidad y sensacion de movimiento
+
