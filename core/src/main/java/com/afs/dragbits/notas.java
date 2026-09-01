@@ -54,8 +54,8 @@ public class notas {
     * Carreras Legales (Recompensa: DINERO - $)
     * Rival 1 (Principiante)
     * Exigencia: Auto 1 Stock
-    * Stats Bot: $155\text{ km/h}$ V-Max | $9.8\text{ s}$ (0-100) | Sin Nitro
-    * Recompensas: Fácil $\$800$ | Medio $\$960$ | Difícil $\$1,280$
+    * Stats Bot: 155km/h V-Max | 9.8s(0-100) | Sin Nitro
+    * Recompensas: Fácil 800$ | Medio 960$ | Difícil 1,280$
     *
     * Rival 2 (Amateur)
     * Exigencia: Auto 1 Full mejorado o Auto 2 Stock

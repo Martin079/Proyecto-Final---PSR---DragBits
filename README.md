@@ -19,8 +19,9 @@ Ide: InteliJ, con motor LibGDX, y desarrollado para PC
 Abrir el proyecto en InteliJ y abrir build.gradle. Luego buscar Lwjgl3Launcher.java y darle a RUN.
 
 # Estado Actual
-Cuadros simples basicos para la písta y el auto, seguimiento de la camara, sistema de aceleracion,
-sistema de cambio de marcha, HUD simple para comprobar las funciones.
+Mapa simple con burbujas de cada zona. Ventana para elegir rival de carreras legales e ilegales al clickear la 
+burbuja correspondiente. Sistema de dinero y nivel para el jugador y otorgar recompensas al finalizar la carrera.
+Primer bot rival en dificultad facil con su respectiva recompensa. 
 
 ## Documentación del Proyecto
 * [Ver el Historial de Cambios (Changelog)](CHANGELOG.md)

@@ -44,12 +44,20 @@ public class MapaScreen implements Screen {
 
     public MapaScreen(Main game) {
         this.game = game;
+
+        // 1. Instanciar y Cargar el progreso persistido del Jugador
         this.jugador = new Jugador();
+        this.jugador.cargarProgreso();
     }
 
     @Override
     public void show() {
         batch = new SpriteBatch();
+
+        // 2. Recargar progreso por si cambió al volver de otra pantalla
+        if (jugador != null) {
+            jugador.cargarProgreso();
+        }
 
         camara = new OrthographicCamera();
         viewport = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camara);
@@ -59,7 +67,7 @@ public class MapaScreen implements Screen {
         // Carga del HUD de la Ciudad
         hudCiudad = new HUD(batch, jugador);
 
-        // Instancia de la Ventana de Selección de Rival (se agrega 'game' como primer parámetro)
+        // Instancia de la Ventana de Selección de Rival
         ventanaRival = new VentanaSeleccionRival(game, viewport, () -> ventanaRival.ocultar());
 
         // Carga de Texturas
@@ -84,12 +92,12 @@ public class MapaScreen implements Screen {
         float offsetX = anchoBurbuja / 2f;
         float offsetY = altoBurbuja / 2f;
 
-        // 1. Carreras Legales -> Abre ventana con rivales LEGALES (hasta el índice 0 desbloqueado como prueba)
+        // 1. Carreras Legales
         burbujas.add(new Burbuja(100f - offsetX, 170f - offsetY, anchoBurbuja, altoBurbuja, frameLegales, () -> {
             abrirVentanaRival(VentanaSeleccionRival.TipoCarrera.LEGAL, 0);
         }));
 
-        // 2. Carreras Ilegales -> Abre ventana con rivales ILEGALES
+        // 2. Carreras Ilegales
         burbujas.add(new Burbuja(580f - offsetX, 590f - offsetY, anchoBurbuja, altoBurbuja, frameIlegales, () -> {
             abrirVentanaRival(VentanaSeleccionRival.TipoCarrera.ILEGAL, 0);
         }));
@@ -117,12 +125,10 @@ public class MapaScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // Manejo del procesador de entrada cuando se cierra la ventana
         if (!ventanaRival.isVisible() && Gdx.input.getInputProcessor() == ventanaRival.getStage()) {
             Gdx.input.setInputProcessor(hudCiudad.getStage());
         }
 
-        // Solo procesar clics en el mapa si la ventana NO está abierta
         if (!ventanaRival.isVisible()) {
             mouseCoordsVirtuales.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             viewport.unproject(mouseCoordsVirtuales);

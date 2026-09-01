@@ -46,6 +46,7 @@
 ### Added 24/8/2026 
 
 - Clase jugador con dinero, experiencia, nivel, y el calculo para la progresión
+- Implementacion de guardado de estadisticas del jugador en un archivo
 - HUD en la ciudad indicando dinero y nivel
 
 ### Added 30/8/2026
@@ -56,4 +57,9 @@
 
 ### Added 31/8/2026
 - Posicion de largada y meta, y vuelta al menu al llegar a la meta
+
+
+### Added 1/9/2026
+- Primer bot rival de carreras legales con dificultad facil
+- Otorgamiento de recompensas al finalizar la carrera
 
