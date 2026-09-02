@@ -1,6 +1,7 @@
 package com.afs.dragbits.ciudad;
 
 import com.afs.dragbits.jugador.Jugador;
+import com.afs.dragbits.util.SpriteSheetLoader;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -61,16 +62,11 @@ public class Interfaz implements Disposable {
         fondoGrisTexture = new Texture(pixmap);
         pixmap.dispose();
 
-        // cargar Texturas
+        // Cargar Texturas usando SpriteSheetLoader
         billeteTexture = new Texture(Gdx.files.internal("sprites/Ciudad/Billete.png"));
-        nivelSheetTexture = new Texture(Gdx.files.internal("sprites/Ciudad/Nivel-sheet.png"));
 
-        // extraer los 9 frames 41x41 px
-        TextureRegion[][] tmp = TextureRegion.split(nivelSheetTexture, 41, 41);
-        framesNivel = new TextureRegion[9];
-        for (int i = 0; i < 9; i++) {
-            framesNivel[i] = tmp[0][i];
-        }
+        nivelSheetTexture = SpriteSheetLoader.cargarTextura("sprites/Ciudad/Nivel-sheet.png");
+        framesNivel = SpriteSheetLoader.recortar(nivelSheetTexture, 41, 41, 9);
 
         // font por defecto
         font = new BitmapFont();
@@ -113,7 +109,6 @@ public class Interfaz implements Disposable {
 
         stage.addActor(tablaPrincipal);
     }
-
 
     public void actualizar(float delta) {
         // actualizar

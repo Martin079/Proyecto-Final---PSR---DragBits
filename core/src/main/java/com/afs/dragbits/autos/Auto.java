@@ -1,6 +1,6 @@
 package com.afs.dragbits.autos;
 
-import com.badlogic.gdx.Gdx;
+import com.afs.dragbits.util.SpriteSheetLoader;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -105,24 +105,25 @@ public abstract class Auto {
     }
 
     private void cargarSpriteSheet(String ruta) {
-        spriteSheet = new Texture(Gdx.files.internal(ruta));
-        spriteSheet.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        // Carga centralizada mediante SpriteSheetLoader
+        spriteSheet = SpriteSheetLoader.cargarTextura(ruta);
 
         int anchoFrame = spriteSheet.getWidth() / 7;
         int altoFrame = spriteSheet.getHeight();
-        TextureRegion[][] tmp = TextureRegion.split(spriteSheet, anchoFrame, altoFrame);
+
+        TextureRegion[] frames = SpriteSheetLoader.recortar(spriteSheet, anchoFrame, altoFrame);
 
         // 1. Primer frame: Estático
-        frameEstatico = tmp[0][0];
+        frameEstatico = frames[0];
 
         // 2. Segundo y tercer frame: En movimiento
-        animAvanzando = new Animation<>(0.12f, tmp[0][1], tmp[0][2]);
+        animAvanzando = new Animation<>(0.12f, frames[1], frames[2]);
 
         // 3. Cuarto y quinto frame: Cambio de marcha
-        animCambio = new Animation<>(0.15f, tmp[0][3], tmp[0][4]);
+        animCambio = new Animation<>(0.15f, frames[3], frames[4]);
 
-        // 4. Sexto y septimo frame: Nitro
-        animNitro = new Animation<>(0.10f, tmp[0][5], tmp[0][6]);
+        // 4. Sexto y séptimo frame: Nitro
+        animNitro = new Animation<>(0.10f, frames[5], frames[6]);
     }
 
     public void acelerar(float delta) {

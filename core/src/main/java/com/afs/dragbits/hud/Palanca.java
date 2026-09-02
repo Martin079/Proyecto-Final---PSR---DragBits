@@ -1,11 +1,11 @@
 package com.afs.dragbits.hud;
 
-import com.badlogic.gdx.Gdx;
+import com.afs.dragbits.funcionalidades.CajaDeCambios;
+import com.afs.dragbits.util.SpriteSheetLoader;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.afs.dragbits.funcionalidades.CajaDeCambios;
 
 /**renderiza esquema de la palanca  a la izquierda del HUD*/
 public class Palanca {
@@ -25,14 +25,13 @@ public class Palanca {
         camaraHUD = new OrthographicCamera();
         camaraHUD.setToOrtho(false, anchoPantalla, altoPantalla);
 
-        spriteSheet = new Texture(Gdx.files.internal("sprites/HUD/palanca -sheet.png"));
-        spriteSheet.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        spriteSheet = SpriteSheetLoader.cargarTextura("sprites/HUD/palanca -sheet.png");
+        TextureRegion[] frames = SpriteSheetLoader.recortar(spriteSheet, 120, 60);
 
-        TextureRegion[][] tmp = TextureRegion.split(spriteSheet, 120, 60);
-        frameEsquema   = tmp[0][0];
-        frameCentro    = tmp[0][1];
-        frameIzquierda = tmp[0][2];
-        frameDerecha   = tmp[0][3];
+        frameEsquema   = frames[0];
+        frameCentro    = frames[1];
+        frameIzquierda = frames[2];
+        frameDerecha   = frames[3];
     }
 
     public void dibujar(SpriteBatch batch, CajaDeCambios caja, float anchoPantalla) {

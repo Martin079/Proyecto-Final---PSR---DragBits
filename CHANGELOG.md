@@ -77,3 +77,4 @@
 - Cambios de nombre de Mayuscula a minuscula en los package
 - Cambio de clase nota a archivo .md
 - Correccion de carga de musica dos veces donde una no se utilizaba ocupando memoria
+- Añadido clase SpriteSheetLoader para reutilizar la carga de sprites

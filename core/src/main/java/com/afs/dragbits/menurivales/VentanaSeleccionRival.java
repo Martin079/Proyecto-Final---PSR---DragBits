@@ -1,6 +1,5 @@
 package com.afs.dragbits.menurivales;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,6 +16,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.afs.dragbits.Main;
 import com.afs.dragbits.screens.GameScreen;
+import com.afs.dragbits.util.SpriteSheetLoader;
 
 public class VentanaSeleccionRival implements Disposable {
 
@@ -51,25 +51,26 @@ public class VentanaSeleccionRival implements Disposable {
         fondoOscuroTexture = new Texture(pixmap);
         pixmap.dispose();
 
-        // Sheet 14 cuadros de 200x200 px
-        menuAutosSheet = new Texture(Gdx.files.internal("sprites/MenuAutos/Iconos autos-sheet.png"));
-        TextureRegion[][] tmp = TextureRegion.split(menuAutosSheet, 200, 200);
+        // Cargar sheet de 14 cuadros de 200x200 px usando SpriteSheetLoader
+        menuAutosSheet = SpriteSheetLoader.cargarTextura("sprites/MenuAutos/Iconos autos-sheet.png");
+        TextureRegion[] todosLosFrames = SpriteSheetLoader.recortar(menuAutosSheet, 200, 200, 14);
 
+        // Copiamos los primeros 10 frames para los rivales
         framesRival = new TextureRegion[10];
-        for (int i = 0; i < 10; i++) {
-            framesRival[i] = tmp[0][i];
-        }
-        frameBloqueado = tmp[0][13]; // Ícono '?'
+        System.arraycopy(todosLosFrames, 0, framesRival, 0, 10);
 
-        // Boton Cerrar
-        botonCerrarTexture = new Texture(Gdx.files.internal("sprites/Botones/Boton cerrar.png"));
+        // Frame del auto bloqueado (ícono '?')
+        frameBloqueado = todosLosFrames[13];
+
+        // Botón Cerrar
+        botonCerrarTexture = SpriteSheetLoader.cargarTextura("sprites/Botones/Boton cerrar.png");
     }
 
     private void crearEstructuraBase(Runnable accionCerrar) {
         Table root = new Table();
         root.setFillParent(true);
 
-        // panel Central
+        // Panel Central
         ventanaTable = new Table();
         ventanaTable.setBackground(new TextureRegionDrawable(new TextureRegion(fondoOscuroTexture)));
         ventanaTable.pad(20);
@@ -82,7 +83,7 @@ public class VentanaSeleccionRival implements Disposable {
         this.visible = true;
         ventanaTable.clear();
 
-        // BOTON CERRAR
+        // BOTÓN CERRAR
         Image btnCerrar = new Image(botonCerrarTexture);
         btnCerrar.setScaling(Scaling.fit);
 
@@ -116,7 +117,6 @@ public class VentanaSeleccionRival implements Disposable {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         ocultar();
-                        // Transición a GameScreen (puedes pasarle parámetros si tu constructor de GameScreen lo requiere)
                         game.setScreen(new GameScreen(game));
                     }
                 });
@@ -140,7 +140,6 @@ public class VentanaSeleccionRival implements Disposable {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         ocultar();
-                        // Transición a GameScreen
                         game.setScreen(new GameScreen(game));
                     }
                 });

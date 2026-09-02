@@ -2,13 +2,13 @@ package com.afs.dragbits.funcionalidades;
 
 /*IMPORTANTE!!!!!! ahora reinicia el auto a la posicion original, cuando este hecho lo demas se pierde la carrera*/
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.afs.dragbits.autos.Auto;
+import com.afs.dragbits.util.SpriteSheetLoader;
 
 /**controla la secuencia del semaforo de largada, la deteccion de salida en falso
  * y el renderizado en la parte superior central de la pantalla.
@@ -48,16 +48,11 @@ public class Semaforo {
         camaraHUD = new OrthographicCamera();
         camaraHUD.setToOrtho(false, anchoPantalla, altoPantalla);
 
-        // Carga del sprite
-        spriteSheet = new Texture(Gdx.files.internal("sprites/HUD/Semaforo-sheet.png"));
-        spriteSheet.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        // Carga del sprite usando SpriteSheetLoader
+        spriteSheet = SpriteSheetLoader.cargarTextura("sprites/HUD/Semaforo-sheet.png");
 
-        // recorte de los 6 frames, 60x180 px
-        TextureRegion[][] tmp = TextureRegion.split(spriteSheet, 60, 180);
-        frames = new TextureRegion[6];
-        for (int i = 0; i < 6; i++) {
-            frames[i] = tmp[0][i];
-        }
+        // Recorte directo de los 6 frames (60x180 px)
+        frames = SpriteSheetLoader.recortar(spriteSheet, 60, 180, 6);
 
         iniciarSecuencia();
     }
