@@ -30,7 +30,7 @@ public class Semaforo {
     private Texture spriteSheet;
     private TextureRegion[] frames;
 
-    // Dimensiones visuales en pantalla
+    // Dimensiones
     private final float ancho = 120f;
     private final float alto = 360f;
 
@@ -48,11 +48,11 @@ public class Semaforo {
         camaraHUD = new OrthographicCamera();
         camaraHUD.setToOrtho(false, anchoPantalla, altoPantalla);
 
-        // Carga del sprite sheet
+        // Carga del sprite
         spriteSheet = new Texture(Gdx.files.internal("sprites/HUD/Semaforo-sheet.png"));
         spriteSheet.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-        // Recorte de los 6 frames (60x180 px cada uno)
+        // recorte de los 6 frames, 60x180 px
         TextureRegion[][] tmp = TextureRegion.split(spriteSheet, 60, 180);
         frames = new TextureRegion[6];
         for (int i = 0; i < 6; i++) {
@@ -76,7 +76,7 @@ public class Semaforo {
     public void actualizar(Auto auto, float delta) {
         if (estadoActual == EstadoSemaforo.FINALIZADO) return;
 
-        // --- DETECCIÓN DE SALIDA EN FALSO ---
+        //SALIDA EN FALSO
         // Si el semaforo no esta en VERDE y el auto tiene movimiento físico (velocidad > 0)
         if (estadoActual != EstadoSemaforo.VERDE && estadoActual != EstadoSemaforo.SALIDA_FALSO) {
             if (auto.getVelocidad() > 0) {
@@ -87,7 +87,7 @@ public class Semaforo {
             }
         }
 
-        // --- SECUENCIA DE TIEMPOS DE LUCES ---
+        // TIEMPOS DE LUCES
         temporizador += delta;
 
         if (estadoActual == EstadoSemaforo.VERDE) {
@@ -136,7 +136,7 @@ public class Semaforo {
 
         batch.setProjectionMatrix(camaraHUD.combined);
 
-        // Posición: Arriba en el centro
+        // posicion
         float posX = (anchoPantalla / 2f) - (ancho / 2f);
         float posY = altoPantalla - alto - 10f; // 10px de margen respecto al borde superior
 
@@ -156,7 +156,7 @@ public class Semaforo {
 
     private void resetearAuto(Auto auto) {
         auto.setVelocidad(0f);
-        auto.setPosX(posXInicialAuto); // Ahora reinicia en la posición calculada por Picodromo
+        auto.setPosX(posXInicialAuto); // reinicia la posicion calculada por Picodromo
         auto.setMarchaActual(0);
     }
 

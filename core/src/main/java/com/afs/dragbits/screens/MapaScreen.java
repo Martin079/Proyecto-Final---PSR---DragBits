@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.afs.dragbits.Main;
 import com.afs.dragbits.ciudad.Burbuja;
-import com.afs.dragbits.ciudad.interfaz;
+import com.afs.dragbits.ciudad.Interfaz;
 import com.afs.dragbits.menurivales.VentanaSeleccionRival;
 import com.afs.dragbits.jugador.Jugador;
 
@@ -32,11 +32,11 @@ public class MapaScreen implements Screen {
     private List<Burbuja> burbujas;
     private Vector3 mouseCoordsVirtuales;
 
-    // Integración de Jugador y HUD
+    // Jugador y HUD
     private Jugador jugador;
-    private interfaz interfazCiudad;
+    private Interfaz interfazCiudad;
 
-    // Integración Ventana Seleccionar Rival
+    // ventana Seleccionar Rival
     private VentanaSeleccionRival ventanaRival;
 
     private static final float ANCHO_VIRTUAL = 1280f;
@@ -45,7 +45,7 @@ public class MapaScreen implements Screen {
     public MapaScreen(Main game) {
         this.game = game;
 
-        // 1. Instanciar y Cargar el progreso persistido del Jugador
+        //  Instanciar y Cargar el progreso del Jugador
         this.jugador = new Jugador();
         this.jugador.cargarProgreso();
     }
@@ -54,7 +54,7 @@ public class MapaScreen implements Screen {
     public void show() {
         batch = new SpriteBatch();
 
-        // Configurar volumen para el Mapa (Reducido al 40%)
+        // volumen en el mapa
         if (game.getMusicaFondo() != null) {
             game.getMusicaFondo().setVolume(0.4f);
             if (!game.getMusicaFondo().isPlaying()) {
@@ -62,7 +62,7 @@ public class MapaScreen implements Screen {
             }
         }
 
-        // 2. Recargar progreso por si cambió al volver de otra pantalla
+        // recargar progreso por si cambio al volver de otra pantalla
         if (jugador != null) {
             jugador.cargarProgreso();
         }
@@ -72,13 +72,13 @@ public class MapaScreen implements Screen {
 
         mouseCoordsVirtuales = new Vector3();
 
-        // Carga del HUD de la Ciudad
-        interfazCiudad = new interfaz(batch, jugador);
+        // carga del HUD de la Ciudad
+        interfazCiudad = new Interfaz(batch, jugador);
 
-        // Instancia de la Ventana de Selección de Rival
+        // instancia de la ventana de Selección de Rival
         ventanaRival = new VentanaSeleccionRival(game, viewport, () -> ventanaRival.ocultar());
 
-        // Carga de Texturas
+        // Texturas
         mapaTexture = new Texture(Gdx.files.internal("sprites/Ciudad/Mapa.png"));
         mapaTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
@@ -100,27 +100,27 @@ public class MapaScreen implements Screen {
         float offsetX = anchoBurbuja / 2f;
         float offsetY = altoBurbuja / 2f;
 
-        // 1. Carreras Legales
+        //  Carreras Legales
         burbujas.add(new Burbuja(100f - offsetX, 170f - offsetY, anchoBurbuja, altoBurbuja, frameLegales, () -> {
             abrirVentanaRival(VentanaSeleccionRival.TipoCarrera.LEGAL, 0);
         }));
 
-        // 2. Carreras Ilegales
+        // Carreras Ilegales
         burbujas.add(new Burbuja(580f - offsetX, 590f - offsetY, anchoBurbuja, altoBurbuja, frameIlegales, () -> {
             abrirVentanaRival(VentanaSeleccionRival.TipoCarrera.ILEGAL, 0);
         }));
 
-        // 3. Tienda de Mejoras
+        // Tienda de Mejoras
         burbujas.add(new Burbuja(1015f - offsetX, 390f - offsetY, anchoBurbuja, altoBurbuja, frameMejoras, () -> {
             System.out.println("Entrando a Tienda de Mejoras...");
         }));
 
-        // 4. Tienda de Autos
+        //Tienda de Autos
         burbujas.add(new Burbuja(350f - offsetX, 594f - offsetY, anchoBurbuja, altoBurbuja, frameAutos, () -> {
             System.out.println("Entrando a Tienda de Autos...");
         }));
 
-        // 5. Modo Online
+        // Modo Online
         burbujas.add(new Burbuja(1010f - offsetX, 180f - offsetY, anchoBurbuja, altoBurbuja, frameOnline, () -> {
             System.out.println("Entrando a Modo Online...");
         }));
@@ -155,7 +155,7 @@ public class MapaScreen implements Screen {
         viewport.apply();
         batch.setProjectionMatrix(camara.combined);
 
-        // --- 1. DIBUJADO DE LA CIUDAD Y OBJETOS ---
+        //DIBUJADO DE LA CIUDAD Y OBJETOS
         batch.begin();
         batch.draw(mapaTexture, 0, 0, ANCHO_VIRTUAL, ALTO_VIRTUAL);
 
@@ -164,10 +164,10 @@ public class MapaScreen implements Screen {
         }
         batch.end();
 
-        // --- 2. DIBUJADO DEL HUD ---
+        // DIBUJADO DEL HUD
         interfazCiudad.render();
 
-        // --- 3. DIBUJADO DE LA VENTANA (SI ESTÁ ACTIVA) ---
+        //DIBUJADO DE LA VENTANA
         ventanaRival.render(delta);
     }
 

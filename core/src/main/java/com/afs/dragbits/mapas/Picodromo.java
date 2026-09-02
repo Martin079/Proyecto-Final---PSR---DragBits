@@ -18,30 +18,30 @@ public class Picodromo {
     public Picodromo() {
         spriteSheet = new Texture("sprites/Pistas/Pista-sheet.png");
 
-        // Dividir el sheet de 3x1 regiones de 1080x1080
+        // dividir el sheet de 1080x1080px
         TextureRegion[][] regiones = TextureRegion.split(spriteSheet, 1080, 1080);
         regionLargada = regiones[0][0];
         regionIntermedia = regiones[0][1];
         regionMeta = regiones[0][2];
 
-        // Posición X donde se dibuja el tile de la Meta
+        // posición X donde se dibuja la Meta
         this.xMeta = (1 + CANTIDAD_INTERMEDIAS) * ANCHO_SECCION;
     }
 
     public void dibujar(SpriteBatch batch, float altoPantalla) {
         float xActual = 0f;
 
-        // 1. Dibujar Largada
+        // Largada
         batch.draw(regionLargada, xActual, 0, ANCHO_SECCION, altoPantalla);
         xActual += ANCHO_SECCION;
 
-        // 2. Dibujar Secciones Intermedias (4 o más)
+        // Secciones Intermedias
         for (int i = 0; i < CANTIDAD_INTERMEDIAS; i++) {
             batch.draw(regionIntermedia, xActual, 0, ANCHO_SECCION, altoPantalla);
             xActual += ANCHO_SECCION;
         }
 
-        // 3. Dibujar Meta
+        //Meta
         batch.draw(regionMeta, xActual, 0, ANCHO_SECCION, altoPantalla);
     }
 

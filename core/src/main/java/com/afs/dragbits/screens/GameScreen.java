@@ -37,19 +37,19 @@ public class GameScreen implements Screen {
     // Datos del Jugador
     private Jugador datosJugador;
 
-    // Viewport de interfaz fija
+    // viewport de interfaz fija
     private OrthographicCamera camaraUI;
     private Viewport viewportUI;
     private Vector3 mouseCoords;
 
-    // Funcionalidades y HUD
+    // funcionalidades y HUD
     private Acelerador acelerador;
     private CajaDeCambios cajaDeCambios;
     private Semaforo semaforo;
     private Basicos hudBasicos;
     private Palanca hudPalanca;
 
-    // Estado de carrera y UI Fin de Carrera
+    // Estado de carrera y UI fin de carrera
     private boolean carreraFinalizada;
     private boolean jugadorGano;
     private boolean recompensaOtorgada;
@@ -70,7 +70,7 @@ public class GameScreen implements Screen {
     public void show() {
         batch = new SpriteBatch();
 
-        // Configurar volumen para la Carrera (Reducido al 20%)
+        // volumen de musica en carrera
         if (game.getMusicaFondo() != null) {
             game.getMusicaFondo().setVolume(0.2f);
             if (!game.getMusicaFondo().isPlaying()) {
@@ -84,7 +84,7 @@ public class GameScreen implements Screen {
         datosJugador = new Jugador();
         datosJugador.cargarProgreso();
 
-        // Camara de interfaz fija
+        // Camara fija
         camaraUI = new OrthographicCamera();
         viewportUI = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camaraUI);
         mouseCoords = new Vector3();
@@ -179,7 +179,7 @@ public class GameScreen implements Screen {
 
         ScreenUtils.clear(0, 0, 0, 1);
 
-        // 1. Renderizar Mundo
+        // renderizar Mundo
         batch.begin();
         camaraJugador.aplicarACamara(batch);
         picodromo.dibujar(batch, Gdx.graphics.getHeight());
@@ -187,14 +187,14 @@ public class GameScreen implements Screen {
         autoRival.dibujar(batch);
         batch.end();
 
-        // 2. Renderizar HUD
+        // renderizar HUD
         batch.begin();
         hudBasicos.dibujar(batch, autoJugador, Gdx.graphics.getWidth());
         hudPalanca.dibujar(batch, cajaDeCambios, Gdx.graphics.getWidth());
         semaforo.dibujar(batch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
 
-        // 3. Renderizar Result UI
+        // renderizar resultado
         if (carreraFinalizada) {
             viewportUI.apply();
             batch.setProjectionMatrix(camaraUI.combined);

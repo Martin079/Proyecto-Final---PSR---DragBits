@@ -12,12 +12,12 @@ public class Jugador {
     private long experienciaSiguienteNivel;
     private long dinero;
 
-    // Constructor por defecto (nuevo jugador)
+    // constructor por defecto (nuevo jugador)
     public Jugador() {
         this(1, 0, 0);
     }
 
-    // Constructor parametrizado (útil para pruebas o cargar partidas)
+    // constructor parametrizado (cargar partidas)
     public Jugador(int nivelInicial, long experienciaInicial, long dineroInicial) {
         this.nivel = Math.max(1, nivelInicial);
         this.experienciaActual = Math.max(0, experienciaInicial);
@@ -25,9 +25,8 @@ public class Jugador {
         this.experienciaSiguienteNivel = calcularExperienciaRequerida(this.nivel);
     }
 
-    /** Cálculo de XP requerida para pasar del nivel actual al siguiente */
+    /** calculo de XP requerida para pasar del nivel actual al siguiente */
     public long calcularExperienciaRequerida(int nivelActual) {
-        // Nivel 1: 200 XP | Nivel 2: 800 XP | Nivel 3: 1800 XP | Nivel 4: 3200 XP
         return (long) (200 * Math.pow(nivelActual, 2));
     }
 
@@ -51,7 +50,7 @@ public class Jugador {
         return subioDeNivel;
     }
 
-    // --- MANEJO DE DINERO ---
+    // DINERO
 
     public void sumarDinero(long cantidad) {
         if (cantidad > 0) {
@@ -67,9 +66,9 @@ public class Jugador {
         return false; // Dinero insuficiente
     }
 
-    // --- SITEMA DE GUARDADO Y CARGA (LibGDX Preferences) ---
+    //GUARDADO Y CARGA
 
-    /** Guardar estado actual del jugador en disco */
+    /** guardar estado actual del jugador en disco */
     public void guardarProgreso() {
         Preferences prefs = Gdx.app.getPreferences(PREFS_NAME);
         prefs.putInteger("nivel", this.nivel);
@@ -79,7 +78,7 @@ public class Jugador {
         Gdx.app.log("Jugador", "Progreso guardado correctamente.");
     }
 
-    /** Cargar estado guardado previamente. Si no existe, mantiene los valores por defecto. */
+    /** cargar estado guardado previamente.*/
     public void cargarProgreso() {
         Preferences prefs = Gdx.app.getPreferences(PREFS_NAME);
         if (prefs.contains("nivel")) {
@@ -98,14 +97,14 @@ public class Jugador {
         prefs.flush();
     }
 
-    // --- GETTERS Y SETTERS ---
+    // GETTERS Y SETTERS
 
     public int getNivel() { return nivel; }
     public long getExperienciaActual() { return experienciaActual; }
     public long getExperienciaSiguienteNivel() { return experienciaSiguienteNivel; }
     public long getDinero() { return dinero; }
 
-    // Setters manuales por si necesitas forzar valores específicos
+    // Setters manuales
     public void setNivel(int nivel) {
         this.nivel = Math.max(1, nivel);
         this.experienciaSiguienteNivel = calcularExperienciaRequerida(this.nivel);

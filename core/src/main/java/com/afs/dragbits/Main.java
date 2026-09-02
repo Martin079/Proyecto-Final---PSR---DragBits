@@ -11,10 +11,10 @@ public class Main extends Game {
 
     @Override
     public void create() {
-        // Cargar música de fondo global
+        // musica de fondo global
         musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("audio/Musica/musica 1.mp3"));
-        musicaFondo.setLooping(true); // Repetición en bucle
-        musicaFondo.setVolume(1.0f);  // Volumen inicial
+        musicaFondo.setLooping(true);
+        musicaFondo.setVolume(1.0f);
         musicaFondo.play();
 
         this.setScreen(new MainMenuScreen(this));

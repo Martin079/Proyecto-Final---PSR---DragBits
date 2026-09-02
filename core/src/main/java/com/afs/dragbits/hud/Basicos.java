@@ -17,7 +17,7 @@ public class Basicos {
 
         fuente = new BitmapFont();
         fuente.setColor(Color.valueOf("4DA6FF"));
-        fuente.getData().setScale(1.8f); // Texto más grande para acompañar el HUD
+        fuente.getData().setScale(1.8f);
     }
 
     public void dibujar(SpriteBatch batch, Auto auto, float anchoPantalla) {
@@ -28,7 +28,7 @@ public class Basicos {
         String marchaStr = (auto.getMarchaActual() == 0) ? "N" : String.valueOf(auto.getMarchaActual());
         String embragueStr = auto.isEmbraguePresionado() ? " [EMBRAGUE]" : "";
 
-        // Posición ajustada a la izquierda del borde para dar margen al texto grande
+        // posicion a la izquierda
         float posX = anchoPantalla - 310f;
         float posY = 110f;
 

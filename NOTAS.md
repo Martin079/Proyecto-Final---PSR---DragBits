@@ -1,13 +1,4 @@
-package com.afs.dragbits;
-
-/*------------------------------
-Solo para dejar un par de anotaciones para tener en cuenta
-----------------------------------*/
-
-
-public class notas {
-
-    /*posibles Valores de mejora aproximados para cada nivel
+    posibles Valores de mejora aproximados para cada nivel
     *
     * Nivel 1: Auto Base de Inicio (Sin mejoras en la tienda).
     * Nivel 2: Aceleración I (-0.15s en 0-100 km/h) | Tracción I (-10% patinaje inicial).
@@ -30,10 +21,9 @@ public class notas {
     *  Nivel 19: Potencia del Nitro IV (+12% empuje al activar nitro) | Caja de Cambios IV (+10% margen de tiempo para cambios perfectos).
     *  Nivel 20: Velocidad Máxima V (Élite) (+8 km/h a la V-Max) | Tracción V (Élite) (Patinaje casi nulo en largada).
     *
-    * */
 
 
-    /*posibles estadisticas para cada auto y recompensas/costo
+    posibles estadisticas para cada auto y recompensas/costo
     *
     *
     *Multiplicadores de Dificultad y Recompensas
@@ -102,9 +92,4 @@ public class notas {
     * Rival 5 (Líder de la Red)
     * Exigencia: Auto 3 Full Tuned
     * Stats Bot: $285\text{ km/h}$ V-Max | $3.2\text{ s}$ (0-100) | Nitro (5s)
-    * Recompensas: Fácil $2,000\text{ XP}$ | Medio $2,400\text{ XP}$ | Difícil $3,200\text{ XP}$    *
-    *
-    *
-    * */
-
-}
+    * Recompensas: Fácil $2,000\text{ XP}$ | Medio $2,400\text{ XP}$ | Difícil $3,200\text{ XP}$   

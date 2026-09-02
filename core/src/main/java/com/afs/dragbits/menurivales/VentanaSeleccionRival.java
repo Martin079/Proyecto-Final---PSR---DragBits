@@ -26,7 +26,7 @@ public class VentanaSeleccionRival implements Disposable {
     private Stage stage;
     private boolean visible = false;
 
-    // Recogida de Recursos
+    // Recursos
     private Texture fondoOscuroTexture;
     private Texture menuAutosSheet;
     private Texture botonCerrarTexture;
@@ -44,7 +44,7 @@ public class VentanaSeleccionRival implements Disposable {
     }
 
     private void cargarRecursos() {
-        // Fondo gris oscuro semitransparente casi opaco (Alpha 0.9)
+        // Fondo gris oscuro semitransparente
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(new Color(0.1f, 0.1f, 0.1f, 0.90f));
         pixmap.fill();
@@ -61,7 +61,7 @@ public class VentanaSeleccionRival implements Disposable {
         }
         frameBloqueado = tmp[0][13]; // Ícono '?'
 
-        // Botón Cerrar
+        // Boton Cerrar
         botonCerrarTexture = new Texture(Gdx.files.internal("sprites/Botones/Boton cerrar.png"));
     }
 
@@ -69,7 +69,7 @@ public class VentanaSeleccionRival implements Disposable {
         Table root = new Table();
         root.setFillParent(true);
 
-        // Panel Central
+        // panel Central
         ventanaTable = new Table();
         ventanaTable.setBackground(new TextureRegionDrawable(new TextureRegion(fondoOscuroTexture)));
         ventanaTable.pad(20);
@@ -82,7 +82,7 @@ public class VentanaSeleccionRival implements Disposable {
         this.visible = true;
         ventanaTable.clear();
 
-        // 1. BOTÓN DE CERRAR
+        // BOTON CERRAR
         Image btnCerrar = new Image(botonCerrarTexture);
         btnCerrar.setScaling(Scaling.fit);
 
@@ -98,11 +98,11 @@ public class VentanaSeleccionRival implements Disposable {
         topBar.add(btnCerrar).size(80, 80).right();
         ventanaTable.add(topBar).growX().padBottom(15).row();
 
-        // 2. CONTENEDOR DE RIVALES (3 Arriba / 2 Abajo)
+        // CONTENEDOR DE RIVALES (3 Arriba / 2 Abajo)
         Table grillaRivales = new Table();
         int offsetInicio = (tipoCarrera == TipoCarrera.LEGAL) ? 0 : 5;
 
-        // --- FILA SUPERIOR (3 Rivales) ---
+        // FILA SUPERIOR (3 Rivales)
         Table filaArriba = new Table();
         for (int i = 0; i < 3; i++) {
             int indiceRival = i;
@@ -126,7 +126,7 @@ public class VentanaSeleccionRival implements Disposable {
         }
         grillaRivales.add(filaArriba).padBottom(15).row();
 
-        // --- FILA INFERIOR (2 Rivales) ---
+        // FILA INFERIOR (2 Rivales)
         Table filaAbajo = new Table();
         for (int i = 3; i < 5; i++) {
             int indiceRival = i;

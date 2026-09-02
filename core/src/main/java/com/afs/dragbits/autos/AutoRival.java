@@ -24,14 +24,14 @@ public class AutoRival extends com.afs.dragbits.autos.Auto {
 
 
     public void actualizarIA(float delta, Semaforo.EstadoSemaforo estadoSemaforo) {
-        // 1. Iniciar marcha cuando el semáforo pasa a VERDE
+        // 1. inicia la marcha cuando el semaforo pasa a VERDE
         if (estadoSemaforo == Semaforo.EstadoSemaforo.VERDE && marchaActual == 0) {
             marchaActual = 1;
         }
 
-        // 2. Si la carrera ya arrancó (marcha > 0)
+        // 2. si la carrera ya arranco
         if (marchaActual > 0) {
-            // Manejo de la simulación de embrague/cambio
+            //simulacion de embrague/cambio
             if (embraguePresionado) {
                 tiempoSiguienteCambio -= delta;
                 if (tiempoSiguienteCambio <= 0) {
@@ -40,16 +40,16 @@ public class AutoRival extends com.afs.dragbits.autos.Auto {
             } else {
                 acelerar(delta);
 
-                // Cambiar de marcha automáticamente cerca de la zona óptima de RPM
+                // cambiar de marcha cerca de la zona óptima de RPM
                 if (rpm >= (rpmMaximas - 600f) && marchaActual < (relacionesTransmision.length - 1)) {
                     marchaActual++;
                     embraguePresionado = true;
-                    tiempoSiguienteCambio = 0.18f; // Tiempo que tarda el bot en meter el cambio
+                    tiempoSiguienteCambio = 0.18f; // tiempo que tarda en meter el cambio
                 }
             }
         }
 
-        // Actualizar posición física y tiempo de animación
+        // actualizar posición física y tiempo de animacion
         actualizar(delta);
     }
 

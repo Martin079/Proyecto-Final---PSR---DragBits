@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -38,9 +37,6 @@ public class MainMenuScreen extends InputAdapter implements Screen {
     private float[] optionYPositions = new float[2];
     private float optionHeight = 60f;
 
-    // Instancia de música de fondo
-    private Music musicaFondo;
-
     public MainMenuScreen(Main game) {
         this.game = game;
 
@@ -51,18 +47,12 @@ public class MainMenuScreen extends InputAdapter implements Screen {
 
         titleFont = new BitmapFont();
         optionFont = new BitmapFont();
-
-        // Cargar y configurar la música
-        musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("audio/Musica/musica 1.mp3"));
-        musicaFondo.setLooping(true);
-        musicaFondo.setVolume(1.0f); // Volumen alto para el Menú
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(this);
 
-        // Ajustar volumen del menú (Fuerte)
         if (game.getMusicaFondo() != null) {
             game.getMusicaFondo().setVolume(1.0f);
             if (!game.getMusicaFondo().isPlaying()) {
@@ -172,9 +162,6 @@ public class MainMenuScreen extends InputAdapter implements Screen {
         batch.dispose();
         titleFont.dispose();
         optionFont.dispose();
-        if (musicaFondo != null) {
-            musicaFondo.dispose();
-        }
     }
 
     @Override public void pause() {}

@@ -75,3 +75,5 @@
 ### Fix 2/9/2026
 - Cambios en el nombre de los sprites para evitar errores por mayusculas/minusculas
 - Cambios de nombre de Mayuscula a minuscula en los package
+- Cambio de clase nota a archivo .md
+- Correccion de carga de musica dos veces donde una no se utilizaba ocupando memoria
