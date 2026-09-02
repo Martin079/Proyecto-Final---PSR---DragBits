@@ -79,3 +79,4 @@
 - Correccion de carga de musica dos veces donde una no se utilizaba ocupando memoria
 - Añadido clase SpriteSheetLoader para reutilizar la carga de sprites
 - Añadido clase TexturaSolidaFactory para reutilizar la creacion de fondos solidos y lisos
+- Refactorizacion de VentanaSeleccionRival para evitar duplicidad de codigo

@@ -97,55 +97,44 @@ public class VentanaSeleccionRival implements Disposable {
 
         // CONTENEDOR DE RIVALES (3 Arriba / 2 Abajo)
         Table grillaRivales = new Table();
-        int offsetInicio = (tipoCarrera == TipoCarrera.LEGAL) ? 0 : 5;
 
-        // FILA SUPERIOR (3 Rivales)
-        Table filaArriba = new Table();
-        for (int i = 0; i < 3; i++) {
-            int indiceRival = i;
-            boolean desbloqueado = indiceRival <= maxRivalDesbloqueado;
-            TextureRegion region = desbloqueado ? framesRival[offsetInicio + indiceRival] : frameBloqueado;
-
-            ImageButton btnRival = new ImageButton(new TextureRegionDrawable(region));
-            btnRival.getImage().setScaling(Scaling.fit);
-            if (desbloqueado) {
-                btnRival.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        ocultar();
-                        game.setScreen(new GameScreen(game));
-                    }
-                });
-            }
-
-            filaArriba.add(btnRival).size(150, 150).pad(15);
-        }
+        // FILA SUPERIOR (3 rivales
+        Table filaArriba = crearFilaRivales(0, 3, tipoCarrera, maxRivalDesbloqueado);
         grillaRivales.add(filaArriba).padBottom(15).row();
 
-        // FILA INFERIOR (2 Rivales)
-        Table filaAbajo = new Table();
-        for (int i = 3; i < 5; i++) {
-            int indiceRival = i;
-            boolean desbloqueado = indiceRival <= maxRivalDesbloqueado;
-            TextureRegion region = desbloqueado ? framesRival[offsetInicio + indiceRival] : frameBloqueado;
-
-            ImageButton btnRival = new ImageButton(new TextureRegionDrawable(region));
-            btnRival.getImage().setScaling(Scaling.fit);
-            if (desbloqueado) {
-                btnRival.addListener(new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        ocultar();
-                        game.setScreen(new GameScreen(game));
-                    }
-                });
-            }
-
-            filaAbajo.add(btnRival).size(150, 150).pad(15);
-        }
+        // FILA INFERIOR (2 rivales)
+        Table filaAbajo = crearFilaRivales(3, 5, tipoCarrera, maxRivalDesbloqueado);
         grillaRivales.add(filaAbajo).row();
 
         ventanaTable.add(grillaRivales).expand().center();
+    }
+
+    private Table crearFilaRivales(int inicio, int fin, TipoCarrera tipoCarrera, int maxRivalDesbloqueado) {
+        Table fila = new Table();
+        int offsetInicio = (tipoCarrera == TipoCarrera.LEGAL) ? 0 : 5;
+
+        for (int i = inicio; i < fin; i++) {
+            int indiceRival = i;
+            boolean desbloqueado = indiceRival <= maxRivalDesbloqueado;
+            TextureRegion region = desbloqueado ? framesRival[offsetInicio + indiceRival] : frameBloqueado;
+
+            ImageButton btnRival = new ImageButton(new TextureRegionDrawable(region));
+            btnRival.getImage().setScaling(Scaling.fit);
+
+            if (desbloqueado) {
+                btnRival.addListener(new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        ocultar();
+                        game.setScreen(new GameScreen(game));
+                    }
+                });
+            }
+
+            fila.add(btnRival).size(150, 150).pad(15);
+        }
+
+        return fila;
     }
 
     public void ocultar() {
