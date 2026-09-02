@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,6 +23,7 @@ import com.afs.dragbits.funcionalidades.Acelerador;
 import com.afs.dragbits.funcionalidades.CajaDeCambios;
 import com.afs.dragbits.funcionalidades.Semaforo;
 import com.afs.dragbits.mapas.Picodromo;
+import com.afs.dragbits.util.TexturaSolidaFactory;
 
 public class GameScreen implements Screen {
 
@@ -119,17 +119,11 @@ public class GameScreen implements Screen {
     }
 
     private void crearCartelUI() {
-        Pixmap pixmapFondo = new Pixmap(460, 240, Pixmap.Format.RGBA8888);
-        pixmapFondo.setColor(0, 0, 0, 0.85f);
-        pixmapFondo.fill();
-        texturaCartel = new Texture(pixmapFondo);
-        pixmapFondo.dispose();
+        // Fondo del cartel usando TexturaSolidaFactory
+        texturaCartel = TexturaSolidaFactory.crearTextura(460, 240, new Color(0, 0, 0, 0.85f));
 
-        Pixmap pixmapBoton = new Pixmap(220, 50, Pixmap.Format.RGBA8888);
-        pixmapBoton.setColor(Color.valueOf("27ae60"));
-        pixmapBoton.fill();
-        texturaBoton = new Texture(pixmapBoton);
-        pixmapBoton.dispose();
+        // Fondo del botón usando TexturaSolidaFactory
+        texturaBoton = TexturaSolidaFactory.crearTextura(220, 50, Color.valueOf("27ae60"));
 
         fuenteTexto = new BitmapFont();
         fuenteTexto.setColor(Color.WHITE);

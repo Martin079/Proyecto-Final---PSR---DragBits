@@ -2,9 +2,9 @@ package com.afs.dragbits.ciudad;
 
 import com.afs.dragbits.jugador.Jugador;
 import com.afs.dragbits.util.SpriteSheetLoader;
+import com.afs.dragbits.util.TexturaSolidaFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -55,15 +55,11 @@ public class Interfaz implements Disposable {
     }
 
     private void cargarRecursos() {
-        // fondo gris oscuro semitransparente
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(0.15f, 0.15f, 0.15f, 0.75f));
-        pixmap.fill();
-        fondoGrisTexture = new Texture(pixmap);
-        pixmap.dispose();
+        // fondo gris oscuro semitransparente usando la fabrica
+        fondoGrisTexture = TexturaSolidaFactory.crearTextura(new Color(0.15f, 0.15f, 0.15f, 0.75f));
 
         // Cargar Texturas usando SpriteSheetLoader
-        billeteTexture = new Texture(Gdx.files.internal("sprites/Ciudad/Billete.png"));
+        billeteTexture = SpriteSheetLoader.cargarTextura("sprites/Ciudad/Billete.png");
 
         nivelSheetTexture = SpriteSheetLoader.cargarTextura("sprites/Ciudad/Nivel-sheet.png");
         framesNivel = SpriteSheetLoader.recortar(nivelSheetTexture, 41, 41, 9);

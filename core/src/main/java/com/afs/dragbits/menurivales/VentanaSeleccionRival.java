@@ -1,7 +1,6 @@
 package com.afs.dragbits.menurivales;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -17,6 +16,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.afs.dragbits.Main;
 import com.afs.dragbits.screens.GameScreen;
 import com.afs.dragbits.util.SpriteSheetLoader;
+import com.afs.dragbits.util.TexturaSolidaFactory;
 
 public class VentanaSeleccionRival implements Disposable {
 
@@ -44,12 +44,8 @@ public class VentanaSeleccionRival implements Disposable {
     }
 
     private void cargarRecursos() {
-        // Fondo gris oscuro semitransparente
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(new Color(0.1f, 0.1f, 0.1f, 0.90f));
-        pixmap.fill();
-        fondoOscuroTexture = new Texture(pixmap);
-        pixmap.dispose();
+        // Fondo gris oscuro semitransparente usando la fábrica
+        fondoOscuroTexture = TexturaSolidaFactory.crearTextura(new Color(0.1f, 0.1f, 0.1f, 0.90f));
 
         // Cargar sheet de 14 cuadros de 200x200 px usando SpriteSheetLoader
         menuAutosSheet = SpriteSheetLoader.cargarTextura("sprites/MenuAutos/Iconos autos-sheet.png");
