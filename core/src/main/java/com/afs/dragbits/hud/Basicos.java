@@ -1,4 +1,4 @@
-package com.afs.dragbits.HUD;
+package com.afs.dragbits.hud;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;

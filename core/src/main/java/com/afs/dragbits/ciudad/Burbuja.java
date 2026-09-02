@@ -1,4 +1,4 @@
-package com.afs.dragbits.Ciudad;
+package com.afs.dragbits.ciudad;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

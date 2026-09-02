@@ -11,10 +11,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.afs.dragbits.Main;
-import com.afs.dragbits.Ciudad.Burbuja;
-import com.afs.dragbits.Ciudad.HUD;
-import com.afs.dragbits.MenuRivales.VentanaSeleccionRival;
-import com.afs.dragbits.Jugador.Jugador;
+import com.afs.dragbits.ciudad.Burbuja;
+import com.afs.dragbits.ciudad.interfaz;
+import com.afs.dragbits.menurivales.VentanaSeleccionRival;
+import com.afs.dragbits.jugador.Jugador;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class MapaScreen implements Screen {
 
     // Integración de Jugador y HUD
     private Jugador jugador;
-    private HUD hudCiudad;
+    private interfaz interfazCiudad;
 
     // Integración Ventana Seleccionar Rival
     private VentanaSeleccionRival ventanaRival;
@@ -73,7 +73,7 @@ public class MapaScreen implements Screen {
         mouseCoordsVirtuales = new Vector3();
 
         // Carga del HUD de la Ciudad
-        hudCiudad = new HUD(batch, jugador);
+        interfazCiudad = new interfaz(batch, jugador);
 
         // Instancia de la Ventana de Selección de Rival
         ventanaRival = new VentanaSeleccionRival(game, viewport, () -> ventanaRival.ocultar());
@@ -134,7 +134,7 @@ public class MapaScreen implements Screen {
     @Override
     public void render(float delta) {
         if (!ventanaRival.isVisible() && Gdx.input.getInputProcessor() == ventanaRival.getStage()) {
-            Gdx.input.setInputProcessor(hudCiudad.getStage());
+            Gdx.input.setInputProcessor(interfazCiudad.getStage());
         }
 
         if (!ventanaRival.isVisible()) {
@@ -165,7 +165,7 @@ public class MapaScreen implements Screen {
         batch.end();
 
         // --- 2. DIBUJADO DEL HUD ---
-        hudCiudad.render();
+        interfazCiudad.render();
 
         // --- 3. DIBUJADO DE LA VENTANA (SI ESTÁ ACTIVA) ---
         ventanaRival.render(delta);
@@ -174,7 +174,7 @@ public class MapaScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
-        if (hudCiudad != null) hudCiudad.resize(width, height);
+        if (interfazCiudad != null) interfazCiudad.resize(width, height);
         if (ventanaRival != null) ventanaRival.resize(width, height);
     }
 
@@ -187,7 +187,7 @@ public class MapaScreen implements Screen {
         if (batch != null) batch.dispose();
         if (mapaTexture != null) mapaTexture.dispose();
         if (burbujasSheet != null) burbujasSheet.dispose();
-        if (hudCiudad != null) hudCiudad.dispose();
+        if (interfazCiudad != null) interfazCiudad.dispose();
         if (ventanaRival != null) ventanaRival.dispose();
     }
 }

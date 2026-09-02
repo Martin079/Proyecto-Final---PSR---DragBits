@@ -1,4 +1,4 @@
-package com.afs.dragbits.MenuRivales;
+package com.afs.dragbits.menurivales;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;

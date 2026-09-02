@@ -1,6 +1,6 @@
-package com.afs.dragbits.Ciudad;
+package com.afs.dragbits.ciudad;
 
-import com.afs.dragbits.Jugador.Jugador;
+import com.afs.dragbits.jugador.Jugador;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class HUD implements Disposable {
+public class interfaz implements Disposable {
 
     private Stage stage;
     private Jugador jugador;
@@ -44,7 +44,7 @@ public class HUD implements Disposable {
     private static final float DURACION_PAUSA_FRAME9 = 0.5f; // Pausa mostrando el frame 8 (icono 9)
     private static final float DURACION_TOTAL_ANIM = DURACION_CICLO_XP + DURACION_PAUSA_FRAME9;
 
-    public HUD(SpriteBatch batch, Jugador jugador) {
+    public interfaz(SpriteBatch batch, Jugador jugador) {
         this.jugador = jugador;
         this.nivelAnterior = jugador.getNivel();
         this.stage = new Stage(new ScreenViewport(), batch);

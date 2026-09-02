@@ -74,3 +74,4 @@
 
 ### Fix 2/9/2026
 - Cambios en el nombre de los sprites para evitar errores por mayusculas/minusculas
+- Cambios de nombre de Mayuscula a minuscula en los package

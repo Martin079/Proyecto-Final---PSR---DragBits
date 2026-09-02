@@ -1,4 +1,4 @@
-package com.afs.dragbits.Jugador;
+package com.afs.dragbits.jugador;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
