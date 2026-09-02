@@ -79,10 +79,10 @@ public class MapaScreen implements Screen {
         ventanaRival = new VentanaSeleccionRival(game, viewport, () -> ventanaRival.ocultar());
 
         // Carga de Texturas
-        mapaTexture = new Texture(Gdx.files.internal("Sprites/Ciudad/Mapa.png"));
+        mapaTexture = new Texture(Gdx.files.internal("sprites/Ciudad/Mapa.png"));
         mapaTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-        burbujasSheet = new Texture(Gdx.files.internal("Sprites/Ciudad/Burbuja mapa-sheet.png"));
+        burbujasSheet = new Texture(Gdx.files.internal("sprites/Ciudad/Burbuja mapa-sheet.png"));
         burbujasSheet.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
         TextureRegion[][] tmp = TextureRegion.split(burbujasSheet, 31, 45);

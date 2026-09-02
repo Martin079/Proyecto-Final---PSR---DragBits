@@ -53,7 +53,7 @@ public class Picodromo {
     }
 
     /**
-     * Posición de spawn inicial (3/4 de la sección de largada, de izquierda a derecha)
+     * Posición de spawn inicial
      */
     public float getPosicionSpawnX() {
         return ANCHO_SECCION * 0.55f;

@@ -62,8 +62,8 @@ public class HUD implements Disposable {
         pixmap.dispose();
 
         // 2. Cargar Texturas
-        billeteTexture = new Texture(Gdx.files.internal("Sprites/Ciudad/Billete.png"));
-        nivelSheetTexture = new Texture(Gdx.files.internal("Sprites/Ciudad/Nivel-sheet.png"));
+        billeteTexture = new Texture(Gdx.files.internal("sprites/Ciudad/Billete.png"));
+        nivelSheetTexture = new Texture(Gdx.files.internal("sprites/Ciudad/Nivel-sheet.png"));
 
         // Extraer los 9 frames de 41x41 px (asumiendo que están en fila horizontal)
         TextureRegion[][] tmp = TextureRegion.split(nivelSheetTexture, 41, 41);

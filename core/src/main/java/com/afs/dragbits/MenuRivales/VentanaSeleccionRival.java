@@ -62,7 +62,7 @@ public class VentanaSeleccionRival implements Disposable {
         frameBloqueado = tmp[0][13]; // Ícono '?'
 
         // Botón Cerrar
-        botonCerrarTexture = new Texture(Gdx.files.internal("Sprites/Botones/Boton cerrar.png"));
+        botonCerrarTexture = new Texture(Gdx.files.internal("sprites/Botones/Boton cerrar.png"));
     }
 
     private void crearEstructuraBase(Runnable accionCerrar) {

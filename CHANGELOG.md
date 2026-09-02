@@ -72,3 +72,5 @@
 ### Added 2/9/2026
 - Añadido de un único tema de fondo para cada "pantalla", con volumen distinto en cada uno
 
+### Fix 2/9/2026
+- Cambios en el nombre de los sprites para evitar errores por mayusculas/minusculas
