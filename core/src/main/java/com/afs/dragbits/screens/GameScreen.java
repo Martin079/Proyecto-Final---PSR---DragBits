@@ -69,6 +69,15 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         batch = new SpriteBatch();
+
+        // Configurar volumen para la Carrera (Reducido al 20%)
+        if (game.getMusicaFondo() != null) {
+            game.getMusicaFondo().setVolume(0.2f);
+            if (!game.getMusicaFondo().isPlaying()) {
+                game.getMusicaFondo().play();
+            }
+        }
+
         picodromo = new Picodromo();
 
         // Cargar progreso del Jugador
@@ -83,7 +92,7 @@ public class GameScreen implements Screen {
         // Instanciar auto del jugador
         autoJugador = new AutoJugador(picodromo.getPosicionSpawnX(), 130f);
 
-        // Instanciar Bot Rival (V-Max 155, Acel 45, Tracción 70, $800 recompensa, carril superior)
+        // Instanciar Bot Rival
         autoRival = new AutoRival(
             picodromo.getPosicionSpawnX(),
             230f,
@@ -110,16 +119,14 @@ public class GameScreen implements Screen {
     }
 
     private void crearCartelUI() {
-        // Fondo del cartel mas amplio para alojar textos de recompensa
         Pixmap pixmapFondo = new Pixmap(460, 240, Pixmap.Format.RGBA8888);
         pixmapFondo.setColor(0, 0, 0, 0.85f);
         pixmapFondo.fill();
         texturaCartel = new Texture(pixmapFondo);
         pixmapFondo.dispose();
 
-        // Textura del botón
         Pixmap pixmapBoton = new Pixmap(220, 50, Pixmap.Format.RGBA8888);
-        pixmapBoton.setColor(Color.valueOf("27ae60")); // Verde
+        pixmapBoton.setColor(Color.valueOf("27ae60"));
         pixmapBoton.fill();
         texturaBoton = new Texture(pixmapBoton);
         pixmapBoton.dispose();
@@ -127,7 +134,6 @@ public class GameScreen implements Screen {
         fuenteTexto = new BitmapFont();
         fuenteTexto.setColor(Color.WHITE);
 
-        // Posicionar el botón en el centro de la pantalla virtual
         float btnX = (ANCHO_VIRTUAL - 220f) / 2f;
         float btnY = (ALTO_VIRTUAL - 240f) / 2f + 20f;
         boundsBoton = new Rectangle(btnX, btnY, 220f, 50f);
@@ -135,28 +141,22 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        // Lógica de carrera
         if (!carreraFinalizada) {
             cajaDeCambios.actualizar(autoJugador, delta);
             acelerador.actualizar(autoJugador, delta);
             autoJugador.actualizar(delta);
 
-            // Actualizar lógica del Bot y semáforo
             autoRival.actualizarIA(delta, semaforo.getEstadoActual());
             semaforo.actualizar(autoJugador, delta);
 
-            // Detección de fin de carrera
             float metaX = picodromo.getPosicionLineaMeta();
             boolean jugadorCruzo = autoJugador.getFrenteX() >= metaX;
             boolean botCruzo = autoRival.getFrenteX() >= metaX;
 
             if (jugadorCruzo || botCruzo) {
                 carreraFinalizada = true;
-
-                // Determinamos el ganador comparando la posición de la trompa
                 jugadorGano = autoJugador.getFrenteX() >= autoRival.getFrenteX();
 
-                // Otorgar y guardar dinero una sola vez
                 if (jugadorGano && !recompensaOtorgada) {
                     datosJugador.sumarDinero(autoRival.getRecompensa());
                     datosJugador.guardarProgreso();
@@ -164,7 +164,6 @@ public class GameScreen implements Screen {
                 }
             }
         } else {
-            // Manejo de clic para regresar al MapaScreen
             if (Gdx.input.justTouched()) {
                 mouseCoords.set(Gdx.input.getX(), Gdx.input.getY(), 0);
                 viewportUI.unproject(mouseCoords);
@@ -178,7 +177,6 @@ public class GameScreen implements Screen {
 
         camaraJugador.actualizar(autoJugador);
 
-        // Rendering
         ScreenUtils.clear(0, 0, 0, 1);
 
         // 1. Renderizar Mundo
@@ -186,17 +184,17 @@ public class GameScreen implements Screen {
         camaraJugador.aplicarACamara(batch);
         picodromo.dibujar(batch, Gdx.graphics.getHeight());
         autoJugador.dibujar(batch);
-        autoRival.dibujar(batch); // Dibujar bot
+        autoRival.dibujar(batch);
         batch.end();
 
-        // 2. Renderizar HUD e Interfaz fija
+        // 2. Renderizar HUD
         batch.begin();
         hudBasicos.dibujar(batch, autoJugador, Gdx.graphics.getWidth());
         hudPalanca.dibujar(batch, cajaDeCambios, Gdx.graphics.getWidth());
         semaforo.dibujar(batch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
 
-        // 3. Renderizar Cartel de Resultado y Recompensa
+        // 3. Renderizar Result UI
         if (carreraFinalizada) {
             viewportUI.apply();
             batch.setProjectionMatrix(camaraUI.combined);
@@ -205,10 +203,8 @@ public class GameScreen implements Screen {
             float cartelX = (ANCHO_VIRTUAL - 460f) / 2f;
             float cartelY = (ALTO_VIRTUAL - 240f) / 2f;
 
-            // Panel de fondo
             batch.draw(texturaCartel, cartelX, cartelY);
 
-            // Mensajes según la victoria o derrota
             fuenteTexto.getData().setScale(2f);
             if (jugadorGano) {
                 fuenteTexto.setColor(Color.GOLD);
@@ -226,11 +222,9 @@ public class GameScreen implements Screen {
                 fuenteTexto.draw(batch, "Recompensa: +$0", cartelX + 165f, cartelY + 140f);
             }
 
-            // Mostrar el total del dinero acumulado (desde la clase Jugador)
             fuenteTexto.setColor(Color.WHITE);
             fuenteTexto.draw(batch, "Total: $" + datosJugador.getDinero(), cartelX + 175f, cartelY + 100f);
 
-            // Botón Volver al Mapa
             batch.draw(texturaBoton, boundsBoton.x, boundsBoton.y, boundsBoton.width, boundsBoton.height);
             fuenteTexto.getData().setScale(1.2f);
             fuenteTexto.draw(batch, "VOLVER AL MAPA", boundsBoton.x + 35f, boundsBoton.y + 32f);

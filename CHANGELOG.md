@@ -68,3 +68,7 @@
 
 ### Updated 2/9/2026
 - Cambio en el sprite para el auto del primer rival
+
+### Added 2/9/2026
+- Añadido de un único tema de fondo para cada "pantalla", con volumen distinto en cada uno
+

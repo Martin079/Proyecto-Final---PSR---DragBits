@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -26,7 +27,6 @@ public class MainMenuScreen extends InputAdapter implements Screen {
     private BitmapFont optionFont;
     private GlyphLayout layout;
 
-
     private final String titleText = "DRAG BITS";
     private final String[] options = {"START GAME", "EXIT"};
     private int selectedIndex = 0;
@@ -35,9 +35,11 @@ public class MainMenuScreen extends InputAdapter implements Screen {
     private final float SELECTED_SCALE = 2.5f;
     private float[] currentScales = {NORMAL_SCALE, NORMAL_SCALE};
 
-
     private float[] optionYPositions = new float[2];
     private float optionHeight = 60f;
+
+    // Instancia de música de fondo
+    private Music musicaFondo;
 
     public MainMenuScreen(Main game) {
         this.game = game;
@@ -47,18 +49,32 @@ public class MainMenuScreen extends InputAdapter implements Screen {
         batch = new SpriteBatch();
         layout = new GlyphLayout();
 
-
         titleFont = new BitmapFont();
         optionFont = new BitmapFont();
 
+        // Cargar y configurar la música
+        musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("audio/Musica/musica 1.mp3"));
+        musicaFondo.setLooping(true);
+        musicaFondo.setVolume(1.0f); // Volumen alto para el Menú
+    }
+
+    @Override
+    public void show() {
         Gdx.input.setInputProcessor(this);
+
+        // Ajustar volumen del menú (Fuerte)
+        if (game.getMusicaFondo() != null) {
+            game.getMusicaFondo().setVolume(1.0f);
+            if (!game.getMusicaFondo().isPlaying()) {
+                game.getMusicaFondo().play();
+            }
+        }
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 
         for (int i = 0; i < options.length; i++) {
             float targetScale = (i == selectedIndex) ? SELECTED_SCALE : NORMAL_SCALE;
@@ -69,13 +85,11 @@ public class MainMenuScreen extends InputAdapter implements Screen {
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
 
-
         titleFont.getData().setScale(4.0f);
         layout.setText(titleFont, titleText);
         float titleX = (viewport.getWorldWidth() - layout.width) / 2;
         float titleY = viewport.getWorldHeight() * 0.75f;
         titleFont.draw(batch, titleText, titleX, titleY);
-
 
         float startY = viewport.getWorldHeight() * 0.45f;
         float spacing = 80f;
@@ -89,7 +103,6 @@ public class MainMenuScreen extends InputAdapter implements Screen {
             optionYPositions[i] = y;
 
             optionFont.draw(batch, options[i], x, y);
-
 
             if (i == selectedIndex) {
                 float arrowX = x - 60f;
@@ -137,11 +150,9 @@ public class MainMenuScreen extends InputAdapter implements Screen {
 
     private void executeSelectedOption() {
         if (selectedIndex == 0) {
-
             game.setScreen(new MapaScreen(game));
             this.dispose();
         } else if (selectedIndex == 1) {
-
             Gdx.app.exit();
         }
     }
@@ -161,9 +172,11 @@ public class MainMenuScreen extends InputAdapter implements Screen {
         batch.dispose();
         titleFont.dispose();
         optionFont.dispose();
+        if (musicaFondo != null) {
+            musicaFondo.dispose();
+        }
     }
 
-    @Override public void show() {}
     @Override public void pause() {}
     @Override public void resume() {}
 }

@@ -54,6 +54,14 @@ public class MapaScreen implements Screen {
     public void show() {
         batch = new SpriteBatch();
 
+        // Configurar volumen para el Mapa (Reducido al 40%)
+        if (game.getMusicaFondo() != null) {
+            game.getMusicaFondo().setVolume(0.4f);
+            if (!game.getMusicaFondo().isPlaying()) {
+                game.getMusicaFondo().play();
+            }
+        }
+
         // 2. Recargar progreso por si cambió al volver de otra pantalla
         if (jugador != null) {
             jugador.cargarProgreso();

@@ -1,15 +1,27 @@
 package com.afs.dragbits;
 
-
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.afs.dragbits.screens.MainMenuScreen;
 
 public class Main extends Game {
 
+    private Music musicaFondo;
+
     @Override
     public void create() {
+        // Cargar música de fondo global
+        musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("audio/Musica/musica 1.mp3"));
+        musicaFondo.setLooping(true); // Repetición en bucle
+        musicaFondo.setVolume(1.0f);  // Volumen inicial
+        musicaFondo.play();
 
         this.setScreen(new MainMenuScreen(this));
+    }
+
+    public Music getMusicaFondo() {
+        return musicaFondo;
     }
 
     @Override
@@ -20,5 +32,8 @@ public class Main extends Game {
     @Override
     public void dispose() {
         super.dispose();
+        if (musicaFondo != null) {
+            musicaFondo.dispose();
+        }
     }
 }
