@@ -66,3 +66,5 @@
 ### Updated 1/9/2026
 - Sprite del primer auto y mejores efectos de velocidad y sensacion de movimiento
 
+### Updated 2/9/2026
+- Cambio en el sprite para el auto del primer rival
