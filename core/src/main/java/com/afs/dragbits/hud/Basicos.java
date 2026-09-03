@@ -1,19 +1,16 @@
 package com.afs.dragbits.hud;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.afs.dragbits.autos.Auto;
 
-public class Basicos {
+public class Basicos extends ElementoHUD {
 
-    private final OrthographicCamera camaraHUD;
     private final BitmapFont fuente;
 
     public Basicos(float anchoPantalla, float altoPantalla) {
-        camaraHUD = new OrthographicCamera();
-        camaraHUD.setToOrtho(false, anchoPantalla, altoPantalla);
+        super(anchoPantalla, altoPantalla);
 
         fuente = new BitmapFont();
         fuente.setColor(Color.valueOf("4DA6FF"));
@@ -21,7 +18,7 @@ public class Basicos {
     }
 
     public void dibujar(SpriteBatch batch, Auto auto, float anchoPantalla) {
-        batch.setProjectionMatrix(camaraHUD.combined);
+        aplicarProyeccion(batch);
 
         int velKmH = (int) auto.getVelocidad();
         int rpm = (int) auto.getRpm();
@@ -37,10 +34,7 @@ public class Basicos {
         fuente.draw(batch, "MARCHA: " + marchaStr + embragueStr, posX, posY - 70f);
     }
 
-    public void resize(float ancho, float alto) {
-        camaraHUD.setToOrtho(false, ancho, alto);
-    }
-
+    @Override
     public void dispose() {
         if (fuente != null) fuente.dispose();
     }

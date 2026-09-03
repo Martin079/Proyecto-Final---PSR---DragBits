@@ -21,9 +21,10 @@ import com.afs.dragbits.autos.AutoRival;
 import com.afs.dragbits.camara.SeguimientoJugador;
 import com.afs.dragbits.funcionalidades.Acelerador;
 import com.afs.dragbits.funcionalidades.CajaDeCambios;
-import com.afs.dragbits.funcionalidades.Semaforo;
+import com.afs.dragbits.hud.Semaforo;
 import com.afs.dragbits.mapas.Picodromo;
 import com.afs.dragbits.util.TexturaSolidaFactory;
+import com.afs.dragbits.jugador.RepositorioJugador;
 
 public class GameScreen implements Screen {
 
@@ -81,8 +82,9 @@ public class GameScreen implements Screen {
         picodromo = new Picodromo();
 
         // Cargar progreso del Jugador
-        datosJugador = new Jugador();
-        datosJugador.cargarProgreso();
+        RepositorioJugador repositorioJugador = new RepositorioJugador();
+        datosJugador = repositorioJugador.cargarJugador();
+
 
         // Camara fija
         camaraUI = new OrthographicCamera();
@@ -153,7 +155,7 @@ public class GameScreen implements Screen {
 
                 if (jugadorGano && !recompensaOtorgada) {
                     datosJugador.sumarDinero(autoRival.getRecompensa());
-                    datosJugador.guardarProgreso();
+                    new RepositorioJugador().guardarProgreso(datosJugador);
                     recompensaOtorgada = true;
                 }
             }

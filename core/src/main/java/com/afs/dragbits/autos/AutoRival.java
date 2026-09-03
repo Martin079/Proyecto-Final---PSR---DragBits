@@ -1,7 +1,7 @@
 package com.afs.dragbits.autos;
 
 import com.badlogic.gdx.graphics.Color;
-import com.afs.dragbits.funcionalidades.Semaforo;
+import com.afs.dragbits.hud.Semaforo;
 
 public class AutoRival extends com.afs.dragbits.autos.Auto {
 

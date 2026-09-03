@@ -1,8 +1,7 @@
-package com.afs.dragbits.funcionalidades;
+package com.afs.dragbits.hud;
 
 /*IMPORTANTE!!!!!! ahora reinicia el auto a la posicion original, cuando este hecho lo demas se pierde la carrera*/
 
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,10 +9,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.afs.dragbits.autos.Auto;
 import com.afs.dragbits.util.SpriteSheetLoader;
 
-/**controla la secuencia del semaforo de largada, la deteccion de salida en falso
+/**
+ * Controla la secuencia del semaforo de largada, la deteccion de salida en falso
  * y el renderizado en la parte superior central de la pantalla.
  */
-public class Semaforo {
+public class Semaforo extends ElementoHUD {
 
     public enum EstadoSemaforo {
         APAGADO,      // Frame 0
@@ -26,7 +26,6 @@ public class Semaforo {
     }
 
     private EstadoSemaforo estadoActual;
-    private final OrthographicCamera camaraHUD;
     private Texture spriteSheet;
     private TextureRegion[] frames;
 
@@ -43,10 +42,8 @@ public class Semaforo {
     private float posXInicialAuto;
 
     public Semaforo(float anchoPantalla, float altoPantalla, float posXInicialAuto) {
+        super(anchoPantalla, altoPantalla);
         this.posXInicialAuto = posXInicialAuto;
-
-        camaraHUD = new OrthographicCamera();
-        camaraHUD.setToOrtho(false, anchoPantalla, altoPantalla);
 
         // Carga del sprite usando SpriteSheetLoader
         spriteSheet = SpriteSheetLoader.cargarTextura("sprites/HUD/Semaforo-sheet.png");
@@ -57,7 +54,8 @@ public class Semaforo {
         iniciarSecuencia();
     }
 
-    /**reinicia o inicia la secuencia del semáforo desde el estado APAGADO.
+    /**
+     * reinicia o inicia la secuencia del semáforo desde el estado APAGADO.
      */
     public void iniciarSecuencia() {
         estadoActual = EstadoSemaforo.APAGADO;
@@ -66,12 +64,13 @@ public class Semaforo {
         tiempoParaSiguienteLuz = MathUtils.random(0.3f, 0.8f);
     }
 
-    /**logica de luces y verifica la salida en falso del auto.
+    /**
+     * logica de luces y verifica la salida en falso del auto.
      */
     public void actualizar(Auto auto, float delta) {
         if (estadoActual == EstadoSemaforo.FINALIZADO) return;
 
-        //SALIDA EN FALSO
+        // SALIDA EN FALSO
         // Si el semaforo no esta en VERDE y el auto tiene movimiento físico (velocidad > 0)
         if (estadoActual != EstadoSemaforo.VERDE && estadoActual != EstadoSemaforo.SALIDA_FALSO) {
             if (auto.getVelocidad() > 0) {
@@ -124,12 +123,13 @@ public class Semaforo {
         }
     }
 
-    /**dibujar semaforo arriba al centro
+    /**
+     * dibujar semaforo arriba al centro
      */
     public void dibujar(SpriteBatch batch, float anchoPantalla, float altoPantalla) {
         if (estadoActual == EstadoSemaforo.FINALIZADO) return;
 
-        batch.setProjectionMatrix(camaraHUD.combined);
+        aplicarProyeccion(batch);
 
         // posicion
         float posX = (anchoPantalla / 2f) - (ancho / 2f);
@@ -159,10 +159,7 @@ public class Semaforo {
         this.posXInicialAuto = posX;
     }
 
-    public void resize(float ancho, float alto) {
-        camaraHUD.setToOrtho(false, ancho, alto);
-    }
-
+    @Override
     public void dispose() {
         if (spriteSheet != null) spriteSheet.dispose();
     }

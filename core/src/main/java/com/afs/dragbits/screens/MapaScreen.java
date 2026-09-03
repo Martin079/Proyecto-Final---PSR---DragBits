@@ -15,6 +15,7 @@ import com.afs.dragbits.ciudad.Burbuja;
 import com.afs.dragbits.ciudad.Interfaz;
 import com.afs.dragbits.menurivales.VentanaSeleccionRival;
 import com.afs.dragbits.jugador.Jugador;
+import com.afs.dragbits.jugador.RepositorioJugador;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,9 @@ public class MapaScreen implements Screen {
     private List<Burbuja> burbujas;
     private Vector3 mouseCoordsVirtuales;
 
-    // Jugador y HUD
+    // Jugador, Repositorio y HUD
     private Jugador jugador;
+    private final RepositorioJugador repositorioJugador;
     private Interfaz interfazCiudad;
 
     // ventana Seleccionar Rival
@@ -44,10 +46,10 @@ public class MapaScreen implements Screen {
 
     public MapaScreen(Main game) {
         this.game = game;
+        this.repositorioJugador = new RepositorioJugador();
 
-        //  Instanciar y Cargar el progreso del Jugador
-        this.jugador = new Jugador();
-        this.jugador.cargarProgreso();
+        // Cargar el progreso del Jugador mediante el repositorio
+        this.jugador = repositorioJugador.cargarJugador();
     }
 
     @Override
@@ -64,7 +66,7 @@ public class MapaScreen implements Screen {
 
         // recargar progreso por si cambio al volver de otra pantalla
         if (jugador != null) {
-            jugador.cargarProgreso();
+            repositorioJugador.cargarProgreso(jugador);
         }
 
         camara = new OrthographicCamera();
@@ -100,7 +102,7 @@ public class MapaScreen implements Screen {
         float offsetX = anchoBurbuja / 2f;
         float offsetY = altoBurbuja / 2f;
 
-        //  Carreras Legales
+        // Carreras Legales
         burbujas.add(new Burbuja(100f - offsetX, 170f - offsetY, anchoBurbuja, altoBurbuja, frameLegales, () -> {
             abrirVentanaRival(VentanaSeleccionRival.TipoCarrera.LEGAL, 0);
         }));
@@ -115,7 +117,7 @@ public class MapaScreen implements Screen {
             System.out.println("Entrando a Tienda de Mejoras...");
         }));
 
-        //Tienda de Autos
+        // Tienda de Autos
         burbujas.add(new Burbuja(350f - offsetX, 594f - offsetY, anchoBurbuja, altoBurbuja, frameAutos, () -> {
             System.out.println("Entrando a Tienda de Autos...");
         }));
@@ -155,7 +157,7 @@ public class MapaScreen implements Screen {
         viewport.apply();
         batch.setProjectionMatrix(camara.combined);
 
-        //DIBUJADO DE LA CIUDAD Y OBJETOS
+        // DIBUJADO DE LA CIUDAD Y OBJETOS
         batch.begin();
         batch.draw(mapaTexture, 0, 0, ANCHO_VIRTUAL, ALTO_VIRTUAL);
 
@@ -167,7 +169,7 @@ public class MapaScreen implements Screen {
         // DIBUJADO DEL HUD
         interfazCiudad.render();
 
-        //DIBUJADO DE LA VENTANA
+        // DIBUJADO DE LA VENTANA
         ventanaRival.render(delta);
     }
 

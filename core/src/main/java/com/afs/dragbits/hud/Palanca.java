@@ -2,15 +2,13 @@ package com.afs.dragbits.hud;
 
 import com.afs.dragbits.funcionalidades.CajaDeCambios;
 import com.afs.dragbits.util.SpriteSheetLoader;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-/**renderiza esquema de la palanca  a la izquierda del HUD*/
-public class Palanca {
+/** renderiza esquema de la palanca a la izquierda del HUD */
+public class Palanca extends ElementoHUD {
 
-    private final OrthographicCamera camaraHUD;
     private Texture spriteSheet;
 
     private TextureRegion frameEsquema;   // frame 0: diagrama
@@ -22,8 +20,7 @@ public class Palanca {
     private float alto = 90f;
 
     public Palanca(float anchoPantalla, float altoPantalla) {
-        camaraHUD = new OrthographicCamera();
-        camaraHUD.setToOrtho(false, anchoPantalla, altoPantalla);
+        super(anchoPantalla, altoPantalla);
 
         spriteSheet = SpriteSheetLoader.cargarTextura("sprites/HUD/palanca -sheet.png");
         TextureRegion[] frames = SpriteSheetLoader.recortar(spriteSheet, 120, 60);
@@ -35,16 +32,16 @@ public class Palanca {
     }
 
     public void dibujar(SpriteBatch batch, CajaDeCambios caja, float anchoPantalla) {
-        batch.setProjectionMatrix(camaraHUD.combined);
+        aplicarProyeccion(batch);
 
-        //izquierda del HUD (arranca en anchoPantalla - 310f)
+        // izquierda del HUD (arranca en anchoPantalla - 310f)
         float posX = anchoPantalla - 530f;
         float posY = 30f; // alineacion altura HUD principal
 
         // dibujar esquema base
         batch.draw(frameEsquema, posX, posY, ancho, alto);
 
-        //determinar palanca y desplazamiento X
+        // determinar palanca y desplazamiento X
         TextureRegion perillaActual;
         int pX = caja.getPalancaX();
         int pY = caja.getPalancaY();
@@ -53,16 +50,16 @@ public class Palanca {
 
         if (pX == -1) {
             perillaActual = frameIzquierda;
-            offsetX = -44f; //a la izquierda
+            offsetX = -44f; // a la izquierda
         } else if (pX == 1) {
             perillaActual = frameDerecha;
-            offsetX = 44f;  //a la derecha
+            offsetX = 44f;  // a la derecha
         } else {
             perillaActual = frameCentro;
             offsetX = 0f;
         }
 
-        //desplazamiento Y
+        // desplazamiento Y
         float offsetY = 0f;
         if (pY == 1) {
             offsetY = 18f;  // arriba
@@ -74,10 +71,7 @@ public class Palanca {
         batch.draw(perillaActual, posX + offsetX, posY + offsetY, ancho, alto);
     }
 
-    public void resize(float ancho, float alto) {
-        camaraHUD.setToOrtho(false, ancho, alto);
-    }
-
+    @Override
     public void dispose() {
         if (spriteSheet != null) spriteSheet.dispose();
     }
