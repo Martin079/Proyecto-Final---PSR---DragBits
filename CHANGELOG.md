@@ -80,3 +80,4 @@
 - Añadido clase SpriteSheetLoader para reutilizar la carga de sprites
 - Añadido clase TexturaSolidaFactory para reutilizar la creacion de fondos solidos y lisos
 - Refactorizacion de VentanaSeleccionRival para evitar duplicidad de codigo
+- Refactorizacion de la clase Jugador, creando la clase RepositorioJugador para manejo de carga y guardado de datos
