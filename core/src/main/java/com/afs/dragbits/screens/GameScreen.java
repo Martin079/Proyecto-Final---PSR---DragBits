@@ -12,6 +12,7 @@ import com.afs.dragbits.Main;
 import com.afs.dragbits.autos.AutoJugador;
 import com.afs.dragbits.autos.AutoRival;
 import com.afs.dragbits.camara.SeguimientoJugador;
+import com.afs.dragbits.funcionalidades.ControladorCarrera;
 import com.afs.dragbits.funcionalidades.Acelerador;
 import com.afs.dragbits.funcionalidades.CajaDeCambios;
 import com.afs.dragbits.hud.Basicos;
@@ -31,6 +32,9 @@ public class GameScreen implements Screen {
     private AutoRival autoRival; // Bot
     private SeguimientoJugador camaraJugador;
 
+    // Lógica y estado de carrera
+    private ControladorCarrera controladorCarrera;
+
     // Datos del Jugador
     private Jugador datosJugador;
 
@@ -46,11 +50,6 @@ public class GameScreen implements Screen {
     private Basicos hudBasicos;
     private Palanca hudPalanca;
     private CartelResultado cartelResultado;
-
-    // Estado de carrera
-    private boolean carreraFinalizada;
-    private boolean jugadorGano;
-    private boolean recompensaOtorgada;
 
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
@@ -94,6 +93,8 @@ public class GameScreen implements Screen {
             "sprites/Autos/renault 12-sheet.png"
         );
 
+        controladorCarrera = new ControladorCarrera(picodromo, autoJugador, autoRival, datosJugador);
+
         camaraJugador = new SeguimientoJugador(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         acelerador = new Acelerador();
@@ -102,15 +103,11 @@ public class GameScreen implements Screen {
         hudBasicos = new Basicos(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         hudPalanca = new Palanca(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cartelResultado = new CartelResultado(ANCHO_VIRTUAL, ALTO_VIRTUAL);
-
-        carreraFinalizada = false;
-        jugadorGano = false;
-        recompensaOtorgada = false;
     }
 
     @Override
     public void render(float delta) {
-        if (!carreraFinalizada) {
+        if (!controladorCarrera.isCarreraFinalizada()) {
             cajaDeCambios.actualizar(autoJugador, delta);
             acelerador.actualizar(autoJugador, delta);
             autoJugador.actualizar(delta);
@@ -118,20 +115,7 @@ public class GameScreen implements Screen {
             autoRival.actualizarIA(delta, semaforo.getEstadoActual());
             semaforo.actualizar(autoJugador, delta);
 
-            float metaX = picodromo.getPosicionLineaMeta();
-            boolean jugadorCruzo = autoJugador.getFrenteX() >= metaX;
-            boolean botCruzo = autoRival.getFrenteX() >= metaX;
-
-            if (jugadorCruzo || botCruzo) {
-                carreraFinalizada = true;
-                jugadorGano = autoJugador.getFrenteX() >= autoRival.getFrenteX();
-
-                if (jugadorGano && !recompensaOtorgada) {
-                    datosJugador.sumarDinero(autoRival.getRecompensa());
-                    new RepositorioJugador().guardarProgreso(datosJugador);
-                    recompensaOtorgada = true;
-                }
-            }
+            controladorCarrera.actualizar();
         } else {
             if (Gdx.input.justTouched()) {
                 mouseCoords.set(Gdx.input.getX(), Gdx.input.getY(), 0);
@@ -164,11 +148,11 @@ public class GameScreen implements Screen {
         batch.end();
 
         // Renderizar Cartel de Resultado si terminó la carrera
-        if (carreraFinalizada) {
+        if (controladorCarrera.isCarreraFinalizada()) {
             batch.begin();
             cartelResultado.dibujar(
                 batch,
-                jugadorGano,
+                controladorCarrera.isJugadorGano(),
                 autoRival.getRecompensa(),
                 datosJugador.getDinero(),
                 ANCHO_VIRTUAL,
