@@ -2,29 +2,25 @@ package com.afs.dragbits.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.afs.dragbits.hud.Basicos;
-import com.afs.dragbits.hud.Palanca;
-import com.afs.dragbits.jugador.Jugador;
 import com.afs.dragbits.Main;
 import com.afs.dragbits.autos.AutoJugador;
 import com.afs.dragbits.autos.AutoRival;
 import com.afs.dragbits.camara.SeguimientoJugador;
 import com.afs.dragbits.funcionalidades.Acelerador;
 import com.afs.dragbits.funcionalidades.CajaDeCambios;
+import com.afs.dragbits.hud.Basicos;
+import com.afs.dragbits.hud.CartelResultado;
+import com.afs.dragbits.hud.Palanca;
 import com.afs.dragbits.hud.Semaforo;
-import com.afs.dragbits.mapas.Picodromo;
-import com.afs.dragbits.util.TexturaSolidaFactory;
+import com.afs.dragbits.jugador.Jugador;
 import com.afs.dragbits.jugador.RepositorioJugador;
+import com.afs.dragbits.mapas.Picodromo;
 
 public class GameScreen implements Screen {
 
@@ -38,27 +34,23 @@ public class GameScreen implements Screen {
     // Datos del Jugador
     private Jugador datosJugador;
 
-    // viewport de interfaz fija
+    // Viewport de interfaz fija
     private OrthographicCamera camaraUI;
     private Viewport viewportUI;
     private Vector3 mouseCoords;
 
-    // funcionalidades y HUD
+    // Funcionalidades y HUD
     private Acelerador acelerador;
     private CajaDeCambios cajaDeCambios;
     private Semaforo semaforo;
     private Basicos hudBasicos;
     private Palanca hudPalanca;
+    private CartelResultado cartelResultado;
 
-    // Estado de carrera y UI fin de carrera
+    // Estado de carrera
     private boolean carreraFinalizada;
     private boolean jugadorGano;
     private boolean recompensaOtorgada;
-
-    private Texture texturaCartel;
-    private Texture texturaBoton;
-    private BitmapFont fuenteTexto;
-    private Rectangle boundsBoton;
 
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
@@ -71,7 +63,7 @@ public class GameScreen implements Screen {
     public void show() {
         batch = new SpriteBatch();
 
-        // volumen de musica en carrera
+        // Volumen de música en carrera
         if (game.getMusicaFondo() != null) {
             game.getMusicaFondo().setVolume(0.2f);
             if (!game.getMusicaFondo().isPlaying()) {
@@ -85,16 +77,13 @@ public class GameScreen implements Screen {
         RepositorioJugador repositorioJugador = new RepositorioJugador();
         datosJugador = repositorioJugador.cargarJugador();
 
-
-        // Camara fija
+        // Cámara fija UI
         camaraUI = new OrthographicCamera();
         viewportUI = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camaraUI);
         mouseCoords = new Vector3();
 
-        // Instanciar auto del jugador
+        // Instanciar auto del jugador y rival
         autoJugador = new AutoJugador(picodromo.getPosicionSpawnX(), 130f);
-
-        // Instanciar Bot Rival
         autoRival = new AutoRival(
             picodromo.getPosicionSpawnX(),
             230f,
@@ -112,27 +101,11 @@ public class GameScreen implements Screen {
         semaforo = new Semaforo(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), picodromo.getPosicionSpawnX());
         hudBasicos = new Basicos(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         hudPalanca = new Palanca(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        cartelResultado = new CartelResultado(ANCHO_VIRTUAL, ALTO_VIRTUAL);
 
         carreraFinalizada = false;
         jugadorGano = false;
         recompensaOtorgada = false;
-
-        crearCartelUI();
-    }
-
-    private void crearCartelUI() {
-        // Fondo del cartel usando TexturaSolidaFactory
-        texturaCartel = TexturaSolidaFactory.crearTextura(460, 240, new Color(0, 0, 0, 0.85f));
-
-        // Fondo del botón usando TexturaSolidaFactory
-        texturaBoton = TexturaSolidaFactory.crearTextura(220, 50, Color.valueOf("27ae60"));
-
-        fuenteTexto = new BitmapFont();
-        fuenteTexto.setColor(Color.WHITE);
-
-        float btnX = (ANCHO_VIRTUAL - 220f) / 2f;
-        float btnY = (ALTO_VIRTUAL - 240f) / 2f + 20f;
-        boundsBoton = new Rectangle(btnX, btnY, 220f, 50f);
     }
 
     @Override
@@ -164,7 +137,7 @@ public class GameScreen implements Screen {
                 mouseCoords.set(Gdx.input.getX(), Gdx.input.getY(), 0);
                 viewportUI.unproject(mouseCoords);
 
-                if (boundsBoton.contains(mouseCoords.x, mouseCoords.y)) {
+                if (cartelResultado.fueBotonTocado(mouseCoords)) {
                     game.setScreen(new MapaScreen(game));
                     return;
                 }
@@ -175,7 +148,7 @@ public class GameScreen implements Screen {
 
         ScreenUtils.clear(0, 0, 0, 1);
 
-        // renderizar Mundo
+        // Renderizar Mundo
         batch.begin();
         camaraJugador.aplicarACamara(batch);
         picodromo.dibujar(batch, Gdx.graphics.getHeight());
@@ -183,48 +156,24 @@ public class GameScreen implements Screen {
         autoRival.dibujar(batch);
         batch.end();
 
-        // renderizar HUD
+        // Renderizar HUD del juego
         batch.begin();
         hudBasicos.dibujar(batch, autoJugador, Gdx.graphics.getWidth());
         hudPalanca.dibujar(batch, cajaDeCambios, Gdx.graphics.getWidth());
         semaforo.dibujar(batch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
 
-        // renderizar resultado
+        // Renderizar Cartel de Resultado si terminó la carrera
         if (carreraFinalizada) {
-            viewportUI.apply();
-            batch.setProjectionMatrix(camaraUI.combined);
             batch.begin();
-
-            float cartelX = (ANCHO_VIRTUAL - 460f) / 2f;
-            float cartelY = (ALTO_VIRTUAL - 240f) / 2f;
-
-            batch.draw(texturaCartel, cartelX, cartelY);
-
-            fuenteTexto.getData().setScale(2f);
-            if (jugadorGano) {
-                fuenteTexto.setColor(Color.GOLD);
-                fuenteTexto.draw(batch, "¡VICTORIA!", cartelX + 140f, cartelY + 200f);
-
-                fuenteTexto.getData().setScale(1.2f);
-                fuenteTexto.setColor(Color.GREEN);
-                fuenteTexto.draw(batch, "Recompensa: +$" + autoRival.getRecompensa(), cartelX + 130f, cartelY + 140f);
-            } else {
-                fuenteTexto.setColor(Color.RED);
-                fuenteTexto.draw(batch, "DERROTA", cartelX + 160f, cartelY + 200f);
-
-                fuenteTexto.getData().setScale(1.2f);
-                fuenteTexto.setColor(Color.WHITE);
-                fuenteTexto.draw(batch, "Recompensa: +$0", cartelX + 165f, cartelY + 140f);
-            }
-
-            fuenteTexto.setColor(Color.WHITE);
-            fuenteTexto.draw(batch, "Total: $" + datosJugador.getDinero(), cartelX + 175f, cartelY + 100f);
-
-            batch.draw(texturaBoton, boundsBoton.x, boundsBoton.y, boundsBoton.width, boundsBoton.height);
-            fuenteTexto.getData().setScale(1.2f);
-            fuenteTexto.draw(batch, "VOLVER AL MAPA", boundsBoton.x + 35f, boundsBoton.y + 32f);
-
+            cartelResultado.dibujar(
+                batch,
+                jugadorGano,
+                autoRival.getRecompensa(),
+                datosJugador.getDinero(),
+                ANCHO_VIRTUAL,
+                ALTO_VIRTUAL
+            );
             batch.end();
         }
     }
@@ -236,6 +185,7 @@ public class GameScreen implements Screen {
         if (hudBasicos != null) hudBasicos.resize(width, height);
         if (hudPalanca != null) hudPalanca.resize(width, height);
         if (semaforo != null) semaforo.resize(width, height);
+        if (cartelResultado != null) cartelResultado.resize(width, height);
     }
 
     @Override public void pause() {}
@@ -251,8 +201,6 @@ public class GameScreen implements Screen {
         if (hudBasicos != null) hudBasicos.dispose();
         if (hudPalanca != null) hudPalanca.dispose();
         if (semaforo != null) semaforo.dispose();
-        if (texturaCartel != null) texturaCartel.dispose();
-        if (texturaBoton != null) texturaBoton.dispose();
-        if (fuenteTexto != null) fuenteTexto.dispose();
+        if (cartelResultado != null) cartelResultado.dispose();
     }
 }

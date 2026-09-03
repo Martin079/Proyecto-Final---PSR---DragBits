@@ -82,4 +82,4 @@
 - Refactorizacion de VentanaSeleccionRival para evitar duplicidad de codigo
 - Refactorizacion de la clase Jugador, creando la clase RepositorioJugador para manejo de carga y guardado de datos
 - Refactorizacion Basicos, Palanca y Semaforo con ElementoHUD por el campo OrtographicCamera. 
-- 
+- Refactorizacion GameScreen, moviendo el cartel al finalizar la carrera a la clase CartelResultado. 
