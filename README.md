@@ -27,4 +27,4 @@ Primer bot rival en dificultad facil con su respectiva recompensa.
 * [Ver el Historial de Cambios (Changelog)](CHANGELOG.md)
 * [Ver la Propuesta Detallada en la Wiki](https://github.com/Martin079/Proyecto-Final---PSR---DragBits/wiki/Propuesta-del-Proyecto-‐-DragBITS-‐-Anza-Findlay-Sambon)
 * [Ver tablero Kanban en Trello](https://trello.com/invite/b/6a84409df5f62a64764640ff/ATTI62343de83d9d45696e73ba36a80e3bba9F7BA9B8/kanban-dragbits)
-
+* [Ver video de presentacion segunda pre entrega](https://docs.google.com/document/d/1sWfDE58ydnB8vjrnUZCrf1hfbcyPKZca/edit?usp=drive_link&ouid=115003604920059226513&rtpof=true&sd=true)
