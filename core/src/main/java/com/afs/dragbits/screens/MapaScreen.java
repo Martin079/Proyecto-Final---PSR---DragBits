@@ -1,5 +1,6 @@
 package com.afs.dragbits.screens;
 
+import com.afs.dragbits.menurivales.TipoCarrera;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -104,12 +105,12 @@ public class MapaScreen implements Screen {
 
         // Carreras Legales
         burbujas.add(new Burbuja(100f - offsetX, 170f - offsetY, anchoBurbuja, altoBurbuja, frameLegales, () -> {
-            abrirVentanaRival(VentanaSeleccionRival.TipoCarrera.LEGAL, 0);
+            abrirVentanaRival(TipoCarrera.LEGAL, 0);
         }));
 
         // Carreras Ilegales
         burbujas.add(new Burbuja(580f - offsetX, 590f - offsetY, anchoBurbuja, altoBurbuja, frameIlegales, () -> {
-            abrirVentanaRival(VentanaSeleccionRival.TipoCarrera.ILEGAL, 0);
+            abrirVentanaRival(TipoCarrera.ILEGAL, 0);
         }));
 
         // Tienda de Mejoras
@@ -128,7 +129,7 @@ public class MapaScreen implements Screen {
         }));
     }
 
-    private void abrirVentanaRival(VentanaSeleccionRival.TipoCarrera tipo, int maxDesbloqueado) {
+    private void abrirVentanaRival(TipoCarrera tipo, int maxDesbloqueado) {
         ventanaRival.mostrar(tipo, maxDesbloqueado);
         Gdx.input.setInputProcessor(ventanaRival.getStage());
     }

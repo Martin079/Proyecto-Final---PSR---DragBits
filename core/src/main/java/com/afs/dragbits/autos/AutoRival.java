@@ -1,5 +1,6 @@
 package com.afs.dragbits.autos;
 
+import com.afs.dragbits.hud.EstadoSemaforo;
 import com.badlogic.gdx.graphics.Color;
 import com.afs.dragbits.hud.Semaforo;
 
@@ -23,9 +24,9 @@ public class AutoRival extends com.afs.dragbits.autos.Auto {
     }
 
 
-    public void actualizarIA(float delta, Semaforo.EstadoSemaforo estadoSemaforo) {
+    public void actualizarIA(float delta, EstadoSemaforo estadoSemaforo) {
         // 1. inicia la marcha cuando el semaforo pasa a VERDE
-        if (estadoSemaforo == Semaforo.EstadoSemaforo.VERDE && marchaActual == 0) {
+        if (estadoSemaforo == EstadoSemaforo.VERDE && marchaActual == 0) {
             marchaActual = 1;
         }
 

@@ -11,13 +11,6 @@ import com.badlogic.gdx.math.MathUtils;
 
 public abstract class Auto {
 
-    public enum EstadoAuto {
-        ESTATICO,
-        AVANZANDO,
-        CAMBIANDO_MARCHA,
-        NITRO
-    }
-
     protected float posX;
     protected float posY;
     protected float ancho = 200f;

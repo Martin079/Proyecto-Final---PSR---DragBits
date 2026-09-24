@@ -20,8 +20,6 @@ import com.afs.dragbits.util.TexturaSolidaFactory;
 
 public class VentanaSeleccionRival implements Disposable {
 
-    public enum TipoCarrera { LEGAL, ILEGAL }
-
     private final Main game;
     private Stage stage;
     private boolean visible = false;

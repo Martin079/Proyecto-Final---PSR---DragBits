@@ -84,3 +84,7 @@
 - Refactorizacion Basicos, Palanca y Semaforo con ElementoHUD por el campo OrtographicCamera
 - Refactorizacion GameScreen, moviendo el cartel al finalizar la carrera a la clase CartelResultado.
 - Refactorizacion de GameScreen, moviendo la gestion de la carrera a ControladorCarrera
+
+### Fix 24/9/2026
+
+- Creacion de clase Enum para EstadoAuto, EstadoSemaforo y TipoCarrera
