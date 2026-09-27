@@ -9,12 +9,11 @@ public class Jugador {
     private long experienciaSiguienteNivel;
     private long dinero;
 
-    // Constructor por defecto (nuevo jugador)
     public Jugador() {
         this(1, 0, 0);
     }
 
-    // Constructor parametrizado (cargar partidas o testing)
+    //cargar partidas
     public Jugador(int nivelInicial, long experienciaInicial, long dineroInicial) {
         this.nivel = Math.max(1, nivelInicial);
         this.experienciaActual = Math.max(0, experienciaInicial);
@@ -22,19 +21,19 @@ public class Jugador {
         this.experienciaSiguienteNivel = calcularExperienciaRequerida(this.nivel);
     }
 
-    /** Calculo de XP requerida para pasar del nivel actual al siguiente */
+
     public long calcularExperienciaRequerida(int nivelActual) {
         return (long) (200 * Math.pow(nivelActual, 2));
     }
 
-    /** Añade experiencia al jugador y revisa si sube de nivel */
+
     public boolean sumarExperiencia(long cantidad) {
         if (cantidad <= 0) return false;
 
         this.experienciaActual += cantidad;
         boolean subioDeNivel = false;
 
-        // while por si la experiencia otorgada hace subir varios niveles de golpe
+        //por si la experiencia otorgada hace subir varios niveles de golpe
         while (this.experienciaActual >= this.experienciaSiguienteNivel) {
             this.experienciaActual -= this.experienciaSiguienteNivel;
             this.nivel++;
@@ -47,7 +46,7 @@ public class Jugador {
         return subioDeNivel;
     }
 
-    // DINERO
+
 
     public void sumarDinero(long cantidad) {
         if (cantidad > 0) {
@@ -58,9 +57,9 @@ public class Jugador {
     public boolean restarDinero(long cantidad) {
         if (cantidad > 0 && this.dinero >= cantidad) {
             this.dinero -= cantidad;
-            return true; // Compra exitosa
+            return true;
         }
-        return false; // Dinero insuficiente
+        return false;
     }
 
     // GETTERS Y SETTERS
@@ -70,7 +69,7 @@ public class Jugador {
     public long getExperienciaSiguienteNivel() { return experienciaSiguienteNivel; }
     public long getDinero() { return dinero; }
 
-    // Setters manuales
+
     public void setNivel(int nivel) {
         this.nivel = Math.max(1, nivel);
         this.experienciaSiguienteNivel = calcularExperienciaRequerida(this.nivel);

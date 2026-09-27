@@ -42,21 +42,20 @@ public class VentanaSeleccionRival implements Disposable {
     }
 
     private void cargarRecursos() {
-        // Fondo gris oscuro semitransparente usando la fábrica
+        //gris oscuro semitransparente
         fondoOscuroTexture = TexturaSolidaFactory.crearTextura(new Color(0.1f, 0.1f, 0.1f, 0.90f));
 
-        // Cargar sheet de 14 cuadros de 200x200 px usando SpriteSheetLoader
+        //sheet de 14 cuadros de 200x200 px
         menuAutosSheet = SpriteSheetLoader.cargarTextura("sprites/MenuAutos/Iconos autos-sheet.png");
         TextureRegion[] todosLosFrames = SpriteSheetLoader.recortar(menuAutosSheet, 200, 200, 14);
 
-        // Copiamos los primeros 10 frames para los rivales
+        //primeros 10 frames rivales
         framesRival = new TextureRegion[10];
         System.arraycopy(todosLosFrames, 0, framesRival, 0, 10);
 
-        // Frame del auto bloqueado (ícono '?')
+        //auto bloqueado
         frameBloqueado = todosLosFrames[13];
 
-        // Botón Cerrar
         botonCerrarTexture = SpriteSheetLoader.cargarTextura("sprites/Botones/Boton cerrar.png");
     }
 
@@ -64,7 +63,6 @@ public class VentanaSeleccionRival implements Disposable {
         Table root = new Table();
         root.setFillParent(true);
 
-        // Panel Central
         ventanaTable = new Table();
         ventanaTable.setBackground(new TextureRegionDrawable(new TextureRegion(fondoOscuroTexture)));
         ventanaTable.pad(20);
@@ -77,7 +75,6 @@ public class VentanaSeleccionRival implements Disposable {
         this.visible = true;
         ventanaTable.clear();
 
-        // BOTÓN CERRAR
         Image btnCerrar = new Image(botonCerrarTexture);
         btnCerrar.setScaling(Scaling.fit);
 
@@ -93,10 +90,10 @@ public class VentanaSeleccionRival implements Disposable {
         topBar.add(btnCerrar).size(80, 80).right();
         ventanaTable.add(topBar).growX().padBottom(15).row();
 
-        // CONTENEDOR DE RIVALES (3 Arriba / 2 Abajo)
+        //(3 Arriba / 2 Abajo)
         Table grillaRivales = new Table();
 
-        // FILA SUPERIOR (3 rivales
+        // FILA SUPERIOR (3 rivales)
         Table filaArriba = crearFilaRivales(0, 3, tipoCarrera, maxRivalDesbloqueado);
         grillaRivales.add(filaArriba).padBottom(15).row();
 

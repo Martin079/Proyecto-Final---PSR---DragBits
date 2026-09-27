@@ -11,7 +11,6 @@ public class Main extends Game {
 
     @Override
     public void create() {
-        // musica de fondo global
         musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("audio/Musica/musica 1.mp3"));
         musicaFondo.setLooping(true);
         musicaFondo.setVolume(1.0f);

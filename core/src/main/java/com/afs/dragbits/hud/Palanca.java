@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-/** renderiza esquema de la palanca a la izquierda del HUD */
+
 public class Palanca extends ElementoHUD {
 
     private Texture spriteSheet;
@@ -36,12 +36,10 @@ public class Palanca extends ElementoHUD {
 
         // izquierda del HUD (arranca en anchoPantalla - 310f)
         float posX = anchoPantalla - 530f;
-        float posY = 30f; // alineacion altura HUD principal
+        float posY = 30f; // DEBE SER LA MISMA ALTURA QUE EL HUD PRINCIPAL
 
-        // dibujar esquema base
         batch.draw(frameEsquema, posX, posY, ancho, alto);
 
-        // determinar palanca y desplazamiento X
         TextureRegion perillaActual;
         int pX = caja.getPalancaX();
         int pY = caja.getPalancaY();
@@ -59,7 +57,6 @@ public class Palanca extends ElementoHUD {
             offsetX = 0f;
         }
 
-        // desplazamiento Y
         float offsetY = 0f;
         if (pY == 1) {
             offsetY = 18f;  // arriba
@@ -67,7 +64,6 @@ public class Palanca extends ElementoHUD {
             offsetY = -18f; // abajo
         }
 
-        // dibujar palanca arriba del esquema con el desplazamiento aplicado
         batch.draw(perillaActual, posX + offsetX, posY + offsetY, ancho, alto);
     }
 

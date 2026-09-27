@@ -25,7 +25,7 @@ public class Basicos extends ElementoHUD {
         String marchaStr = (auto.getMarchaActual() == 0) ? "N" : String.valueOf(auto.getMarchaActual());
         String embragueStr = auto.isEmbraguePresionado() ? " [EMBRAGUE]" : "";
 
-        // posicion a la izquierda
+        //izquierda
         float posX = anchoPantalla - 310f;
         float posY = 110f;
 

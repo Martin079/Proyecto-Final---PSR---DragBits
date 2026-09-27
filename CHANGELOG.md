@@ -88,3 +88,8 @@
 ### Fix 24/9/2026
 
 - Creacion de clase Enum para EstadoAuto, EstadoSemaforo y TipoCarrera
+
+
+### Fix 27/9/2026
+
+- Cambios en los comentarios

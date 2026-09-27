@@ -16,29 +16,28 @@ public abstract class Auto {
     protected float ancho = 200f;
     protected float alto = 80f;
 
-    // Estadísticas del auto
+    // Estadísticas
     protected float velocidad;
     protected float velocidadMaxima;
-    protected float aceleracion;       // fuerza del motor
-    protected float traccion;          // evita que las ruedas patinen en marchas bajas o arranque
+    protected float aceleracion;
+    protected float traccion;
     protected float potenciaNitro;
-    protected float capacidadNitro;    // tiempo util de nitro en segundos (ej. 3.0s)
+    protected float capacidadNitro;    // tiempo  de nitro en segundos
     protected float nitroRestante;
     protected float zonaSincronizacion;// ampliacion de la zona de cambio de marcha
 
     protected float rpm;
     protected float rpmMaximas;
 
-    // cambios y nitro
+
     protected int marchaActual; // 0 = Neutral, 1..5
     protected boolean embraguePresionado;
     protected boolean nitroActivo;
     protected float[] relacionesTransmision = {0f, 0.30f, 0.50f, 0.70f, 0.85f, 1.0f};
 
-    // indicadores fisicos
     protected boolean patinando;
 
-    // sprites y animaciones
+    // sprites
     private Texture spriteSheet;
     private TextureRegion frameEstatico;           // Frame 1
     private Animation<TextureRegion> animAvanzando; // Frames 2 y 3
@@ -48,7 +47,7 @@ public abstract class Auto {
     private float stateTime;
     private Texture texturaFallback;
 
-    // para dar mas sensacion de velocidad
+    // dar mas sensacion de velocidad
     private static final float FACTOR_MOVIMIENTO = 4.2f;
 
     // fisicas y aceleracion
@@ -98,7 +97,6 @@ public abstract class Auto {
     }
 
     private void cargarSpriteSheet(String ruta) {
-        // Carga centralizada mediante SpriteSheetLoader
         spriteSheet = SpriteSheetLoader.cargarTextura(ruta);
 
         int anchoFrame = spriteSheet.getWidth() / 7;
@@ -106,16 +104,16 @@ public abstract class Auto {
 
         TextureRegion[] frames = SpriteSheetLoader.recortar(spriteSheet, anchoFrame, altoFrame);
 
-        // 1. Primer frame: Estático
+        //Primer frame: Estático
         frameEstatico = frames[0];
 
-        // 2. Segundo y tercer frame: En movimiento
+        //Segundo y tercer frame: En movimiento
         animAvanzando = new Animation<>(0.12f, frames[1], frames[2]);
 
-        // 3. Cuarto y quinto frame: Cambio de marcha
+        //Cuarto y quinto frame: Cambio de marcha
         animCambio = new Animation<>(0.15f, frames[3], frames[4]);
 
-        // 4. Sexto y séptimo frame: Nitro
+        //Sexto y séptimo frame: Nitro
         animNitro = new Animation<>(0.10f, frames[5], frames[6]);
     }
 

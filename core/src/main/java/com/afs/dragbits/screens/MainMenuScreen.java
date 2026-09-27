@@ -63,7 +63,7 @@ public class MainMenuScreen extends InputAdapter implements Screen {
         fuenteOpciones = new BitmapFont();
 
 
-        texturaControles = new Texture(Gdx.files.internal("Sprites/MenuPrincipal/Controles.png"));
+        texturaControles = new Texture(Gdx.files.internal("sprites/MenuPrincipal/Controles.png"));
     }
 
     @Override

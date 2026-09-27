@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class SpriteSheetLoader {
 
-    //carga una textura desde assets y aplica el filtro Nearest.
 
     public static Texture cargarTextura(String ruta) {
         Texture textura = new Texture(Gdx.files.internal(ruta));
@@ -14,8 +13,6 @@ public class SpriteSheetLoader {
         return textura;
     }
 
-    //corta una textura en un arreglo unidimensional
-    //asume que la textura consta de una sola fila
 
     public static TextureRegion[] recortar(Texture textura, int anchoFrame, int altoFrame) {
         TextureRegion[][] tmp = TextureRegion.split(textura, anchoFrame, altoFrame);
@@ -24,7 +21,6 @@ public class SpriteSheetLoader {
         return frames;
     }
 
-    //sobrecarga que permite extraer los primeros N frames.
 
     public static TextureRegion[] recortar(Texture textura, int anchoFrame, int altoFrame, int cantidadFrames) {
         TextureRegion[][] tmp = TextureRegion.split(textura, anchoFrame, altoFrame);
@@ -34,7 +30,6 @@ public class SpriteSheetLoader {
         return frames;
     }
 
-    //carga la textura y devuelve el arreglo de regiones recortado en un solo paso
 
     public static TextureRegion[] cargarYCortar(String ruta, int anchoFrame, int altoFrame) {
         Texture textura = cargarTextura(ruta);

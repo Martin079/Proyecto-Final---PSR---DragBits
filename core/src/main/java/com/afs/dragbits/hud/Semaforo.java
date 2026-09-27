@@ -1,6 +1,5 @@
 package com.afs.dragbits.hud;
 
-/*IMPORTANTE!!!!!! ahora reinicia el auto a la posicion original, cuando este hecho lo demas se pierde la carrera*/
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,17 +8,13 @@ import com.badlogic.gdx.math.MathUtils;
 import com.afs.dragbits.autos.Auto;
 import com.afs.dragbits.util.SpriteSheetLoader;
 
-/**
- * Controla la secuencia del semaforo de largada, la deteccion de salida en falso
- * y el renderizado en la parte superior central de la pantalla.
- */
 public class Semaforo extends ElementoHUD {
 
     private EstadoSemaforo estadoActual;
     private Texture spriteSheet;
     private TextureRegion[] frames;
 
-    // Dimensiones
+    // Tamaño
     private final float ancho = 120f;
     private final float alto = 360f;
 
@@ -28,50 +23,44 @@ public class Semaforo extends ElementoHUD {
     private float temporizador;
     private float tiempoVerdeEnPantalla = 1.0f; // en verde antes de desaparecer
 
-    // Guarda la posición X exacta donde debe reiniciarse el auto
+
     private float posXInicialAuto;
 
     public Semaforo(float anchoPantalla, float altoPantalla, float posXInicialAuto) {
         super(anchoPantalla, altoPantalla);
         this.posXInicialAuto = posXInicialAuto;
 
-        // Carga del sprite usando SpriteSheetLoader
+
         spriteSheet = SpriteSheetLoader.cargarTextura("sprites/HUD/Semaforo-sheet.png");
 
-        // Recorte directo de los 6 frames (60x180 px)
+        // 6 frames de 60x180 px
         frames = SpriteSheetLoader.recortar(spriteSheet, 60, 180, 6);
 
         iniciarSecuencia();
     }
 
-    /**
-     * reinicia o inicia la secuencia del semáforo desde el estado APAGADO.
-     */
+
     public void iniciarSecuencia() {
         estadoActual = EstadoSemaforo.APAGADO;
         temporizador = 0f;
-        // Asigna un tiempo aleatorio impredecible entre 0.3s y 0.8s
+        //tiempo aleatorio entre 0.3s y 0.8s
         tiempoParaSiguienteLuz = MathUtils.random(0.3f, 0.8f);
     }
 
-    /**
-     * logica de luces y verifica la salida en falso del auto.
-     */
+
     public void actualizar(Auto auto, float delta) {
         if (estadoActual == EstadoSemaforo.FINALIZADO) return;
 
         // SALIDA EN FALSO
-        // Si el semaforo no esta en VERDE y el auto tiene movimiento físico (velocidad > 0)
+        // Si el semaforo no esta en VERDE y el auto tiene movimiento
         if (estadoActual != EstadoSemaforo.VERDE && estadoActual != EstadoSemaforo.SALIDA_FALSO) {
             if (auto.getVelocidad() > 0) {
                 estadoActual = EstadoSemaforo.SALIDA_FALSO;
-                // Resetear auto a la posición de salida configurada dinámicamente y velocidad 0
                 resetearAuto(auto);
                 return;
             }
         }
 
-        // TIEMPOS DE LUCES
         temporizador += delta;
 
         if (estadoActual == EstadoSemaforo.VERDE) {
@@ -83,7 +72,6 @@ public class Semaforo extends ElementoHUD {
         }
 
         if (estadoActual == EstadoSemaforo.SALIDA_FALSO) {
-            // si hubo salida en falso se reinicia
             if (temporizador >= 1.5f) {
                 iniciarSecuencia();
             }
@@ -113,15 +101,12 @@ public class Semaforo extends ElementoHUD {
         }
     }
 
-    /**
-     * dibujar semaforo arriba al centro
-     */
+
     public void dibujar(SpriteBatch batch, float anchoPantalla, float altoPantalla) {
         if (estadoActual == EstadoSemaforo.FINALIZADO) return;
 
         aplicarProyeccion(batch);
 
-        // posicion
         float posX = (anchoPantalla / 2f) - (ancho / 2f);
         float posY = altoPantalla - alto - 10f; // 10px de margen respecto al borde superior
 
@@ -141,7 +126,7 @@ public class Semaforo extends ElementoHUD {
 
     private void resetearAuto(Auto auto) {
         auto.setVelocidad(0f);
-        auto.setPosX(posXInicialAuto); // reinicia la posicion calculada por Picodromo
+        auto.setPosX(posXInicialAuto);
         auto.setMarchaActual(0);
     }
 

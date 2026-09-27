@@ -1,6 +1,6 @@
 package com.afs.dragbits.autos;
 
-/** auto controlado por el jugador */
+
 public class AutoJugador extends Auto {
 
     public AutoJugador(float posX, float posY) {

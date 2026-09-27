@@ -10,11 +10,7 @@ public class RepositorioJugador {
     private static final String KEY_XP_ACTUAL = "experienciaActual";
     private static final String KEY_DINERO = "dinero";
 
-    /**
-     * Guardar estado actual del jugador en disco.
-     *
-     * jugador - Instancia del jugador con los datos a guardar.
-     */
+
     public void guardarProgreso(Jugador jugador) {
         if (jugador == null) return;
 
@@ -27,12 +23,7 @@ public class RepositorioJugador {
         Gdx.app.log("RepositorioJugador", "Progreso guardado correctamente.");
     }
 
-    /**
-     * carga el estado guardado sobre la instancia del jugador provista.
-     * si no existen datos previos, mantiene el estado del jugador.
-     *
-     * jugador - Instancia del jugador sobre la cual aplicar la carga.
-     */
+
     public void cargarProgreso(Jugador jugador) {
         if (jugador == null) return;
 
@@ -50,21 +41,13 @@ public class RepositorioJugador {
         }
     }
 
-    /**
-     * crea y retorna una nueva instancia de Jugador cargando los datos guardados en disco.
-     * si no hay partida guardada, devuelve un Jugador por defecto (Nivel 1, XP 0, Dinero 0).
-     *
-     * return - Instancia de Jugador con los datos recuperados o por defecto.
-     */
+
     public Jugador cargarJugador() {
         Jugador jugador = new Jugador();
         cargarProgreso(jugador);
         return jugador;
     }
 
-    /**
-     * Borra el archivo de guardado de preferencias.
-     */
     public void borrarProgreso() {
         Preferences prefs = Gdx.app.getPreferences(PREFS_NAME);
         prefs.clear();

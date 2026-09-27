@@ -55,16 +55,15 @@ public class Interfaz implements Disposable {
     }
 
     private void cargarRecursos() {
-        // fondo gris oscuro semitransparente usando la fabrica
+        //gris oscuro semitransparente
         fondoGrisTexture = TexturaSolidaFactory.crearTextura(new Color(0.15f, 0.15f, 0.15f, 0.75f));
 
-        // Cargar Texturas usando SpriteSheetLoader
         billeteTexture = SpriteSheetLoader.cargarTextura("sprites/Ciudad/Billete.png");
 
         nivelSheetTexture = SpriteSheetLoader.cargarTextura("sprites/Ciudad/Nivel-sheet.png");
         framesNivel = SpriteSheetLoader.recortar(nivelSheetTexture, 41, 41, 9);
 
-        // font por defecto
+        //fuente
         font = new BitmapFont();
         font.getData().setScale(1.2f);
     }
@@ -77,14 +76,12 @@ public class Interfaz implements Disposable {
         Table barraHud = new Table();
         barraHud.setBackground(new Image(fondoGrisTexture).getDrawable());
 
-        // DINERO
         Image imgBillete = new Image(billeteTexture);
 
         Label.LabelStyle estiloTexto = new Label.LabelStyle(font, Color.WHITE);
         labelDinero = new Label("$" + jugador.getDinero(), estiloTexto);
         labelDinero.setAlignment(Align.left);
 
-        // NIVEL
         imgIconoNivel = new Image(framesNivel[0]);
         labelNivel = new Label(String.valueOf(jugador.getNivel()), estiloTexto);
         labelNivel.setAlignment(Align.center);
@@ -107,10 +104,8 @@ public class Interfaz implements Disposable {
     }
 
     public void actualizar(float delta) {
-        // actualizar
         labelDinero.setText("$" + jugador.getDinero());
 
-        // detección de subida de nivel
         if (jugador.getNivel() > nivelAnterior && !animandoSubidaNivel) {
             animandoSubidaNivel = true;
             tiempoAnimacion = 0f;
@@ -120,7 +115,6 @@ public class Interfaz implements Disposable {
             tiempoAnimacion += delta;
 
             if (tiempoAnimacion < DURACION_CICLO_XP) {
-                //1: reproducir frames 0 al 7
                 float progreso = tiempoAnimacion / DURACION_CICLO_XP;
                 int frameIndex = (int) (progreso * 8);
                 if (frameIndex > 7) frameIndex = 7;
@@ -128,23 +122,19 @@ public class Interfaz implements Disposable {
                 imgIconoNivel.setDrawable(new TextureRegionDrawable(framesNivel[frameIndex]));
             }
             else if (tiempoAnimacion < DURACION_TOTAL_ANIM) {
-                //mostrar frame 8
                 imgIconoNivel.setDrawable(new TextureRegionDrawable(framesNivel[8]));
             }
             else {
-                //finalizar animación y actualizar visualmente
                 animandoSubidaNivel = false;
                 nivelAnterior = jugador.getNivel();
                 labelNivel.setText(String.valueOf(jugador.getNivel()));
             }
         } else {
-            // estado normal - calcular frame (0 a 7) segun el porcentaje de XP actual
             labelNivel.setText(String.valueOf(jugador.getNivel()));
 
             float porcentaje = (float) jugador.getExperienciaActual() / jugador.getExperienciaSiguienteNivel();
             int frameIndex = (int) (porcentaje * 8);
 
-            // evitar desbordamiento
             if (frameIndex < 0) frameIndex = 0;
             if (frameIndex > 7) frameIndex = 7;
 

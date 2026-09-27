@@ -32,18 +32,17 @@ public class GameScreen implements Screen {
     private AutoRival autoRival; // Bot
     private SeguimientoJugador camaraJugador;
 
-    // Lógica y estado de carrera
     private ControladorCarrera controladorCarrera;
 
-    // Datos del Jugador
+
     private Jugador datosJugador;
 
-    // Viewport de interfaz fija
+
     private OrthographicCamera camaraUI;
     private Viewport viewportUI;
     private Vector3 mouseCoords;
 
-    // Funcionalidades y HUD
+
     private Acelerador acelerador;
     private CajaDeCambios cajaDeCambios;
     private Semaforo semaforo;
@@ -72,16 +71,15 @@ public class GameScreen implements Screen {
 
         picodromo = new Picodromo();
 
-        // Cargar progreso del Jugador
         RepositorioJugador repositorioJugador = new RepositorioJugador();
         datosJugador = repositorioJugador.cargarJugador();
 
-        // Cámara fija UI
+
         camaraUI = new OrthographicCamera();
         viewportUI = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camaraUI);
         mouseCoords = new Vector3();
 
-        // Instanciar auto del jugador y rival
+
         autoJugador = new AutoJugador(picodromo.getPosicionSpawnX(), 130f);
         autoRival = new AutoRival(
             picodromo.getPosicionSpawnX(),

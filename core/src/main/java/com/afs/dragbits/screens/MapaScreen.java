@@ -34,12 +34,12 @@ public class MapaScreen implements Screen {
     private List<Burbuja> burbujas;
     private Vector3 mouseCoordsVirtuales;
 
-    // Jugador, Repositorio y HUD
+
     private Jugador jugador;
     private final RepositorioJugador repositorioJugador;
     private Interfaz interfazCiudad;
 
-    // ventana Seleccionar Rival
+
     private VentanaSeleccionRival ventanaRival;
 
     private static final float ANCHO_VIRTUAL = 1280f;
@@ -49,7 +49,6 @@ public class MapaScreen implements Screen {
         this.game = game;
         this.repositorioJugador = new RepositorioJugador();
 
-        // Cargar el progreso del Jugador mediante el repositorio
         this.jugador = repositorioJugador.cargarJugador();
     }
 
@@ -75,13 +74,10 @@ public class MapaScreen implements Screen {
 
         mouseCoordsVirtuales = new Vector3();
 
-        // carga del HUD de la Ciudad
         interfazCiudad = new Interfaz(batch, jugador);
 
-        // instancia de la ventana de Selección de Rival
         ventanaRival = new VentanaSeleccionRival(game, viewport, () -> ventanaRival.ocultar());
 
-        // Texturas
         mapaTexture = new Texture(Gdx.files.internal("sprites/Ciudad/Mapa.png"));
         mapaTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
@@ -115,17 +111,17 @@ public class MapaScreen implements Screen {
 
         // Tienda de Mejoras
         burbujas.add(new Burbuja(1015f - offsetX, 390f - offsetY, anchoBurbuja, altoBurbuja, frameMejoras, () -> {
-            System.out.println("Entrando a Tienda de Mejoras...");
+
         }));
 
         // Tienda de Autos
         burbujas.add(new Burbuja(350f - offsetX, 594f - offsetY, anchoBurbuja, altoBurbuja, frameAutos, () -> {
-            System.out.println("Entrando a Tienda de Autos...");
+
         }));
 
         // Modo Online
         burbujas.add(new Burbuja(1010f - offsetX, 180f - offsetY, anchoBurbuja, altoBurbuja, frameOnline, () -> {
-            System.out.println("Entrando a Modo Online...");
+
         }));
     }
 
@@ -158,7 +154,6 @@ public class MapaScreen implements Screen {
         viewport.apply();
         batch.setProjectionMatrix(camara.combined);
 
-        // DIBUJADO DE LA CIUDAD Y OBJETOS
         batch.begin();
         batch.draw(mapaTexture, 0, 0, ANCHO_VIRTUAL, ALTO_VIRTUAL);
 
@@ -167,10 +162,9 @@ public class MapaScreen implements Screen {
         }
         batch.end();
 
-        // DIBUJADO DEL HUD
+
         interfazCiudad.render();
 
-        // DIBUJADO DE LA VENTANA
         ventanaRival.render(delta);
     }
 

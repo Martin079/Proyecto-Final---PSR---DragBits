@@ -8,10 +8,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.afs.dragbits.util.TexturaSolidaFactory;
 
-/**
- * componente UI del HUD encargado de renderizar el cartel al finalizar
- * una carrera (victoria/derrota, recompensa y dinero total).
- */
+
 public class CartelResultado extends ElementoHUD {
 
     private final Texture texturaCartel;
@@ -72,9 +69,6 @@ public class CartelResultado extends ElementoHUD {
         fuenteTexto.draw(batch, "VOLVER AL MAPA", boundsBoton.x + 35f, boundsBoton.y + 32f);
     }
 
-    /**
-     * verifica si una coordenada del espacio de interfaz toca el botón "Volver al Mapa".
-     */
     public boolean fueBotonTocado(Vector3 coordsVirtuales) {
         return boundsBoton.contains(coordsVirtuales.x, coordsVirtuales.y);
     }

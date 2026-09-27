@@ -6,10 +6,6 @@ import com.afs.dragbits.jugador.Jugador;
 import com.afs.dragbits.jugador.RepositorioJugador;
 import com.afs.dragbits.mapas.Picodromo;
 
-/**
- * gestiona el estado de la carrera:
- * deteccion de cruce de meta, determinacion del ganador y recompensas.
- */
 public class ControladorCarrera {
 
     private final Picodromo picodromo;
@@ -34,9 +30,6 @@ public class ControladorCarrera {
         this.recompensaOtorgada = false;
     }
 
-    /**
-     * Evalua las condiciones de fin de carrera y gestiona la recompensa.
-     */
     public void actualizar() {
         if (carreraFinalizada) return;
 
