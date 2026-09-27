@@ -19,7 +19,6 @@ import com.afs.dragbits.jugador.Jugador;
 import com.afs.dragbits.jugador.RepositorioJugador;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MapaScreen implements Screen {
 
@@ -31,7 +30,7 @@ public class MapaScreen implements Screen {
     private Texture mapaTexture;
     private Texture burbujasSheet;
 
-    private List<Burbuja> burbujas;
+    private ArrayList<Burbuja> burbujas;
     private Vector3 mouseCoordsVirtuales;
 
 

@@ -96,3 +96,4 @@
 - Cambio en el extend de AutoRival
 - Eliminación de cargarYCortar de SpriteSheetLoader
 - Cambio a mayuscula de final en Semaforo
+- Cambio de List a ArrayList en MapaScreen
