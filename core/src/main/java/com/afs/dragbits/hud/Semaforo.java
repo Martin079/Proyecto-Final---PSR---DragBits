@@ -11,17 +11,12 @@ import com.afs.dragbits.util.SpriteSheetLoader;
 public class Semaforo extends ElementoHUD {
 
     private EstadoSemaforo estadoActual;
-    private Texture spriteSheet;
-    private TextureRegion[] frames;
-
-    // Tamaño
-    private final float ancho = 120f;
-    private final float alto = 360f;
+    private final Texture SPRITE_SHEET;
+    private final TextureRegion[] FRAMES;
 
     // Temporizadores
     private float tiempoParaSiguienteLuz;
     private float temporizador;
-    private float tiempoVerdeEnPantalla = 1.0f; // en verde antes de desaparecer
 
 
     private float posXInicialAuto;
@@ -31,10 +26,10 @@ public class Semaforo extends ElementoHUD {
         this.posXInicialAuto = posXInicialAuto;
 
 
-        spriteSheet = SpriteSheetLoader.cargarTextura("sprites/HUD/Semaforo-sheet.png");
+        SPRITE_SHEET = SpriteSheetLoader.cargarTextura("sprites/HUD/Semaforo-sheet.png");
 
         // 6 frames de 60x180 px
-        frames = SpriteSheetLoader.recortar(spriteSheet, 60, 180, 6);
+        FRAMES = SpriteSheetLoader.recortar(SPRITE_SHEET, 60, 180, 6);
 
         iniciarSecuencia();
     }
@@ -65,6 +60,8 @@ public class Semaforo extends ElementoHUD {
 
         if (estadoActual == EstadoSemaforo.VERDE) {
             // en verde se mantiene 1 segundo y luego desaparecer
+            // en verde antes de desaparecer
+            float tiempoVerdeEnPantalla = 1.0f;
             if (temporizador >= tiempoVerdeEnPantalla) {
                 estadoActual = EstadoSemaforo.FINALIZADO;
             }
@@ -107,8 +104,11 @@ public class Semaforo extends ElementoHUD {
 
         aplicarProyeccion(batch);
 
-        float posX = (anchoPantalla / 2f) - (ancho / 2f);
-        float posY = altoPantalla - alto - 10f; // 10px de margen respecto al borde superior
+        // Tamaño
+        float ANCHO = 120f;
+        float posX = (anchoPantalla / 2f) - (ANCHO / 2f);
+        float ALTO = 360f;
+        float posY = altoPantalla - ALTO - 10f; // 10px de margen respecto al borde superior
 
         int frameIndex = 0;
         switch (estadoActual) {
@@ -121,7 +121,7 @@ public class Semaforo extends ElementoHUD {
             default: break;
         }
 
-        batch.draw(frames[frameIndex], posX, posY, ancho, alto);
+        batch.draw(FRAMES[frameIndex], posX, posY, ANCHO, ALTO);
     }
 
     private void resetearAuto(Auto auto) {
@@ -136,7 +136,7 @@ public class Semaforo extends ElementoHUD {
 
     @Override
     public void dispose() {
-        if (spriteSheet != null) spriteSheet.dispose();
+        if (SPRITE_SHEET != null) SPRITE_SHEET.dispose();
     }
 
     public EstadoSemaforo getEstadoActual() {

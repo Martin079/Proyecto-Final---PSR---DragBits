@@ -4,7 +4,7 @@ import com.afs.dragbits.hud.EstadoSemaforo;
 import com.badlogic.gdx.graphics.Color;
 import com.afs.dragbits.hud.Semaforo;
 
-public class AutoRival extends com.afs.dragbits.autos.Auto {
+public class AutoRival extends Auto {
 
     private int recompensa;
     private float tiempoSiguienteCambio;

@@ -93,3 +93,6 @@
 ### Fix 27/9/2026
 
 - Cambios en los comentarios
+- Cambio en el extend de AutoRival
+- Eliminación de cargarYCortar de SpriteSheetLoader
+- Cambio a mayuscula de final en Semaforo

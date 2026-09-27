@@ -29,10 +29,4 @@ public class SpriteSheetLoader {
         System.arraycopy(tmp[0], 0, frames, 0, limite);
         return frames;
     }
-
-
-    public static TextureRegion[] cargarYCortar(String ruta, int anchoFrame, int altoFrame) {
-        Texture textura = cargarTextura(ruta);
-        return recortar(textura, anchoFrame, altoFrame);
-    }
 }
