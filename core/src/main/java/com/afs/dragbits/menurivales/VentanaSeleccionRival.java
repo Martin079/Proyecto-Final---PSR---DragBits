@@ -23,6 +23,7 @@ public class VentanaSeleccionRival implements Disposable {
     private final Main game;
     private Stage stage;
     private boolean visible = false;
+    private Runnable accionCerrar;
 
     // Recursos
     private Texture fondoOscuroTexture;
@@ -37,8 +38,9 @@ public class VentanaSeleccionRival implements Disposable {
     public VentanaSeleccionRival(Main game, Viewport viewport, Runnable accionCerrar) {
         this.game = game;
         this.stage = new Stage(viewport);
+        this.accionCerrar = accionCerrar;
         cargarRecursos();
-        crearEstructuraBase(accionCerrar);
+        crearEstructuraBase();
     }
 
     private void cargarRecursos() {
@@ -59,7 +61,7 @@ public class VentanaSeleccionRival implements Disposable {
         botonCerrarTexture = SpriteSheetLoader.cargarTextura("sprites/Botones/Boton cerrar.png");
     }
 
-    private void crearEstructuraBase(Runnable accionCerrar) {
+    private void crearEstructuraBase() {
         Table root = new Table();
         root.setFillParent(true);
 
@@ -134,6 +136,9 @@ public class VentanaSeleccionRival implements Disposable {
 
     public void ocultar() {
         this.visible = false;
+        if (accionCerrar != null) {
+            accionCerrar.run();
+        }
     }
 
     public boolean isVisible() {

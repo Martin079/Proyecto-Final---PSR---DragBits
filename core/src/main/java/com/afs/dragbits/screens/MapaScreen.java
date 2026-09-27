@@ -131,11 +131,11 @@ public class MapaScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if (!ventanaRival.isVisible() && Gdx.input.getInputProcessor() == ventanaRival.getStage()) {
+        if (ventanaRival.isVisible() && Gdx.input.getInputProcessor() == ventanaRival.getStage()) {
             Gdx.input.setInputProcessor(interfazCiudad.getStage());
         }
 
-        if (!ventanaRival.isVisible()) {
+        if (ventanaRival.isVisible()) {
             mouseCoordsVirtuales.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             viewport.unproject(mouseCoordsVirtuales);
 

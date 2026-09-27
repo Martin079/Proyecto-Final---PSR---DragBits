@@ -97,3 +97,4 @@
 - Eliminación de cargarYCortar de SpriteSheetLoader
 - Cambio a mayuscula de final en Semaforo
 - Cambio de List a ArrayList en MapaScreen
+- Modificado Runnable accionCerrar sin usar en VentanaSeleccionRival
