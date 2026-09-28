@@ -177,7 +177,12 @@ public class MapaScreen implements Screen {
 
     @Override public void pause() {}
     @Override public void resume() {}
-    @Override public void hide() {}
+
+    @Override
+    public void hide() {
+        Gdx.input.setInputProcessor(null);
+        dispose();
+    }
 
     @Override
     public void dispose() {

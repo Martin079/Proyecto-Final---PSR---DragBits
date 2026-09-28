@@ -174,7 +174,11 @@ public class GameScreen implements Screen {
 
     @Override public void pause() {}
     @Override public void resume() {}
-    @Override public void hide() {}
+
+    @Override
+    public void hide() {
+        dispose();
+    }
 
     @Override
     public void dispose() {

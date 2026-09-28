@@ -267,6 +267,7 @@ public class MainMenuScreen extends InputAdapter implements Screen {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
+        dispose();
     }
 
     @Override
