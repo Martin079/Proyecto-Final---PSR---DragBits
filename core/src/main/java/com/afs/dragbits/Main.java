@@ -3,9 +3,10 @@ package com.afs.dragbits;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.afs.dragbits.audio.ProveedorMusica;
 import com.afs.dragbits.screens.MainMenuScreen;
 
-public class Main extends Game {
+public class Main extends Game implements ProveedorMusica {
 
     private Music musicaFondo;
 
@@ -16,9 +17,10 @@ public class Main extends Game {
         musicaFondo.setVolume(1.0f);
         musicaFondo.play();
 
-        this.setScreen(new MainMenuScreen(this));
+        this.setScreen(new MainMenuScreen(this, this));
     }
 
+    @Override
     public Music getMusicaFondo() {
         return musicaFondo;
     }

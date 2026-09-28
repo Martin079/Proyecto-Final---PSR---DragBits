@@ -106,3 +106,5 @@
 - Correccion de error que no permitia elegir un rival, forzando a cerrar el juego. 
 - Correccion de bug en el viewport en CartelResultado.
 - Añadido hide funcional en GameScreen, MainMenuScreen y MapaScreen. 
+- Desacoplamiento de screens en main
+- Separar la gestion de la musica del main a una clase Interface propia

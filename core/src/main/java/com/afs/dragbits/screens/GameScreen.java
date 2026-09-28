@@ -1,5 +1,7 @@
 package com.afs.dragbits.screens;
 
+import com.afs.dragbits.audio.ProveedorMusica;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -8,7 +10,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.afs.dragbits.Main;
 import com.afs.dragbits.autos.AutoJugador;
 import com.afs.dragbits.autos.AutoRival;
 import com.afs.dragbits.camara.SeguimientoJugador;
@@ -25,7 +26,9 @@ import com.afs.dragbits.mapas.Picodromo;
 
 public class GameScreen implements Screen {
 
-    private final Main game;
+    private final Game game;
+    private ProveedorMusica proveedorMusica = null;
+
     private SpriteBatch batch;
     private Picodromo picodromo;
     private AutoJugador autoJugador;
@@ -33,15 +36,11 @@ public class GameScreen implements Screen {
     private SeguimientoJugador camaraJugador;
 
     private ControladorCarrera controladorCarrera;
-
-
     private Jugador datosJugador;
-
 
     private OrthographicCamera camaraUI;
     private Viewport viewportUI;
     private Vector3 mouseCoords;
-
 
     private Acelerador acelerador;
     private CajaDeCambios cajaDeCambios;
@@ -53,8 +52,9 @@ public class GameScreen implements Screen {
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
 
-    public GameScreen(Main game) {
+    public GameScreen(Game game, ProveedorMusica proveedorMusica) {
         this.game = game;
+        this.proveedorMusica = this.proveedorMusica;
     }
 
     @Override
@@ -62,10 +62,10 @@ public class GameScreen implements Screen {
         batch = new SpriteBatch();
 
         // Volumen de música en carrera
-        if (game.getMusicaFondo() != null) {
-            game.getMusicaFondo().setVolume(0.2f);
-            if (!game.getMusicaFondo().isPlaying()) {
-                game.getMusicaFondo().play();
+        if (proveedorMusica != null && proveedorMusica.getMusicaFondo() != null) {
+            proveedorMusica.getMusicaFondo().setVolume(0.2f);
+            if (!proveedorMusica.getMusicaFondo().isPlaying()) {
+                proveedorMusica.getMusicaFondo().play();
             }
         }
 
@@ -74,11 +74,9 @@ public class GameScreen implements Screen {
         RepositorioJugador repositorioJugador = new RepositorioJugador();
         datosJugador = repositorioJugador.cargarJugador();
 
-
         camaraUI = new OrthographicCamera();
         viewportUI = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camaraUI);
         mouseCoords = new Vector3();
-
 
         autoJugador = new AutoJugador(picodromo.getPosicionSpawnX(), 130f);
         autoRival = new AutoRival(
@@ -120,7 +118,7 @@ public class GameScreen implements Screen {
                 viewportUI.unproject(mouseCoords);
 
                 if (cartelResultado.fueBotonTocado(mouseCoords)) {
-                    game.setScreen(new MapaScreen(game));
+                    game.setScreen(new MapaScreen(game, proveedorMusica));
                     return;
                 }
             }
@@ -168,7 +166,7 @@ public class GameScreen implements Screen {
         if (hudPalanca != null) hudPalanca.resize(width, height);
         if (semaforo != null) semaforo.resize(width, height);
 
-        // CORRECCIÓN: CartelResultado mantiene su espacio virtual constante de 1280x720
+        // CartelResultado mantiene su espacio virtual constante de 1280x720
         if (cartelResultado != null) cartelResultado.resize(ANCHO_VIRTUAL, ALTO_VIRTUAL);
     }
 

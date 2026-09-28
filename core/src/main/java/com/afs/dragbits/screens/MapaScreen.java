@@ -1,6 +1,8 @@
 package com.afs.dragbits.screens;
 
+import com.afs.dragbits.audio.ProveedorMusica;
 import com.afs.dragbits.menurivales.TipoCarrera;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -11,7 +13,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.afs.dragbits.Main;
 import com.afs.dragbits.ciudad.Burbuja;
 import com.afs.dragbits.ciudad.Interfaz;
 import com.afs.dragbits.menurivales.VentanaSeleccionRival;
@@ -22,7 +23,9 @@ import java.util.ArrayList;
 
 public class MapaScreen implements Screen {
 
-    private final Main game;
+    private final Game game;
+    private final ProveedorMusica proveedorMusica;
+
     private SpriteBatch batch;
     private OrthographicCamera camara;
     private Viewport viewport;
@@ -33,21 +36,19 @@ public class MapaScreen implements Screen {
     private ArrayList<Burbuja> burbujas;
     private Vector3 mouseCoordsVirtuales;
 
-
     private Jugador jugador;
     private final RepositorioJugador repositorioJugador;
     private Interfaz interfazCiudad;
-
 
     private VentanaSeleccionRival ventanaRival;
 
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
 
-    public MapaScreen(Main game) {
+    public MapaScreen(Game game, ProveedorMusica proveedorMusica) {
         this.game = game;
+        this.proveedorMusica = proveedorMusica;
         this.repositorioJugador = new RepositorioJugador();
-
         this.jugador = repositorioJugador.cargarJugador();
     }
 
@@ -56,10 +57,10 @@ public class MapaScreen implements Screen {
         batch = new SpriteBatch();
 
         // volumen en el mapa
-        if (game.getMusicaFondo() != null) {
-            game.getMusicaFondo().setVolume(0.4f);
-            if (!game.getMusicaFondo().isPlaying()) {
-                game.getMusicaFondo().play();
+        if (proveedorMusica != null && proveedorMusica.getMusicaFondo() != null) {
+            proveedorMusica.getMusicaFondo().setVolume(0.4f);
+            if (!proveedorMusica.getMusicaFondo().isPlaying()) {
+                proveedorMusica.getMusicaFondo().play();
             }
         }
 
@@ -76,7 +77,10 @@ public class MapaScreen implements Screen {
         interfazCiudad = new Interfaz(batch, jugador);
         Gdx.input.setInputProcessor(interfazCiudad.getStage());
 
-        ventanaRival = new VentanaSeleccionRival(game, viewport, () -> ventanaRival.ocultar());
+        // Callback para cuando se cierra la ventana emergente
+        ventanaRival = new VentanaSeleccionRival(game, proveedorMusica, viewport, () -> {
+            Gdx.input.setInputProcessor(interfazCiudad.getStage());
+        });
 
         mapaTexture = new Texture(Gdx.files.internal("sprites/Ciudad/Mapa.png"));
         mapaTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -132,11 +136,9 @@ public class MapaScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
         if (!ventanaRival.isVisible() && Gdx.input.getInputProcessor() == ventanaRival.getStage()) {
             Gdx.input.setInputProcessor(interfazCiudad.getStage());
         }
-
 
         if (!ventanaRival.isVisible()) {
             if (Gdx.input.justTouched()) {

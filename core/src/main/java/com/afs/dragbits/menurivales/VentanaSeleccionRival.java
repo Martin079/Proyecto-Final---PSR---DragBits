@@ -1,5 +1,7 @@
 package com.afs.dragbits.menurivales;
 
+import com.afs.dragbits.audio.ProveedorMusica;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -13,14 +15,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.afs.dragbits.Main;
 import com.afs.dragbits.screens.GameScreen;
 import com.afs.dragbits.util.SpriteSheetLoader;
 import com.afs.dragbits.util.TexturaSolidaFactory;
 
 public class VentanaSeleccionRival implements Disposable {
 
-    private final Main game;
+    private final Game game;
+    private final ProveedorMusica proveedorMusica;
     private Stage stage;
     private boolean visible = false;
     private Runnable accionCerrar;
@@ -35,8 +37,9 @@ public class VentanaSeleccionRival implements Disposable {
     // Interface
     private Table ventanaTable;
 
-    public VentanaSeleccionRival(Main game, Viewport viewport, Runnable accionCerrar) {
+    public VentanaSeleccionRival(Game game, ProveedorMusica proveedorMusica, Viewport viewport, Runnable accionCerrar) {
         this.game = game;
+        this.proveedorMusica = proveedorMusica;
         this.stage = new Stage(viewport);
         this.accionCerrar = accionCerrar;
         cargarRecursos();
@@ -123,7 +126,7 @@ public class VentanaSeleccionRival implements Disposable {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         ocultar();
-                        game.setScreen(new GameScreen(game));
+                        game.setScreen(new GameScreen(game, proveedorMusica));
                     }
                 });
             }
