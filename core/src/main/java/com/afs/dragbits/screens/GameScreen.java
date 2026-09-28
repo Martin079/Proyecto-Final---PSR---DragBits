@@ -167,7 +167,9 @@ public class GameScreen implements Screen {
         if (hudBasicos != null) hudBasicos.resize(width, height);
         if (hudPalanca != null) hudPalanca.resize(width, height);
         if (semaforo != null) semaforo.resize(width, height);
-        if (cartelResultado != null) cartelResultado.resize(width, height);
+
+        // CORRECCIÓN: CartelResultado mantiene su espacio virtual constante de 1280x720
+        if (cartelResultado != null) cartelResultado.resize(ANCHO_VIRTUAL, ALTO_VIRTUAL);
     }
 
     @Override public void pause() {}

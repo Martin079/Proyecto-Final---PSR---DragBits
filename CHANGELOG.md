@@ -104,3 +104,5 @@
 - Correccion del click en el menu principal.
 - Correccion de error que no permitia abrir las burbujas del mapa
 - Correccion de error que no permitia elegir un rival, forzando a cerrar el juego. 
+- Correccion de bug en el viewport en CartelResultado.
+- 
