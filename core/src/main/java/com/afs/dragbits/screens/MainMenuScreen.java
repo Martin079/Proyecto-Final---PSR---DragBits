@@ -223,7 +223,18 @@ public class MainMenuScreen extends InputAdapter implements Screen {
                     estaMostrandoControles = false;
                 }
             } else {
-                ejecutarOpcionSeleccionada();
+                Vector3 coordenadasMundo = viewport.unproject(new Vector3(screenX, screenY, 0));
+
+                for (int i = 0; i < opcionesMenu.length; i++) {
+                    float topeY = posicionesYOpciones[i];
+                    float baseY = topeY - ALTURA_HITBOX_OPCION;
+
+                    if (coordenadasMundo.y <= topeY && coordenadasMundo.y >= baseY) {
+                        indiceSeleccionado = i;
+                        ejecutarOpcionSeleccionada();
+                        break;
+                    }
+                }
             }
         }
         return true;
@@ -270,4 +281,3 @@ public class MainMenuScreen extends InputAdapter implements Screen {
     @Override public void pause() {}
     @Override public void resume() {}
 }
-

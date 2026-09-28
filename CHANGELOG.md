@@ -98,3 +98,9 @@
 - Cambio a mayuscula de final en Semaforo
 - Cambio de List a ArrayList en MapaScreen
 - Modificado Runnable accionCerrar sin usar en VentanaSeleccionRival
+
+### Fix 28/9/2026
+
+- Correccion del click en el menu principal.
+- Correccion de error que no permitia abrir las burbujas del mapa
+- Correccion de error que no permitia elegir un rival, forzando a cerrar el juego. 

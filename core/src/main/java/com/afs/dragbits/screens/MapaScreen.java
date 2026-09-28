@@ -74,6 +74,7 @@ public class MapaScreen implements Screen {
         mouseCoordsVirtuales = new Vector3();
 
         interfazCiudad = new Interfaz(batch, jugador);
+        Gdx.input.setInputProcessor(interfazCiudad.getStage());
 
         ventanaRival = new VentanaSeleccionRival(game, viewport, () -> ventanaRival.ocultar());
 
@@ -131,15 +132,17 @@ public class MapaScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if (ventanaRival.isVisible() && Gdx.input.getInputProcessor() == ventanaRival.getStage()) {
+
+        if (!ventanaRival.isVisible() && Gdx.input.getInputProcessor() == ventanaRival.getStage()) {
             Gdx.input.setInputProcessor(interfazCiudad.getStage());
         }
 
-        if (ventanaRival.isVisible()) {
-            mouseCoordsVirtuales.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            viewport.unproject(mouseCoordsVirtuales);
 
+        if (!ventanaRival.isVisible()) {
             if (Gdx.input.justTouched()) {
+                mouseCoordsVirtuales.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+                viewport.unproject(mouseCoordsVirtuales);
+
                 for (Burbuja b : burbujas) {
                     if (b.verificarClic(mouseCoordsVirtuales.x, mouseCoordsVirtuales.y)) {
                         break;
@@ -161,9 +164,7 @@ public class MapaScreen implements Screen {
         }
         batch.end();
 
-
         interfazCiudad.render();
-
         ventanaRival.render(delta);
     }
 

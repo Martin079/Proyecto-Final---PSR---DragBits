@@ -44,18 +44,18 @@ public class VentanaSeleccionRival implements Disposable {
     }
 
     private void cargarRecursos() {
-        //gris oscuro semitransparente
+        // gris oscuro semitransparente
         fondoOscuroTexture = TexturaSolidaFactory.crearTextura(new Color(0.1f, 0.1f, 0.1f, 0.90f));
 
-        //sheet de 14 cuadros de 200x200 px
+        // sheet de 14 cuadros de 200x200 px
         menuAutosSheet = SpriteSheetLoader.cargarTextura("sprites/MenuAutos/Iconos autos-sheet.png");
         TextureRegion[] todosLosFrames = SpriteSheetLoader.recortar(menuAutosSheet, 200, 200, 14);
 
-        //primeros 10 frames rivales
+        // primeros 10 frames rivales
         framesRival = new TextureRegion[10];
         System.arraycopy(todosLosFrames, 0, framesRival, 0, 10);
 
-        //auto bloqueado
+        // auto bloqueado
         frameBloqueado = todosLosFrames[13];
 
         botonCerrarTexture = SpriteSheetLoader.cargarTextura("sprites/Botones/Boton cerrar.png");
@@ -92,7 +92,7 @@ public class VentanaSeleccionRival implements Disposable {
         topBar.add(btnCerrar).size(80, 80).right();
         ventanaTable.add(topBar).growX().padBottom(15).row();
 
-        //(3 Arriba / 2 Abajo)
+        // (3 Arriba / 2 Abajo)
         Table grillaRivales = new Table();
 
         // FILA SUPERIOR (3 rivales)
@@ -135,6 +135,7 @@ public class VentanaSeleccionRival implements Disposable {
     }
 
     public void ocultar() {
+        if (!visible) return;
         this.visible = false;
         if (accionCerrar != null) {
             accionCerrar.run();
