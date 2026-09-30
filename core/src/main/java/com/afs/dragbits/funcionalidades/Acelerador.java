@@ -1,13 +1,11 @@
 package com.afs.dragbits.funcionalidades;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.afs.dragbits.autos.Auto;
 
 public class Acelerador {
 
-    public void actualizar(Auto auto, float delta) {
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+    public void actualizar(Auto auto, EntradaJugador entrada, float delta) {
+        if (entrada.estaAcelerando()) {
             auto.acelerar(delta);
         } else {
             auto.desacelerar(delta);

@@ -1,6 +1,7 @@
 package com.afs.dragbits.screens;
 
 import com.afs.dragbits.audio.ProveedorMusica;
+import com.afs.dragbits.funcionalidades.EntradaJugador;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -52,6 +53,8 @@ public class GameScreen implements Screen {
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
 
+    private EntradaJugador entradaJugador;
+
     public GameScreen(Game game, ProveedorMusica proveedorMusica) {
         this.game = game;
         this.proveedorMusica = this.proveedorMusica;
@@ -59,6 +62,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
+
+        entradaJugador = new EntradaJugador();
+
+
         batch = new SpriteBatch();
 
         // Volumen de música en carrera
@@ -104,8 +111,8 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         if (!controladorCarrera.isCarreraFinalizada()) {
-            cajaDeCambios.actualizar(autoJugador, delta);
-            acelerador.actualizar(autoJugador, delta);
+            cajaDeCambios.actualizar(autoJugador, entradaJugador); // Se removió el parámetro delta sobrante
+            acelerador.actualizar(autoJugador, entradaJugador, delta);
             autoJugador.actualizar(delta);
 
             autoRival.actualizarIA(delta, semaforo.getEstadoActual());

@@ -1,7 +1,5 @@
 package com.afs.dragbits.funcionalidades;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.afs.dragbits.autos.Auto;
 
 public class CajaDeCambios {
@@ -11,29 +9,29 @@ public class CajaDeCambios {
     private int palancaX = 0;
     private int palancaY = 0;
 
-    public void actualizar(Auto auto, float delta) {
-        boolean embrague = Gdx.input.isKeyPressed(Input.Keys.SPACE);
+    public void actualizar(Auto auto, EntradaJugador entrada) {
+        boolean embrague = entrada.estaEmbragado();
         auto.setEmbraguePresionado(embrague);
 
         if (embrague) {
-            // movimiento horizontal (Flecha Izquierda / Derecha)
+            // Movimiento horizontal (Izquierda / Derecha)
             if (palancaY == 0) {
-                if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
+                if (entrada.seMovioPalancaIzquierda()) {
                     if (palancaX > -1) palancaX--;
-                } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
+                } else if (entrada.seMovioPalancaDerecha()) {
                     if (palancaX < 1) palancaX++;
                 }
             }
 
-            // movimiento vertical (Flecha Arriba / Abajo)
-            if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
+            // Movimiento vertical (Arriba / Abajo)
+            if (entrada.seMovioPalancaArriba()) {
                 if (palancaY < 1) palancaY++;
-            } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
+            } else if (entrada.seMovioPalancaAbajo()) {
                 if (palancaY > -1) palancaY--;
             }
 
-            //  marcha según coordenadas (X, Y)
-            int nuevaMarcha = 0; // Neutral por defecto
+            // Determinar marcha según coordenadas (X, Y)
+            int nuevaMarcha = 0; // Neutral
 
             if (palancaX == -1 && palancaY == 1)      nuevaMarcha = 1; // Izquierda - Arriba
             else if (palancaX == -1 && palancaY == -1) nuevaMarcha = 2; // Izquierda - Abajo

@@ -108,3 +108,7 @@
 - Añadido hide funcional en GameScreen, MainMenuScreen y MapaScreen. 
 - Desacoplamiento de screens en main
 - Separar la gestion de la musica del main a una clase Interface propia
+
+### Fix 30/9/2026
+
+- Modificacion de las clases Acelerador y CajaDeCambios, pasando el input a la clase EntradaJugador
