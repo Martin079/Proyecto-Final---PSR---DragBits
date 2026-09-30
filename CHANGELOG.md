@@ -1,114 +1,131 @@
 # Changelog
 
+Todos los cambios relevantes de este proyecto se documentan en este archivo.
+
+El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/) y el proyecto utiliza [Versionado Semántico](https://semver.org/lang/es/).
+Convención utilizada en todo el historial:
+
+- Cada versión se escribe como `## [X.Y.Z] - AAAA-MM-DD` (fecha en formato ISO 8601).
+- Dentro de cada versión, los cambios se agrupan únicamente en: `Added` (nuevas funcionalidades), `Changed` (cambios y refactorizaciones), `Fixed` (corrección de errores) y `Removed` (elementos eliminados).
+- Mientras el juego esté en desarrollo inicial se usan versiones `0.x.y`; la `1.0.0` se reserva para la entrega final.
+- Los cambios aún no versionados van en `[Unreleased]`.
+
 ## [Unreleased]
+
+## [0.8.3] - 2026-09-28
+
+### Fixed
+- Corrección del click en el menú principal.
+- Corrección de error que no permitía abrir las burbujas del mapa.
+- Corrección de error que no permitía elegir un rival y forzaba el cierre del juego.
+- Corrección de bug en el viewport de `CartelResultado`.
+
+### Changed
+- Se agregó un `hide` funcional en `GameScreen`, `MainMenuScreen` y `MapaScreen`.
+- Desacoplamiento de las screens en `Main`.
+- La gestión de la música se separó de `Main` mediante la interfaz `ProveedorMusica`.
+
+## [0.8.2] - 2026-09-27
+
+### Changed
+- Cambios en los comentarios del código.
+- Cambio en el `extends` de `AutoRival`.
+- Se puso en mayúscula el `final` de `Semaforo`.
+- Cambio de `List` a `ArrayList` en `MapaScreen`.
+
+### Removed
+- Se eliminó `cargarYCortar` de `SpriteSheetLoader`.
+- Se eliminó el `Runnable accionCerrar`, que no se usaba, en `VentanaSeleccionRival`.
+
+## [0.8.1] - 2026-09-24
+
+### Changed
+- Creación de las clases `enum` `EstadoAuto`, `EstadoSemaforo` y `TipoCarrera`.
+
+## [0.8.0] - 2026-09-02
+
+### Added
+- Un único tema de fondo para cada "pantalla", con volumen distinto en cada uno.
+- Clase `SpriteSheetLoader` para reutilizar la carga de sprites.
+- Clase `TexturaSolidaFactory` para reutilizar la creación de fondos sólidos y lisos.
+- Clase `RepositorioJugador` para el manejo de carga y guardado de datos del jugador.
+- Clase `CartelResultado` para el cartel que se muestra al finalizar la carrera.
+- Clase `ControladorCarrera` para la gestión de la carrera.
+
+### Changed
+- Nuevo sprite para el auto del primer rival.
+- Renombrado de los sprites para evitar errores por mayúsculas/minúsculas.
+- Renombrado de los packages de mayúscula a minúscula.
+- La clase `Nota` pasó a ser el archivo `NOTAS.md`.
+- Refactorización de `VentanaSeleccionRival` para evitar código duplicado.
+- Refactorización de `Jugador`, delegando la carga y el guardado a `RepositorioJugador`.
+- Refactorización de `Basicos`, `Palanca` y `Semaforo` con `ElementoHUD` para compartir el campo `OrthographicCamera`.
+- Refactorización de `GameScreen`: el cartel de fin de carrera pasó a `CartelResultado` y la gestión de la carrera a `ControladorCarrera`.
+
+### Fixed
+- La música se cargaba dos veces y una de las cargas no se utilizaba, ocupando memoria.
+
+## [0.7.0] - 2026-09-01
+
+### Added
+- Primer bot rival de carreras legales con dificultad fácil.
+- Otorgamiento de recompensas al finalizar la carrera.
+
+### Changed
+- Sprite del primer auto y mejores efectos de velocidad y sensación de movimiento.
+
+## [0.6.0] - 2026-08-31
+
+### Added
+- Menú para elegir rival en las carreras legales e ilegales.
+- Posición de largada y de meta, y vuelta al menú al llegar a la meta.
+
+### Changed
+- Actualización de los sprites de la pista.
+
+## [0.5.0] - 2026-08-24
+
+### Added
+- Clase `Jugador` con dinero, experiencia, nivel y el cálculo de la progresión.
+- Guardado de las estadísticas del jugador en un archivo.
+- HUD en la ciudad que indica dinero y nivel.
+
+### Changed
+- Mayor tamaño del semáforo.
+- Reducción de las estadísticas iniciales del auto del jugador.
+
+## [0.4.0] - 2026-08-22
+
+### Added
+- Base para el sistema de nitro.
+
+### Changed
+- Nuevo sistema de aceleración, tracción y velocidad máxima.
+- Ventana forzada a pantalla completa y sin bordes.
+
+## [0.3.0] - 2026-08-19
+
+### Added
+- Secuencia del semáforo y penalización por arrancar antes.
+- Mapa con los globos/íconos de cada zona en su posición correspondiente.
+- Al tocar el ícono de carrera legal se inicia la carrera.
+
+## [0.2.0] - 2026-08-10
+
+### Added
+- Versión inicial del control de aceleración y cambio de marchas.
+- HUD simplificado por texto para mostrar información básica.
+- Versión preliminar de las clases `Auto` y `AutoJugador` con velocidad máxima, aceleración y RPM máximas.
+- Diseño simplificado de la pista y del auto.
+- Primer auto con spritesheet, que reacciona según la situación (cambio, aceleración, estático).
+- HUD básico de la palanca y diseño preliminar de la palanca de cambios.
+- Movimiento de la palanca en el HUD siguiendo las flechas.
+
+## [0.1.0] - AAAA-MM-DD
 
 ### Added
 - Configuración inicial del proyecto con LibGDX usando la herramienta gdx-liftoff.
 - Configuración del repositorio Git local y vinculación con GitHub.
-- Creación del archivo README.md con la información del proyecto.
-- Creación del archivo CHANGELOG.md para el registro de modificaciones.
-- Creación y confifuración de la wiki de GitHub
-
-### Added 5/8/2026
-
-- Version Inicial del control de aceleracion y cambio
-- HUD simplificado por texto para mostrar informacion basica 
-- Version preliminar de la clase Auto y AutoJugador con velocidad maxima, aceleracion y rpm maximas
-- Diseño simplificado de la pista y del auto
-
-
-### Updated 10/8/2026
-
-- Diseño basico de un primer auto con spritesheet, y reaciona segun la situacion (cambio, aceleracion, estatico).
-
-### Added 10/8/2026
-
-- HUD basico de la palanca y diseño preliminar de la palanca de cambios
-- movimiento de la palanca en el HUD siguiendo las flechas
-
-### Added 19/8/2026
-
-- Secuencia del semaforo y penalizacion al arrancar antes.
-- Añadido del mapa y los globos/iconos en su posicion correspondiente
-- Al tocar el icono de carrera legal se inicia la carrera
-
-### Updated 22/8/2026
-
-- Cambiado el sistema de aceleracion traccion y velocidad maxima.
-- Implementada la base para el nitro
-- Ventana forzada en pantalla completa y sin bordes
-
-### Updated 24/8/2026
-
-- Aumentado el tamaño del semaforo
-- Reducido las estadisticas del auto del jugador al inicio
-
-### Added 24/8/2026 
-
-- Clase jugador con dinero, experiencia, nivel, y el calculo para la progresión
-- Implementacion de guardado de estadisticas del jugador en un archivo
-- HUD en la ciudad indicando dinero y nivel
-
-### Added 30/8/2026
-- Añadido de menu para elegir rival para las carreras legales e ilegales
-
-### Updated 31/8/2026
-- Actualizacion sprites de la pista
-
-### Added 31/8/2026
-- Posicion de largada y meta, y vuelta al menu al llegar a la meta
-
-
-### Added 1/9/2026
-- Primer bot rival de carreras legales con dificultad facil
-- Otorgamiento de recompensas al finalizar la carrera
-
-### Updated 1/9/2026
-- Sprite del primer auto y mejores efectos de velocidad y sensacion de movimiento
-
-### Updated 2/9/2026
-- Cambio en el sprite para el auto del primer rival
-
-### Added 2/9/2026
-- Añadido de un único tema de fondo para cada "pantalla", con volumen distinto en cada uno
-
-### Fix 2/9/2026
-- Cambios en el nombre de los sprites para evitar errores por mayusculas/minusculas
-- Cambios de nombre de Mayuscula a minuscula en los package
-- Cambio de clase nota a archivo .md
-- Correccion de carga de musica dos veces donde una no se utilizaba ocupando memoria
-- Añadido clase SpriteSheetLoader para reutilizar la carga de sprites
-- Añadido clase TexturaSolidaFactory para reutilizar la creacion de fondos solidos y lisos
-- Refactorizacion de VentanaSeleccionRival para evitar duplicidad de codigo
-- Refactorizacion de la clase Jugador, creando la clase RepositorioJugador para manejo de carga y guardado de datos
-- Refactorizacion Basicos, Palanca y Semaforo con ElementoHUD por el campo OrtographicCamera
-- Refactorizacion GameScreen, moviendo el cartel al finalizar la carrera a la clase CartelResultado.
-- Refactorizacion de GameScreen, moviendo la gestion de la carrera a ControladorCarrera
-
-### Fix 24/9/2026
-
-- Creacion de clase Enum para EstadoAuto, EstadoSemaforo y TipoCarrera
-
-
-### Fix 27/9/2026
-
-- Cambios en los comentarios
-- Cambio en el extend de AutoRival
-- Eliminación de cargarYCortar de SpriteSheetLoader
-- Cambio a mayuscula de final en Semaforo
-- Cambio de List a ArrayList en MapaScreen
-- Modificado Runnable accionCerrar sin usar en VentanaSeleccionRival
-
-### Fix 28/9/2026
-
-- Correccion del click en el menu principal.
-- Correccion de error que no permitia abrir las burbujas del mapa
-- Correccion de error que no permitia elegir un rival, forzando a cerrar el juego. 
-- Correccion de bug en el viewport en CartelResultado.
-- Añadido hide funcional en GameScreen, MainMenuScreen y MapaScreen. 
-- Desacoplamiento de screens en main
-- Separar la gestion de la musica del main a una clase Interface propia
-
-### Fix 30/9/2026
-
-- Modificacion de las clases Acelerador y CajaDeCambios, pasando el input a la clase EntradaJugador
+- Creación del archivo `README.md` con la información del proyecto.
+- Creación del archivo `CHANGELOG.md` para el registro de modificaciones.
+- Creación y configuración de la wiki de GitHub.
