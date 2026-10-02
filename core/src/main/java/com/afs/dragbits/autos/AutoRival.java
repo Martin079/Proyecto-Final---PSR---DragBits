@@ -2,7 +2,6 @@ package com.afs.dragbits.autos;
 
 import com.afs.dragbits.hud.EstadoSemaforo;
 import com.badlogic.gdx.graphics.Color;
-import com.afs.dragbits.hud.Semaforo;
 
 public class AutoRival extends Auto {
 
