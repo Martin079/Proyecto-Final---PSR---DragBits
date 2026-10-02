@@ -56,12 +56,8 @@ public class MapaScreen implements Screen {
     public void show() {
         batch = new SpriteBatch();
 
-        // volumen en el mapa
-        if (proveedorMusica != null && proveedorMusica.getMusicaFondo() != null) {
-            proveedorMusica.getMusicaFondo().setVolume(0.4f);
-            if (!proveedorMusica.getMusicaFondo().isPlaying()) {
-                proveedorMusica.getMusicaFondo().play();
-            }
+        if (proveedorMusica != null && proveedorMusica.getGestorDeAudio() != null) {
+            proveedorMusica.getGestorDeAudio().setModificadorPantalla(0.4f);
         }
 
         // recargar progreso por si cambio al volver de otra pantalla

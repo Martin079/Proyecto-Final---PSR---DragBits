@@ -68,12 +68,8 @@ public class GameScreen implements Screen {
 
         batch = new SpriteBatch();
 
-        // Volumen de música en carrera
-        if (proveedorMusica != null && proveedorMusica.getMusicaFondo() != null) {
-            proveedorMusica.getMusicaFondo().setVolume(0.2f);
-            if (!proveedorMusica.getMusicaFondo().isPlaying()) {
-                proveedorMusica.getMusicaFondo().play();
-            }
+        if (proveedorMusica != null && proveedorMusica.getGestorDeAudio() != null) {
+            proveedorMusica.getGestorDeAudio().setModificadorPantalla(0.2f);
         }
 
         picodromo = new Picodromo();

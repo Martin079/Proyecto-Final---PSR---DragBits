@@ -1,28 +1,25 @@
 package com.afs.dragbits;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
+import com.afs.dragbits.audio.GestorDeAudio;
 import com.afs.dragbits.audio.ProveedorMusica;
 import com.afs.dragbits.screens.MainMenuScreen;
 
 public class Main extends Game implements ProveedorMusica {
 
-    private Music musicaFondo;
+    private GestorDeAudio gestorDeAudio;
 
     @Override
     public void create() {
-        musicaFondo = Gdx.audio.newMusic(Gdx.files.internal("audio/Musica/musica 1.mp3"));
-        musicaFondo.setLooping(true);
-        musicaFondo.setVolume(1.0f);
-        musicaFondo.play();
+        gestorDeAudio = new GestorDeAudio();
+        gestorDeAudio.reproducirMusica();
 
         this.setScreen(new MainMenuScreen(this, this));
     }
 
     @Override
-    public Music getMusicaFondo() {
-        return musicaFondo;
+    public GestorDeAudio getGestorDeAudio() {
+        return gestorDeAudio;
     }
 
     @Override
@@ -33,8 +30,8 @@ public class Main extends Game implements ProveedorMusica {
     @Override
     public void dispose() {
         super.dispose();
-        if (musicaFondo != null) {
-            musicaFondo.dispose();
+        if (gestorDeAudio != null) {
+            gestorDeAudio.dispose();
         }
     }
 }

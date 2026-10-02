@@ -63,11 +63,9 @@ public class MainMenuScreen extends InputAdapter implements Screen {
     public void show() {
         Gdx.input.setInputProcessor(this);
 
-        if (proveedorMusica != null && proveedorMusica.getMusicaFondo() != null) {
-            proveedorMusica.getMusicaFondo().setVolume(1.0f);
-            if (!proveedorMusica.getMusicaFondo().isPlaying()) {
-                proveedorMusica.getMusicaFondo().play();
-            }
+        if (proveedorMusica != null && proveedorMusica.getGestorDeAudio() != null) {
+            proveedorMusica.getGestorDeAudio().setModificadorPantalla(1.0f);
+            proveedorMusica.getGestorDeAudio().reproducirMusica();
         }
     }
 
