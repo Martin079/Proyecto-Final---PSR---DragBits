@@ -17,6 +17,7 @@ Convención utilizada en todo el historial:
 ### Fixed
 - Agregada clase `GestorDeAudio` para centralizar la musica y los sonidos
 - `EntradaJugador` ahora cubre el mouse en el las screens. 
+- Checkeo del click en menu con la coordenada X
 
 ## [0.8.3] - 2026-09-28
 

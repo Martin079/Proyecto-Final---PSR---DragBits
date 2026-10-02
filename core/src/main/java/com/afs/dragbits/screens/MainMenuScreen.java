@@ -40,6 +40,9 @@ public class MainMenuScreen implements Screen {
     private float[] escalasActuales = {ESCALA_NORMAL, ESCALA_NORMAL, ESCALA_NORMAL};
 
     private float[] posicionesYOpciones = new float[3];
+    private float[] posicionesXOpciones = new float[3];
+    private float[] anchosOpciones = new float[3];
+
     private final float ALTURA_HITBOX_OPCION = 60f;
 
     private Texture texturaControles;
@@ -112,7 +115,12 @@ public class MainMenuScreen implements Screen {
                         for (int i = 0; i < opcionesMenu.length; i++) {
                             float topeY = posicionesYOpciones[i];
                             float baseY = topeY - ALTURA_HITBOX_OPCION;
-                            if (pos.y <= topeY && pos.y >= baseY) {
+
+                            float minX = posicionesXOpciones[i];
+                            float maxX = minX + anchosOpciones[i];
+
+                            // Validacion combinada en Y y en X
+                            if (pos.y <= topeY && pos.y >= baseY && pos.x >= minX && pos.x <= maxX) {
                                 indiceSeleccionado = i;
                                 ejecutarOpcionSeleccionada();
                                 break;
@@ -134,7 +142,11 @@ public class MainMenuScreen implements Screen {
         for (int i = 0; i < opcionesMenu.length; i++) {
             float topeY = posicionesYOpciones[i];
             float baseY = topeY - ALTURA_HITBOX_OPCION;
-            if (y <= topeY && y >= baseY) {
+
+            float minX = posicionesXOpciones[i];
+            float maxX = minX + anchosOpciones[i];
+
+            if (y <= topeY && y >= baseY && x >= minX && x <= maxX) {
                 indiceSeleccionado = i;
             }
         }
@@ -200,7 +212,10 @@ public class MainMenuScreen implements Screen {
             float opcionX = (viewport.getWorldWidth() - layoutTexto.width) / 2;
             float opcionY = posicionYInicial - (i * espacioEntreOpciones);
 
+            // Guardar datos de limites
             posicionesYOpciones[i] = opcionY;
+            posicionesXOpciones[i] = opcionX;
+            anchosOpciones[i] = layoutTexto.width;
 
             fuenteOpciones.draw(batch, opcionesMenu[i], opcionX, opcionY);
 
