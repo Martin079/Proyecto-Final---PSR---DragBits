@@ -1,6 +1,7 @@
 package com.afs.dragbits.screens;
 
 import com.afs.dragbits.audio.ProveedorMusica;
+import com.afs.dragbits.funcionalidades.EntradaJugador;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -13,11 +14,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class MainMenuScreen extends InputAdapter implements Screen {
+public class MainMenuScreen implements Screen {
 
     private final Game game;
     private final ProveedorMusica proveedorMusica;
@@ -44,6 +45,8 @@ public class MainMenuScreen extends InputAdapter implements Screen {
     private Texture texturaControles;
     private boolean estaMostrandoControles = false;
 
+    private EntradaJugador entradaJugador;
+
     public MainMenuScreen(Game game, ProveedorMusica proveedorMusica) {
         this.game = game;
         this.proveedorMusica = proveedorMusica;
@@ -61,11 +64,79 @@ public class MainMenuScreen extends InputAdapter implements Screen {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(this);
+        entradaJugador = new EntradaJugador();
+
+        // Entrada acoplada usando el patron adapter interno para redirigir acciones de menú
+        Gdx.input.setInputProcessor(new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if (estaMostrandoControles) {
+                    if (keycode == Input.Keys.ESCAPE || keycode == Input.Keys.ENTER) {
+                        estaMostrandoControles = false;
+                    }
+                    return true;
+                }
+
+                if (keycode == Input.Keys.UP) {
+                    indiceSeleccionado--;
+                    if (indiceSeleccionado < 0) indiceSeleccionado = opcionesMenu.length - 1;
+                } else if (keycode == Input.Keys.DOWN) {
+                    indiceSeleccionado++;
+                    if (indiceSeleccionado >= opcionesMenu.length) indiceSeleccionado = 0;
+                } else if (keycode == Input.Keys.ENTER) {
+                    ejecutarOpcionSeleccionada();
+                }
+                return true;
+            }
+
+            @Override
+            public boolean mouseMoved(int screenX, int screenY) {
+                if (!estaMostrandoControles) {
+                    Vector2 pos = entradaJugador.getCoordenadasMouseActuales(viewport);
+                    actualizarSeleccionPorMouse(pos.x, pos.y);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+                if (button == Input.Buttons.LEFT) {
+                    Vector2 pos = entradaJugador.getCoordenadasToque(viewport);
+                    if (estaMostrandoControles) {
+                        float areaBotonX = viewport.getWorldWidth() - 200f;
+                        float areaBotonY = viewport.getWorldHeight() - 100f;
+                        if (pos.x > areaBotonX && pos.y > areaBotonY) {
+                            estaMostrandoControles = false;
+                        }
+                    } else {
+                        for (int i = 0; i < opcionesMenu.length; i++) {
+                            float topeY = posicionesYOpciones[i];
+                            float baseY = topeY - ALTURA_HITBOX_OPCION;
+                            if (pos.y <= topeY && pos.y >= baseY) {
+                                indiceSeleccionado = i;
+                                ejecutarOpcionSeleccionada();
+                                break;
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        });
 
         if (proveedorMusica != null && proveedorMusica.getGestorDeAudio() != null) {
             proveedorMusica.getGestorDeAudio().setModificadorPantalla(1.0f);
             proveedorMusica.getGestorDeAudio().reproducirMusica();
+        }
+    }
+
+    private void actualizarSeleccionPorMouse(float x, float y) {
+        for (int i = 0; i < opcionesMenu.length; i++) {
+            float topeY = posicionesYOpciones[i];
+            float baseY = topeY - ALTURA_HITBOX_OPCION;
+            if (y <= topeY && y >= baseY) {
+                indiceSeleccionado = i;
+            }
         }
     }
 
@@ -138,78 +209,6 @@ public class MainMenuScreen extends InputAdapter implements Screen {
                 fuenteOpciones.draw(batch, ">", flechaX, opcionY);
             }
         }
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        if (estaMostrandoControles) {
-            if (keycode == Input.Keys.ESCAPE || keycode == Input.Keys.ENTER) {
-                estaMostrandoControles = false;
-            }
-            return true;
-        }
-
-        if (keycode == Input.Keys.UP) {
-            indiceSeleccionado--;
-            if (indiceSeleccionado < 0) {
-                indiceSeleccionado = opcionesMenu.length - 1;
-            }
-        } else if (keycode == Input.Keys.DOWN) {
-            indiceSeleccionado++;
-            if (indiceSeleccionado >= opcionesMenu.length) {
-                indiceSeleccionado = 0;
-            }
-        } else if (keycode == Input.Keys.ENTER) {
-            ejecutarOpcionSeleccionada();
-        }
-        return true;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        if (!estaMostrandoControles) {
-            Vector3 coordenadasMundo = viewport.unproject(new Vector3(screenX, screenY, 0));
-
-            for (int i = 0; i < opcionesMenu.length; i++) {
-                float topeY = posicionesYOpciones[i];
-                float baseY = topeY - ALTURA_HITBOX_OPCION;
-
-                if (coordenadasMundo.y <= topeY && coordenadasMundo.y >= baseY) {
-                    indiceSeleccionado = i;
-                }
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (button == Input.Buttons.LEFT) {
-            if (estaMostrandoControles) {
-                Vector3 coordenadasMundo = viewport.unproject(new Vector3(screenX, screenY, 0));
-
-                float areaBotonX = viewport.getWorldWidth() - 200f;
-                float areaBotonY = viewport.getWorldHeight() - 100f;
-
-                if (coordenadasMundo.x > areaBotonX && coordenadasMundo.y > areaBotonY) {
-                    estaMostrandoControles = false;
-                }
-            } else {
-                Vector3 coordenadasMundo = viewport.unproject(new Vector3(screenX, screenY, 0));
-
-                for (int i = 0; i < opcionesMenu.length; i++) {
-                    float topeY = posicionesYOpciones[i];
-                    float baseY = topeY - ALTURA_HITBOX_OPCION;
-
-                    if (coordenadasMundo.y <= topeY && coordenadasMundo.y >= baseY) {
-                        indiceSeleccionado = i;
-                        ejecutarOpcionSeleccionada();
-                        break;
-                    }
-                }
-            }
-        }
-        return true;
     }
 
     private void ejecutarOpcionSeleccionada() {

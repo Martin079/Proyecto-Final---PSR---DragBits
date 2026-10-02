@@ -1,22 +1,13 @@
 package com.afs.dragbits.screens;
 
 import com.afs.dragbits.audio.ProveedorMusica;
-import com.afs.dragbits.funcionalidades.EntradaJugador;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.afs.dragbits.autos.AutoJugador;
 import com.afs.dragbits.autos.AutoRival;
 import com.afs.dragbits.camara.SeguimientoJugador;
-import com.afs.dragbits.funcionalidades.ControladorCarrera;
 import com.afs.dragbits.funcionalidades.Acelerador;
 import com.afs.dragbits.funcionalidades.CajaDeCambios;
+import com.afs.dragbits.funcionalidades.ControladorCarrera;
+import com.afs.dragbits.funcionalidades.EntradaJugador;
 import com.afs.dragbits.hud.Basicos;
 import com.afs.dragbits.hud.CartelResultado;
 import com.afs.dragbits.hud.Palanca;
@@ -24,16 +15,26 @@ import com.afs.dragbits.hud.Semaforo;
 import com.afs.dragbits.jugador.Jugador;
 import com.afs.dragbits.jugador.RepositorioJugador;
 import com.afs.dragbits.mapas.Picodromo;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameScreen implements Screen {
 
     private final Game game;
-    private ProveedorMusica proveedorMusica = null;
+    private ProveedorMusica proveedorMusica;
 
     private SpriteBatch batch;
     private Picodromo picodromo;
     private AutoJugador autoJugador;
-    private AutoRival autoRival; // Bot
+    private AutoRival autoRival;
     private SeguimientoJugador camaraJugador;
 
     private ControladorCarrera controladorCarrera;
@@ -41,7 +42,6 @@ public class GameScreen implements Screen {
 
     private OrthographicCamera camaraUI;
     private Viewport viewportUI;
-    private Vector3 mouseCoords;
 
     private Acelerador acelerador;
     private CajaDeCambios cajaDeCambios;
@@ -57,14 +57,13 @@ public class GameScreen implements Screen {
 
     public GameScreen(Game game, ProveedorMusica proveedorMusica) {
         this.game = game;
-        this.proveedorMusica = this.proveedorMusica;
+        this.proveedorMusica = proveedorMusica;
     }
 
     @Override
     public void show() {
-
         entradaJugador = new EntradaJugador();
-
+        Gdx.input.setInputProcessor(entradaJugador);
 
         batch = new SpriteBatch();
 
@@ -73,13 +72,11 @@ public class GameScreen implements Screen {
         }
 
         picodromo = new Picodromo();
-
         RepositorioJugador repositorioJugador = new RepositorioJugador();
         datosJugador = repositorioJugador.cargarJugador();
 
         camaraUI = new OrthographicCamera();
         viewportUI = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camaraUI);
-        mouseCoords = new Vector3();
 
         autoJugador = new AutoJugador(picodromo.getPosicionSpawnX(), 130f);
         autoRival = new AutoRival(
@@ -93,7 +90,6 @@ public class GameScreen implements Screen {
         );
 
         controladorCarrera = new ControladorCarrera(picodromo, autoJugador, autoRival, datosJugador);
-
         camaraJugador = new SeguimientoJugador(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         acelerador = new Acelerador();
@@ -107,7 +103,7 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         if (!controladorCarrera.isCarreraFinalizada()) {
-            cajaDeCambios.actualizar(autoJugador, entradaJugador); // Se removió el parámetro delta sobrante
+            cajaDeCambios.actualizar(autoJugador, entradaJugador);
             acelerador.actualizar(autoJugador, entradaJugador, delta);
             autoJugador.actualizar(delta);
 
@@ -116,9 +112,9 @@ public class GameScreen implements Screen {
 
             controladorCarrera.actualizar();
         } else {
-            if (Gdx.input.justTouched()) {
-                mouseCoords.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-                viewportUI.unproject(mouseCoords);
+            if (entradaJugador.consumoToque()) {
+                Vector2 posTouch = entradaJugador.getCoordenadasToque(viewportUI);
+                Vector3 mouseCoords = new Vector3(posTouch.x, posTouch.y, 0);
 
                 if (cartelResultado.fueBotonTocado(mouseCoords)) {
                     game.setScreen(new MapaScreen(game, proveedorMusica));
@@ -139,14 +135,14 @@ public class GameScreen implements Screen {
         autoRival.dibujar(batch);
         batch.end();
 
-        // Renderizar HUD del juego
+        // Renderizar HUD
         batch.begin();
         hudBasicos.dibujar(batch, autoJugador, Gdx.graphics.getWidth());
         hudPalanca.dibujar(batch, cajaDeCambios, Gdx.graphics.getWidth());
         semaforo.dibujar(batch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
 
-        // Renderizar Cartel de Resultado si terminó la carrera
+        // Renderizar Cartel de Resultado
         if (controladorCarrera.isCarreraFinalizada()) {
             batch.begin();
             cartelResultado.dibujar(
@@ -168,8 +164,6 @@ public class GameScreen implements Screen {
         if (hudBasicos != null) hudBasicos.resize(width, height);
         if (hudPalanca != null) hudPalanca.resize(width, height);
         if (semaforo != null) semaforo.resize(width, height);
-
-        // CartelResultado mantiene su espacio virtual constante de 1280x720
         if (cartelResultado != null) cartelResultado.resize(ANCHO_VIRTUAL, ALTO_VIRTUAL);
     }
 
@@ -178,6 +172,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void hide() {
+        Gdx.input.setInputProcessor(null);
         dispose();
     }
 

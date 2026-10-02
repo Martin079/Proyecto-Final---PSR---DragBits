@@ -1,23 +1,25 @@
 package com.afs.dragbits.screens;
 
 import com.afs.dragbits.audio.ProveedorMusica;
+import com.afs.dragbits.ciudad.Burbuja;
+import com.afs.dragbits.ciudad.Interfaz;
+import com.afs.dragbits.funcionalidades.EntradaJugador;
+import com.afs.dragbits.jugador.Jugador;
+import com.afs.dragbits.jugador.RepositorioJugador;
 import com.afs.dragbits.menurivales.TipoCarrera;
+import com.afs.dragbits.menurivales.VentanaSeleccionRival;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.afs.dragbits.ciudad.Burbuja;
-import com.afs.dragbits.ciudad.Interfaz;
-import com.afs.dragbits.menurivales.VentanaSeleccionRival;
-import com.afs.dragbits.jugador.Jugador;
-import com.afs.dragbits.jugador.RepositorioJugador;
 
 import java.util.ArrayList;
 
@@ -34,13 +36,14 @@ public class MapaScreen implements Screen {
     private Texture burbujasSheet;
 
     private ArrayList<Burbuja> burbujas;
-    private Vector3 mouseCoordsVirtuales;
 
     private Jugador jugador;
     private final RepositorioJugador repositorioJugador;
     private Interfaz interfazCiudad;
 
     private VentanaSeleccionRival ventanaRival;
+    private EntradaJugador entradaJugador;
+    private InputMultiplexer multiplexer;
 
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
@@ -55,12 +58,12 @@ public class MapaScreen implements Screen {
     @Override
     public void show() {
         batch = new SpriteBatch();
+        entradaJugador = new EntradaJugador();
 
         if (proveedorMusica != null && proveedorMusica.getGestorDeAudio() != null) {
             proveedorMusica.getGestorDeAudio().setModificadorPantalla(0.4f);
         }
 
-        // recargar progreso por si cambio al volver de otra pantalla
         if (jugador != null) {
             repositorioJugador.cargarProgreso(jugador);
         }
@@ -68,15 +71,17 @@ public class MapaScreen implements Screen {
         camara = new OrthographicCamera();
         viewport = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camara);
 
-        mouseCoordsVirtuales = new Vector3();
-
         interfazCiudad = new Interfaz(batch, jugador);
-        Gdx.input.setInputProcessor(interfazCiudad.getStage());
 
-        // Callback para cuando se cierra la ventana emergente
         ventanaRival = new VentanaSeleccionRival(game, proveedorMusica, viewport, () -> {
-            Gdx.input.setInputProcessor(interfazCiudad.getStage());
+            Gdx.input.setInputProcessor(multiplexer);
         });
+
+        // Multiplexer que combina los toques de Stage con EntradaJugador
+        multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor(interfazCiudad.getStage());
+        multiplexer.addProcessor(entradaJugador);
+        Gdx.input.setInputProcessor(multiplexer);
 
         mapaTexture = new Texture(Gdx.files.internal("sprites/Ciudad/Mapa.png"));
         mapaTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -99,30 +104,17 @@ public class MapaScreen implements Screen {
         float offsetX = anchoBurbuja / 2f;
         float offsetY = altoBurbuja / 2f;
 
-        // Carreras Legales
         burbujas.add(new Burbuja(100f - offsetX, 170f - offsetY, anchoBurbuja, altoBurbuja, frameLegales, () -> {
             abrirVentanaRival(TipoCarrera.LEGAL, 0);
         }));
 
-        // Carreras Ilegales
         burbujas.add(new Burbuja(580f - offsetX, 590f - offsetY, anchoBurbuja, altoBurbuja, frameIlegales, () -> {
             abrirVentanaRival(TipoCarrera.ILEGAL, 0);
         }));
 
-        // Tienda de Mejoras
-        burbujas.add(new Burbuja(1015f - offsetX, 390f - offsetY, anchoBurbuja, altoBurbuja, frameMejoras, () -> {
-
-        }));
-
-        // Tienda de Autos
-        burbujas.add(new Burbuja(350f - offsetX, 594f - offsetY, anchoBurbuja, altoBurbuja, frameAutos, () -> {
-
-        }));
-
-        // Modo Online
-        burbujas.add(new Burbuja(1010f - offsetX, 180f - offsetY, anchoBurbuja, altoBurbuja, frameOnline, () -> {
-
-        }));
+        burbujas.add(new Burbuja(1015f - offsetX, 390f - offsetY, anchoBurbuja, altoBurbuja, frameMejoras, () -> {}));
+        burbujas.add(new Burbuja(350f - offsetX, 594f - offsetY, anchoBurbuja, altoBurbuja, frameAutos, () -> {}));
+        burbujas.add(new Burbuja(1010f - offsetX, 180f - offsetY, anchoBurbuja, altoBurbuja, frameOnline, () -> {}));
     }
 
     private void abrirVentanaRival(TipoCarrera tipo, int maxDesbloqueado) {
@@ -133,16 +125,14 @@ public class MapaScreen implements Screen {
     @Override
     public void render(float delta) {
         if (!ventanaRival.isVisible() && Gdx.input.getInputProcessor() == ventanaRival.getStage()) {
-            Gdx.input.setInputProcessor(interfazCiudad.getStage());
+            Gdx.input.setInputProcessor(multiplexer);
         }
 
         if (!ventanaRival.isVisible()) {
-            if (Gdx.input.justTouched()) {
-                mouseCoordsVirtuales.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-                viewport.unproject(mouseCoordsVirtuales);
-
+            if (entradaJugador.consumoToque()) {
+                Vector2 coords = entradaJugador.getCoordenadasToque(viewport);
                 for (Burbuja b : burbujas) {
-                    if (b.verificarClic(mouseCoordsVirtuales.x, mouseCoordsVirtuales.y)) {
+                    if (b.verificarClic(coords.x, coords.y)) {
                         break;
                     }
                 }

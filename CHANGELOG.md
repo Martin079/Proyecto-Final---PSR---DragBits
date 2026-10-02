@@ -12,10 +12,11 @@ Convención utilizada en todo el historial:
 
 ## [Unreleased]
 
-## [0.8.3] - 2026-10/02
+## [0.8.4] - 2026-10/02
 
 ### Fixed
 - Agregada clase `GestorDeAudio` para centralizar la musica y los sonidos
+- `EntradaJugador` ahora cubre el mouse en el las screens. 
 
 ## [0.8.3] - 2026-09-28
 
