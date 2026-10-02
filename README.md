@@ -70,12 +70,6 @@ Luego se puede ejecutar con `java -jar lwjgl3/build/libs/DragBits-<versión>.jar
 Abrir el proyecto en IntelliJ IDEA (seleccionando `build.gradle`), esperar a que Gradle sincronice, buscar `Lwjgl3Launcher.java` (módulo `lwjgl3`) y ejecutarlo con RUN.
 
 # Estado Actual
-Prototipo jugable de la segunda preentrega. 
-Se puede recorrer el flujo completo menú → mapa → selección de rival → carrera contra un bot → 
-cartel de resultado → vuelta al mapa, con la mecánica central del juego 
-(aceleración y cambio manual de marchas) funcionando.
-
-# Estado Actual
 
 Prototipo jugable de la **segunda preentrega**. Se puede recorrer el flujo completo
 **menú → mapa → selección de rival → carrera contra un bot → cartel de resultado → vuelta al mapa**,
@@ -108,7 +102,6 @@ con la mecánica central del juego (aceleración y cambio manual de marchas) fun
 
 **Audio**
 - Música de fondo en loop, con volumen distinto según la pantalla (menú, mapa, carrera).
-  - *(Completar cuando estén terminados: efectos de sonido, control de volumen y silencio.)*
 
 
 
