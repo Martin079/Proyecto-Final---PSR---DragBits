@@ -17,7 +17,7 @@ Convención utilizada en todo el historial:
 ### Fixed
 - Cambio de escritura de final para cumplir con las normas
 - Cambio de la dependencia en `VentanaSeleccionRival` con `GameScreen`
-- 
+- Añadido dispose en hide de `MapaScreen`
 
 ## [0.8.4] - 2026-10-02
 

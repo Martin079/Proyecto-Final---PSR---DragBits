@@ -172,6 +172,7 @@ public class MapaScreen implements Screen {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
+        dispose();
     }
 
     @Override
