@@ -12,6 +12,13 @@ Convención utilizada en todo el historial:
 
 ## [Unreleased]
 
+## [0.8.5] - 2026-10/03
+
+### Fixed
+- Cambio de escritura de final para cumplir con las normas
+- Cambio de la dependencia en `VentanaSeleccionRival` con `GameScreen`
+- 
+
 ## [0.8.4] - 2026-10/02
 
 ### Fixed

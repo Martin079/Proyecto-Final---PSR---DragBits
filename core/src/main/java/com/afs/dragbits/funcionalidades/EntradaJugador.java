@@ -18,8 +18,8 @@ public class EntradaJugador extends InputAdapter {
     private int teclaPalancaDerecha = Input.Keys.RIGHT;
 
 
-    private final Vector3 tempCoords = new Vector3();
-    private final Vector2 toqueVirtual = new Vector2();
+    private final Vector3 TEMP_CORDS = new Vector3();
+    private final Vector2 TOQUE_VIRTUAL = new Vector2();
     private boolean huboToque = false;
 
 
@@ -65,16 +65,16 @@ public class EntradaJugador extends InputAdapter {
     }
 
     public Vector2 getCoordenadasToque(Viewport viewport) {
-        tempCoords.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-        viewport.unproject(tempCoords);
-        toqueVirtual.set(tempCoords.x, tempCoords.y);
-        return toqueVirtual;
+        TEMP_CORDS.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+        viewport.unproject(TEMP_CORDS);
+        TOQUE_VIRTUAL.set(TEMP_CORDS.x, TEMP_CORDS.y);
+        return TOQUE_VIRTUAL;
     }
 
     public Vector2 getCoordenadasMouseActuales(Viewport viewport) {
-        tempCoords.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-        viewport.unproject(tempCoords);
-        toqueVirtual.set(tempCoords.x, tempCoords.y);
-        return toqueVirtual;
+        TEMP_CORDS.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+        viewport.unproject(TEMP_CORDS);
+        TOQUE_VIRTUAL.set(TEMP_CORDS.x, TEMP_CORDS.y);
+        return TOQUE_VIRTUAL;
     }
 }

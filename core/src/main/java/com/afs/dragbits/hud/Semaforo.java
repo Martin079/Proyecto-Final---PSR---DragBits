@@ -105,10 +105,10 @@ public class Semaforo extends ElementoHUD {
         aplicarProyeccion(batch);
 
         // Tamaño
-        float ANCHO = 120f;
-        float posX = (anchoPantalla / 2f) - (ANCHO / 2f);
-        float ALTO = 360f;
-        float posY = altoPantalla - ALTO - 10f; // 10px de margen respecto al borde superior
+        float ancho = 120f;
+        float posX = (anchoPantalla / 2f) - (ancho / 2f);
+        float alto = 360f;
+        float posY = altoPantalla - alto - 10f; // 10px de margen respecto al borde superior
 
         int frameIndex = 0;
         switch (estadoActual) {
@@ -121,7 +121,7 @@ public class Semaforo extends ElementoHUD {
             default: break;
         }
 
-        batch.draw(FRAMES[frameIndex], posX, posY, ANCHO, ALTO);
+        batch.draw(FRAMES[frameIndex], posX, posY, ancho, alto);
     }
 
     private void resetearAuto(Auto auto) {

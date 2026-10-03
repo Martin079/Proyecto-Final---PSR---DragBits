@@ -7,14 +7,14 @@ import com.afs.dragbits.autos.Auto;
 
 public class Basicos extends ElementoHUD {
 
-    private final BitmapFont fuente;
+    private final BitmapFont FUENTE;
 
     public Basicos(float anchoPantalla, float altoPantalla) {
         super(anchoPantalla, altoPantalla);
 
-        fuente = new BitmapFont();
-        fuente.setColor(Color.valueOf("4DA6FF"));
-        fuente.getData().setScale(1.8f);
+        FUENTE = new BitmapFont();
+        FUENTE.setColor(Color.valueOf("4DA6FF"));
+        FUENTE.getData().setScale(1.8f);
     }
 
     public void dibujar(SpriteBatch batch, Auto auto, float anchoPantalla) {
@@ -29,13 +29,13 @@ public class Basicos extends ElementoHUD {
         float posX = anchoPantalla - 310f;
         float posY = 110f;
 
-        fuente.draw(batch, "VEL: " + velKmH + " Km/h", posX, posY);
-        fuente.draw(batch, "RPM: " + rpm, posX, posY - 35f);
-        fuente.draw(batch, "MARCHA: " + marchaStr + embragueStr, posX, posY - 70f);
+        FUENTE.draw(batch, "VEL: " + velKmH + " Km/h", posX, posY);
+        FUENTE.draw(batch, "RPM: " + rpm, posX, posY - 35f);
+        FUENTE.draw(batch, "MARCHA: " + marchaStr + embragueStr, posX, posY - 70f);
     }
 
     @Override
     public void dispose() {
-        if (fuente != null) fuente.dispose();
+        if (FUENTE != null) FUENTE.dispose();
     }
 }

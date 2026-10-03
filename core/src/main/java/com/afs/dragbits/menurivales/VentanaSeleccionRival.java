@@ -1,7 +1,5 @@
 package com.afs.dragbits.menurivales;
 
-import com.afs.dragbits.audio.ProveedorMusica;
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -15,17 +13,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.afs.dragbits.screens.GameScreen;
 import com.afs.dragbits.util.SpriteSheetLoader;
 import com.afs.dragbits.util.TexturaSolidaFactory;
 
+import java.util.function.Consumer;
+
 public class VentanaSeleccionRival implements Disposable {
 
-    private final Game game;
-    private final ProveedorMusica proveedorMusica;
     private Stage stage;
     private boolean visible = false;
     private Runnable accionCerrar;
+    private Consumer<Integer> alSeleccionarRival; // Callback para notificar la selección del rival
 
     // Recursos
     private Texture fondoOscuroTexture;
@@ -37,11 +35,10 @@ public class VentanaSeleccionRival implements Disposable {
     // Interface
     private Table ventanaTable;
 
-    public VentanaSeleccionRival(Game game, ProveedorMusica proveedorMusica, Viewport viewport, Runnable accionCerrar) {
-        this.game = game;
-        this.proveedorMusica = proveedorMusica;
+    public VentanaSeleccionRival(Viewport viewport, Runnable accionCerrar, Consumer<Integer> alSeleccionarRival) {
         this.stage = new Stage(viewport);
         this.accionCerrar = accionCerrar;
+        this.alSeleccionarRival = alSeleccionarRival;
         cargarRecursos();
         crearEstructuraBase();
     }
@@ -114,7 +111,7 @@ public class VentanaSeleccionRival implements Disposable {
         int offsetInicio = (tipoCarrera == TipoCarrera.LEGAL) ? 0 : 5;
 
         for (int i = inicio; i < fin; i++) {
-            int indiceRival = i;
+            final int indiceRival = i;
             boolean desbloqueado = indiceRival <= maxRivalDesbloqueado;
             TextureRegion region = desbloqueado ? framesRival[offsetInicio + indiceRival] : frameBloqueado;
 
@@ -126,7 +123,9 @@ public class VentanaSeleccionRival implements Disposable {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
                         ocultar();
-                        game.setScreen(new GameScreen(game, proveedorMusica));
+                        if (alSeleccionarRival != null) {
+                            alSeleccionarRival.accept(indiceRival); // Notifica el ID/indice del rival seleccionado
+                        }
                     }
                 });
             }

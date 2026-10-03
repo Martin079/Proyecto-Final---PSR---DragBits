@@ -6,19 +6,19 @@ import com.badlogic.gdx.utils.Disposable;
 
 public abstract class ElementoHUD implements Disposable {
 
-    protected final OrthographicCamera camaraHUD;
+    protected final OrthographicCamera CAMARA_HUD;
 
     public ElementoHUD(float anchoPantalla, float altoPantalla) {
-        this.camaraHUD = new OrthographicCamera();
-        this.camaraHUD.setToOrtho(false, anchoPantalla, altoPantalla);
+        this.CAMARA_HUD = new OrthographicCamera();
+        this.CAMARA_HUD.setToOrtho(false, anchoPantalla, altoPantalla);
     }
 
     protected void aplicarProyeccion(SpriteBatch batch) {
-        batch.setProjectionMatrix(camaraHUD.combined);
+        batch.setProjectionMatrix(CAMARA_HUD.combined);
     }
 
     public void resize(float ancho, float alto) {
-        camaraHUD.setToOrtho(false, ancho, alto);
+        CAMARA_HUD.setToOrtho(false, ancho, alto);
     }
 
     @Override

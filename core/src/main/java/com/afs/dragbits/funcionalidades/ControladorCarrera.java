@@ -8,22 +8,22 @@ import com.afs.dragbits.mapas.Picodromo;
 
 public class ControladorCarrera {
 
-    private final Picodromo picodromo;
-    private final AutoJugador autoJugador;
-    private final AutoRival autoRival;
-    private final Jugador datosJugador;
-    private final RepositorioJugador repositorioJugador;
+    private final Picodromo PICODROMO;
+    private final AutoJugador AUTO_JUGADOR;
+    private final AutoRival AUTO_RIVAL;
+    private final Jugador DATOS_JUGADOR;
+    private final RepositorioJugador REPOSITORIO_JUGADOR;
 
     private boolean carreraFinalizada;
     private boolean jugadorGano;
     private boolean recompensaOtorgada;
 
-    public ControladorCarrera(Picodromo picodromo, AutoJugador autoJugador, AutoRival autoRival, Jugador datosJugador) {
-        this.picodromo = picodromo;
-        this.autoJugador = autoJugador;
-        this.autoRival = autoRival;
-        this.datosJugador = datosJugador;
-        this.repositorioJugador = new RepositorioJugador();
+    public ControladorCarrera(Picodromo PICODROMO, AutoJugador AUTO_JUGADOR, AutoRival AUTO_RIVAL, Jugador DATOS_JUGADOR) {
+        this.PICODROMO = PICODROMO;
+        this.AUTO_JUGADOR = AUTO_JUGADOR;
+        this.AUTO_RIVAL = AUTO_RIVAL;
+        this.DATOS_JUGADOR = DATOS_JUGADOR;
+        this.REPOSITORIO_JUGADOR = new RepositorioJugador();
 
         this.carreraFinalizada = false;
         this.jugadorGano = false;
@@ -33,17 +33,17 @@ public class ControladorCarrera {
     public void actualizar() {
         if (carreraFinalizada) return;
 
-        float metaX = picodromo.getPosicionLineaMeta();
-        boolean jugadorCruzo = autoJugador.getFrenteX() >= metaX;
-        boolean botCruzo = autoRival.getFrenteX() >= metaX;
+        float metaX = PICODROMO.getPosicionLineaMeta();
+        boolean jugadorCruzo = AUTO_JUGADOR.getFrenteX() >= metaX;
+        boolean botCruzo = AUTO_RIVAL.getFrenteX() >= metaX;
 
         if (jugadorCruzo || botCruzo) {
             carreraFinalizada = true;
-            jugadorGano = autoJugador.getFrenteX() >= autoRival.getFrenteX();
+            jugadorGano = AUTO_JUGADOR.getFrenteX() >= AUTO_RIVAL.getFrenteX();
 
             if (jugadorGano && !recompensaOtorgada) {
-                datosJugador.sumarDinero(autoRival.getRecompensa());
-                repositorioJugador.guardarProgreso(datosJugador);
+                DATOS_JUGADOR.sumarDinero(AUTO_RIVAL.getRecompensa());
+                REPOSITORIO_JUGADOR.guardarProgreso(DATOS_JUGADOR);
                 recompensaOtorgada = true;
             }
         }

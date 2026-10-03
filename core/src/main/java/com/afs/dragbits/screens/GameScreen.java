@@ -28,7 +28,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameScreen implements Screen {
 
-    private final Game game;
+    private final Game GAME;
     private ProveedorMusica proveedorMusica;
 
     private SpriteBatch batch;
@@ -55,8 +55,8 @@ public class GameScreen implements Screen {
 
     private EntradaJugador entradaJugador;
 
-    public GameScreen(Game game, ProveedorMusica proveedorMusica) {
-        this.game = game;
+    public GameScreen(Game GAME, ProveedorMusica proveedorMusica) {
+        this.GAME = GAME;
         this.proveedorMusica = proveedorMusica;
     }
 
@@ -117,7 +117,7 @@ public class GameScreen implements Screen {
                 Vector3 mouseCoords = new Vector3(posTouch.x, posTouch.y, 0);
 
                 if (cartelResultado.fueBotonTocado(mouseCoords)) {
-                    game.setScreen(new MapaScreen(game, proveedorMusica));
+                    GAME.setScreen(new MapaScreen(GAME, proveedorMusica));
                     return;
                 }
             }

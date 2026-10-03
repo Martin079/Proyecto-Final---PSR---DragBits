@@ -13,7 +13,7 @@ public class Picodromo {
 
     private final float ANCHO_SECCION = 1080f;
     private final int CANTIDAD_INTERMEDIAS = 5; // Configura la longitud de la pista
-    private final float xMeta;
+    private final float X_META;
 
     public Picodromo() {
         spriteSheet = new Texture("sprites/Pistas/Pista-sheet.png");
@@ -24,7 +24,7 @@ public class Picodromo {
         regionIntermedia = regiones[0][1];
         regionMeta = regiones[0][2];
 
-        this.xMeta = (1 + CANTIDAD_INTERMEDIAS) * ANCHO_SECCION;
+        this.X_META = (1 + CANTIDAD_INTERMEDIAS) * ANCHO_SECCION;
     }
 
     public void dibujar(SpriteBatch batch, float altoPantalla) {
@@ -46,7 +46,7 @@ public class Picodromo {
 
 
     public float getPosicionLineaMeta() {
-        return xMeta + (ANCHO_SECCION / 2f);
+        return X_META + (ANCHO_SECCION / 2f);
     }
 
 

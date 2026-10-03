@@ -20,8 +20,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class MainMenuScreen implements Screen {
 
-    private final Game game;
-    private final ProveedorMusica proveedorMusica;
+    private final Game GAME;
+    private final ProveedorMusica PROVEEDOR_MUSICA;
 
     private OrthographicCamera camara;
     private Viewport viewport;
@@ -31,8 +31,8 @@ public class MainMenuScreen implements Screen {
     private BitmapFont fuenteOpciones;
     private GlyphLayout layoutTexto;
 
-    private final String textoTitulo = "DRAG BITS";
-    private final String[] opcionesMenu = {"START GAME", "CONTROLES", "EXIT"};
+    private final String TEXTO_TITULO = "DRAG BITS";
+    private final String[] OPCIONES_MENU = {"START GAME", "CONTROLES", "EXIT"};
     private int indiceSeleccionado = 0;
 
     private final float ESCALA_NORMAL = 2.0f;
@@ -50,9 +50,9 @@ public class MainMenuScreen implements Screen {
 
     private EntradaJugador entradaJugador;
 
-    public MainMenuScreen(Game game, ProveedorMusica proveedorMusica) {
-        this.game = game;
-        this.proveedorMusica = proveedorMusica;
+    public MainMenuScreen(Game GAME, ProveedorMusica proveedorMusica) {
+        this.GAME = GAME;
+        this.PROVEEDOR_MUSICA = proveedorMusica;
 
         camara = new OrthographicCamera();
         viewport = new FitViewport(1280f, 720f, camara);
@@ -82,10 +82,10 @@ public class MainMenuScreen implements Screen {
 
                 if (keycode == Input.Keys.UP) {
                     indiceSeleccionado--;
-                    if (indiceSeleccionado < 0) indiceSeleccionado = opcionesMenu.length - 1;
+                    if (indiceSeleccionado < 0) indiceSeleccionado = OPCIONES_MENU.length - 1;
                 } else if (keycode == Input.Keys.DOWN) {
                     indiceSeleccionado++;
-                    if (indiceSeleccionado >= opcionesMenu.length) indiceSeleccionado = 0;
+                    if (indiceSeleccionado >= OPCIONES_MENU.length) indiceSeleccionado = 0;
                 } else if (keycode == Input.Keys.ENTER) {
                     ejecutarOpcionSeleccionada();
                 }
@@ -112,7 +112,7 @@ public class MainMenuScreen implements Screen {
                             estaMostrandoControles = false;
                         }
                     } else {
-                        for (int i = 0; i < opcionesMenu.length; i++) {
+                        for (int i = 0; i < OPCIONES_MENU.length; i++) {
                             float topeY = posicionesYOpciones[i];
                             float baseY = topeY - ALTURA_HITBOX_OPCION;
 
@@ -132,14 +132,14 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        if (proveedorMusica != null && proveedorMusica.getGestorDeAudio() != null) {
-            proveedorMusica.getGestorDeAudio().setModificadorPantalla(1.0f);
-            proveedorMusica.getGestorDeAudio().reproducirMusica();
+        if (PROVEEDOR_MUSICA != null && PROVEEDOR_MUSICA.getGestorDeAudio() != null) {
+            PROVEEDOR_MUSICA.getGestorDeAudio().setModificadorPantalla(1.0f);
+            PROVEEDOR_MUSICA.getGestorDeAudio().reproducirMusica();
         }
     }
 
     private void actualizarSeleccionPorMouse(float x, float y) {
-        for (int i = 0; i < opcionesMenu.length; i++) {
+        for (int i = 0; i < OPCIONES_MENU.length; i++) {
             float topeY = posicionesYOpciones[i];
             float baseY = topeY - ALTURA_HITBOX_OPCION;
 
@@ -191,23 +191,23 @@ public class MainMenuScreen implements Screen {
     }
 
     private void dibujarMenuPrincipal(float delta) {
-        for (int i = 0; i < opcionesMenu.length; i++) {
+        for (int i = 0; i < OPCIONES_MENU.length; i++) {
             float escalaObjetivo = (i == indiceSeleccionado) ? ESCALA_SELECCIONADA : ESCALA_NORMAL;
             escalasActuales[i] = MathUtils.lerp(escalasActuales[i], escalaObjetivo, delta * 12f);
         }
 
         fuenteTitulo.getData().setScale(4.0f);
-        layoutTexto.setText(fuenteTitulo, textoTitulo);
+        layoutTexto.setText(fuenteTitulo, TEXTO_TITULO);
         float tituloX = (viewport.getWorldWidth() - layoutTexto.width) / 2;
         float tituloY = viewport.getWorldHeight() * 0.75f;
-        fuenteTitulo.draw(batch, textoTitulo, tituloX, tituloY);
+        fuenteTitulo.draw(batch, TEXTO_TITULO, tituloX, tituloY);
 
         float posicionYInicial = viewport.getWorldHeight() * 0.45f;
         float espacioEntreOpciones = 80f;
 
-        for (int i = 0; i < opcionesMenu.length; i++) {
+        for (int i = 0; i < OPCIONES_MENU.length; i++) {
             fuenteOpciones.getData().setScale(escalasActuales[i]);
-            layoutTexto.setText(fuenteOpciones, opcionesMenu[i]);
+            layoutTexto.setText(fuenteOpciones, OPCIONES_MENU[i]);
 
             float opcionX = (viewport.getWorldWidth() - layoutTexto.width) / 2;
             float opcionY = posicionYInicial - (i * espacioEntreOpciones);
@@ -217,7 +217,7 @@ public class MainMenuScreen implements Screen {
             posicionesXOpciones[i] = opcionX;
             anchosOpciones[i] = layoutTexto.width;
 
-            fuenteOpciones.draw(batch, opcionesMenu[i], opcionX, opcionY);
+            fuenteOpciones.draw(batch, OPCIONES_MENU[i], opcionX, opcionY);
 
             if (i == indiceSeleccionado) {
                 float flechaX = opcionX - 60f;
@@ -229,7 +229,7 @@ public class MainMenuScreen implements Screen {
     private void ejecutarOpcionSeleccionada() {
         switch (indiceSeleccionado) {
             case 0:
-                game.setScreen(new MapaScreen(game, proveedorMusica));
+                GAME.setScreen(new MapaScreen(GAME, PROVEEDOR_MUSICA));
                 break;
             case 1:
                 estaMostrandoControles = true;

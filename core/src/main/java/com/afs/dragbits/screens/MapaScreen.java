@@ -25,8 +25,8 @@ import java.util.ArrayList;
 
 public class MapaScreen implements Screen {
 
-    private final Game game;
-    private final ProveedorMusica proveedorMusica;
+    private final Game GAME;
+    private final ProveedorMusica PROVEEDOR_MUSICA;
 
     private SpriteBatch batch;
     private OrthographicCamera camara;
@@ -38,7 +38,7 @@ public class MapaScreen implements Screen {
     private ArrayList<Burbuja> burbujas;
 
     private Jugador jugador;
-    private final RepositorioJugador repositorioJugador;
+    private final RepositorioJugador REPOSITORIO_JUGADOR;
     private Interfaz interfazCiudad;
 
     private VentanaSeleccionRival ventanaRival;
@@ -49,10 +49,10 @@ public class MapaScreen implements Screen {
     private static final float ALTO_VIRTUAL = 720f;
 
     public MapaScreen(Game game, ProveedorMusica proveedorMusica) {
-        this.game = game;
-        this.proveedorMusica = proveedorMusica;
-        this.repositorioJugador = new RepositorioJugador();
-        this.jugador = repositorioJugador.cargarJugador();
+        this.GAME = game;
+        this.PROVEEDOR_MUSICA = proveedorMusica;
+        this.REPOSITORIO_JUGADOR = new RepositorioJugador();
+        this.jugador = REPOSITORIO_JUGADOR.cargarJugador();
     }
 
     @Override
@@ -60,12 +60,12 @@ public class MapaScreen implements Screen {
         batch = new SpriteBatch();
         entradaJugador = new EntradaJugador();
 
-        if (proveedorMusica != null && proveedorMusica.getGestorDeAudio() != null) {
-            proveedorMusica.getGestorDeAudio().setModificadorPantalla(0.4f);
+        if (PROVEEDOR_MUSICA != null && PROVEEDOR_MUSICA.getGestorDeAudio() != null) {
+            PROVEEDOR_MUSICA.getGestorDeAudio().setModificadorPantalla(0.4f);
         }
 
         if (jugador != null) {
-            repositorioJugador.cargarProgreso(jugador);
+            REPOSITORIO_JUGADOR.cargarProgreso(jugador);
         }
 
         camara = new OrthographicCamera();
@@ -73,9 +73,18 @@ public class MapaScreen implements Screen {
 
         interfazCiudad = new Interfaz(batch, jugador);
 
-        ventanaRival = new VentanaSeleccionRival(game, proveedorMusica, viewport, () -> {
-            Gdx.input.setInputProcessor(multiplexer);
-        });
+        // Se corrigió el uso de viewportUI a viewport y las variables GAME y PROVEEDOR_MUSICA
+        ventanaRival = new VentanaSeleccionRival(
+            viewport,
+            () -> {
+                // Callback al cerrar la ventana
+                Gdx.input.setInputProcessor(multiplexer);
+            },
+            (indiceRival) -> {
+                // Callback al seleccionar un rival
+                GAME.setScreen(new GameScreen(GAME, PROVEEDOR_MUSICA /*, indiceRival */));
+            }
+        );
 
         // Multiplexer que combina los toques de Stage con EntradaJugador
         multiplexer = new InputMultiplexer();
@@ -124,10 +133,6 @@ public class MapaScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if (!ventanaRival.isVisible() && Gdx.input.getInputProcessor() == ventanaRival.getStage()) {
-            Gdx.input.setInputProcessor(multiplexer);
-        }
-
         if (!ventanaRival.isVisible()) {
             if (entradaJugador.consumoToque()) {
                 Vector2 coords = entradaJugador.getCoordenadasToque(viewport);
@@ -169,7 +174,6 @@ public class MapaScreen implements Screen {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
-        dispose();
     }
 
     @Override
