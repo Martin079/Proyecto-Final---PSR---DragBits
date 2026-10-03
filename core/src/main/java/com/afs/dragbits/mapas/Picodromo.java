@@ -11,8 +11,8 @@ public class Picodromo {
     private TextureRegion regionIntermedia;
     private TextureRegion regionMeta;
 
-    private final float ANCHO_SECCION = 1080f;
-    private final int CANTIDAD_INTERMEDIAS = 5; // Configura la longitud de la pista
+    private static final float ANCHO_SECCION = 1080f;
+    private static final int CANTIDAD_INTERMEDIAS = 5; // Configura la longitud de la pista
     private final float X_META;
 
     public Picodromo() {

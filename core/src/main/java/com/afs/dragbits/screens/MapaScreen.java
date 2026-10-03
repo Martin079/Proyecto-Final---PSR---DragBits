@@ -73,16 +73,14 @@ public class MapaScreen implements Screen {
 
         interfazCiudad = new Interfaz(batch, jugador);
 
-        // Se corrigió el uso de viewportUI a viewport y las variables GAME y PROVEEDOR_MUSICA
+
         ventanaRival = new VentanaSeleccionRival(
             viewport,
             () -> {
-                // Callback al cerrar la ventana
                 Gdx.input.setInputProcessor(multiplexer);
             },
             (indiceRival) -> {
-                // Callback al seleccionar un rival
-                GAME.setScreen(new GameScreen(GAME, PROVEEDOR_MUSICA /*, indiceRival */));
+                GAME.setScreen(new GameScreen(GAME, PROVEEDOR_MUSICA));
             }
         );
 

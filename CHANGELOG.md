@@ -12,14 +12,14 @@ Convención utilizada en todo el historial:
 
 ## [Unreleased]
 
-## [0.8.5] - 2026-10/03
+## [0.8.5] - 2026-10-03
 
 ### Fixed
 - Cambio de escritura de final para cumplir con las normas
 - Cambio de la dependencia en `VentanaSeleccionRival` con `GameScreen`
 - 
 
-## [0.8.4] - 2026-10/02
+## [0.8.4] - 2026-10-02
 
 ### Fixed
 - Agregada clase `GestorDeAudio` para centralizar la musica y los sonidos

@@ -55,8 +55,8 @@ public class GameScreen implements Screen {
 
     private EntradaJugador entradaJugador;
 
-    public GameScreen(Game GAME, ProveedorMusica proveedorMusica) {
-        this.GAME = GAME;
+    public GameScreen(Game game, ProveedorMusica proveedorMusica) {
+        this.GAME = game;
         this.proveedorMusica = proveedorMusica;
     }
 

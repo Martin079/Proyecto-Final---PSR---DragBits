@@ -18,11 +18,11 @@ public class ControladorCarrera {
     private boolean jugadorGano;
     private boolean recompensaOtorgada;
 
-    public ControladorCarrera(Picodromo PICODROMO, AutoJugador AUTO_JUGADOR, AutoRival AUTO_RIVAL, Jugador DATOS_JUGADOR) {
-        this.PICODROMO = PICODROMO;
-        this.AUTO_JUGADOR = AUTO_JUGADOR;
-        this.AUTO_RIVAL = AUTO_RIVAL;
-        this.DATOS_JUGADOR = DATOS_JUGADOR;
+    public ControladorCarrera(Picodromo picodromo, AutoJugador autoJugador, AutoRival autoRival, Jugador datosJugador) {
+        this.PICODROMO = picodromo;
+        this.AUTO_JUGADOR = autoJugador;
+        this.AUTO_RIVAL = autoRival;
+        this.DATOS_JUGADOR = datosJugador;
         this.REPOSITORIO_JUGADOR = new RepositorioJugador();
 
         this.carreraFinalizada = false;

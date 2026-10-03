@@ -9,7 +9,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 public class GestorDeAudio implements Disposable {
 
     private Music musicaFondo;
-    private final ObjectMap<String, Sound> sonidos;
+    private final ObjectMap<String, Sound> SONIDOS;
 
     private float volumenMaestro = 1.0f;       // Configurable por el jugador (0.0 a 1.0)
     private float modificadorPantalla = 1.0f;  // Ajuste contextual (0.2 carrera, 0.4 mapa, 1.0 menú)
@@ -17,7 +17,7 @@ public class GestorDeAudio implements Disposable {
     private float volumenPrevioMute = 1.0f;
 
     public GestorDeAudio() {
-        sonidos = new ObjectMap<>();
+        SONIDOS = new ObjectMap<>();
         cargarMusicaPrincipal();
         cargarEfectos();
     }
@@ -40,7 +40,7 @@ public class GestorDeAudio implements Disposable {
 
     private void cargarSonidoSiExiste(String clave, String ruta) {
         if (Gdx.files.internal(ruta).exists()) {
-            sonidos.put(clave, Gdx.audio.newSound(Gdx.files.internal(ruta)));
+            SONIDOS.put(clave, Gdx.audio.newSound(Gdx.files.internal(ruta)));
         }
     }
 
@@ -61,7 +61,7 @@ public class GestorDeAudio implements Disposable {
 
     public void reproducirEfecto(String clave) {
         if (muteado) return;
-        Sound sonido = sonidos.get(clave);
+        Sound sonido = SONIDOS.get(clave);
         if (sonido != null) {
             sonido.play(getVolumenEfectivo());
         }
@@ -111,9 +111,9 @@ public class GestorDeAudio implements Disposable {
         if (musicaFondo != null) {
             musicaFondo.dispose();
         }
-        for (Sound sonido : sonidos.values()) {
+        for (Sound sonido : SONIDOS.values()) {
             sonido.dispose();
         }
-        sonidos.clear();
+        SONIDOS.clear();
     }
 }

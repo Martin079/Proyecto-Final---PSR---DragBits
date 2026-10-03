@@ -31,27 +31,27 @@ public class MainMenuScreen implements Screen {
     private BitmapFont fuenteOpciones;
     private GlyphLayout layoutTexto;
 
-    private final String TEXTO_TITULO = "DRAG BITS";
-    private final String[] OPCIONES_MENU = {"START GAME", "CONTROLES", "EXIT"};
+    private static final String TEXTO_TITULO = "DRAG BITS";
+    private static final String[] OPCIONES_MENU = {"START GAME", "CONTROLES", "EXIT"};
     private int indiceSeleccionado = 0;
 
-    private final float ESCALA_NORMAL = 2.0f;
-    private final float ESCALA_SELECCIONADA = 2.5f;
+    private static final float ESCALA_NORMAL = 2.0f;
+    private static final float ESCALA_SELECCIONADA = 2.5f;
     private float[] escalasActuales = {ESCALA_NORMAL, ESCALA_NORMAL, ESCALA_NORMAL};
 
     private float[] posicionesYOpciones = new float[3];
     private float[] posicionesXOpciones = new float[3];
     private float[] anchosOpciones = new float[3];
 
-    private final float ALTURA_HITBOX_OPCION = 60f;
+    private static final float ALTURA_HITBOX_OPCION = 60f;
 
     private Texture texturaControles;
     private boolean estaMostrandoControles = false;
 
     private EntradaJugador entradaJugador;
 
-    public MainMenuScreen(Game GAME, ProveedorMusica proveedorMusica) {
-        this.GAME = GAME;
+    public MainMenuScreen(Game game, ProveedorMusica proveedorMusica) {
+        this.GAME = game;
         this.PROVEEDOR_MUSICA = proveedorMusica;
 
         camara = new OrthographicCamera();
