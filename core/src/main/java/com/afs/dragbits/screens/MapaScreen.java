@@ -78,7 +78,7 @@ public class MapaScreen implements Screen {
                 Gdx.input.setInputProcessor(entradaJugador);
             },
             (indiceRival) -> {
-                GAME.setScreen(new GameScreen(GAME, PROVEEDOR_MUSICA));
+                Gdx.app.postRunnable(() -> GAME.setScreen(new GameScreen(GAME, PROVEEDOR_MUSICA)));
             }
         );
 
