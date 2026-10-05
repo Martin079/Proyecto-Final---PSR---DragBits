@@ -12,6 +12,20 @@ Convención utilizada en todo el historial:
 
 ## [Unreleased]
 
+
+## [0.8.6] - 2026-10-05
+
+### Fixed
+Añadido de metodos para eventos de navegación, movimiento de mouse y posicionamiento de toque. 
+- Se unifico la obtención de coordenadas del mouse.
+- Se elimino el InputAdapter anonimo interno, se delega el control de la interfaz a EntradaJugador mediante procesarEntrada(). 
+- Se evito la seleccion por polling del mouse para no sobreescribir la navegación por teclado.
+- Se simplifico la asignacion del procesador reemplazando el InputMultiplexer por EntradaJugador.
+- Se agrego una verificacion tras el procesamiento de entrada para evitar llamadas adicionales a renderizado/dispose de recursos cuando la pantalla cambia.
+  Se limpió el estado de toque persistente durante la carrera ejecutando descartarToque(), evitando que clics pasados activen botones al finalizar la partida.
+
+
+
 ## [0.8.5] - 2026-10-03
 
 ### Fixed

@@ -5,7 +5,6 @@ import com.afs.dragbits.funcionalidades.EntradaJugador;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -68,69 +67,7 @@ public class MainMenuScreen implements Screen {
     @Override
     public void show() {
         entradaJugador = new EntradaJugador();
-
-        // Entrada acoplada usando el patron adapter interno para redirigir acciones de menú
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean keyDown(int keycode) {
-                if (estaMostrandoControles) {
-                    if (keycode == Input.Keys.ESCAPE || keycode == Input.Keys.ENTER) {
-                        estaMostrandoControles = false;
-                    }
-                    return true;
-                }
-
-                if (keycode == Input.Keys.UP) {
-                    indiceSeleccionado--;
-                    if (indiceSeleccionado < 0) indiceSeleccionado = OPCIONES_MENU.length - 1;
-                } else if (keycode == Input.Keys.DOWN) {
-                    indiceSeleccionado++;
-                    if (indiceSeleccionado >= OPCIONES_MENU.length) indiceSeleccionado = 0;
-                } else if (keycode == Input.Keys.ENTER) {
-                    ejecutarOpcionSeleccionada();
-                }
-                return true;
-            }
-
-            @Override
-            public boolean mouseMoved(int screenX, int screenY) {
-                if (!estaMostrandoControles) {
-                    Vector2 pos = entradaJugador.getCoordenadasMouseActuales(viewport);
-                    actualizarSeleccionPorMouse(pos.x, pos.y);
-                }
-                return true;
-            }
-
-            @Override
-            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                if (button == Input.Buttons.LEFT) {
-                    Vector2 pos = entradaJugador.getCoordenadasToque(viewport);
-                    if (estaMostrandoControles) {
-                        float areaBotonX = viewport.getWorldWidth() - 200f;
-                        float areaBotonY = viewport.getWorldHeight() - 100f;
-                        if (pos.x > areaBotonX && pos.y > areaBotonY) {
-                            estaMostrandoControles = false;
-                        }
-                    } else {
-                        for (int i = 0; i < OPCIONES_MENU.length; i++) {
-                            float topeY = posicionesYOpciones[i];
-                            float baseY = topeY - ALTURA_HITBOX_OPCION;
-
-                            float minX = posicionesXOpciones[i];
-                            float maxX = minX + anchosOpciones[i];
-
-                            // Validacion combinada en Y y en X
-                            if (pos.y <= topeY && pos.y >= baseY && pos.x >= minX && pos.x <= maxX) {
-                                indiceSeleccionado = i;
-                                ejecutarOpcionSeleccionada();
-                                break;
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-        });
+        Gdx.input.setInputProcessor(entradaJugador);
 
         if (PROVEEDOR_MUSICA != null && PROVEEDOR_MUSICA.getGestorDeAudio() != null) {
             PROVEEDOR_MUSICA.getGestorDeAudio().setModificadorPantalla(1.0f);
@@ -154,6 +91,10 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        procesarEntrada();
+
+        if (GAME.getScreen() != this) return;
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -222,6 +163,56 @@ public class MainMenuScreen implements Screen {
             if (i == indiceSeleccionado) {
                 float flechaX = opcionX - 60f;
                 fuenteOpciones.draw(batch, ">", flechaX, opcionY);
+            }
+        }
+    }
+
+    private void procesarEntrada() {
+        if (estaMostrandoControles) {
+            if (entradaJugador.consumirCancelar() || entradaJugador.consumirConfirmar()) {
+                estaMostrandoControles = false;
+            }
+            if (entradaJugador.consumoToque()) {
+                Vector2 pos = entradaJugador.getCoordenadasToque(viewport);
+                float areaBotonX = viewport.getWorldWidth() - 200f;
+                float areaBotonY = viewport.getWorldHeight() - 100f;
+                if (pos.x > areaBotonX && pos.y > areaBotonY) {
+                    estaMostrandoControles = false;
+                }
+            }
+        } else {
+            if (entradaJugador.consumirArriba()) {
+                indiceSeleccionado--;
+                if (indiceSeleccionado < 0) indiceSeleccionado = OPCIONES_MENU.length - 1;
+            }
+            if (entradaJugador.consumirAbajo()) {
+                indiceSeleccionado++;
+                if (indiceSeleccionado >= OPCIONES_MENU.length) indiceSeleccionado = 0;
+            }
+            if (entradaJugador.consumirConfirmar()) {
+                ejecutarOpcionSeleccionada();
+                if (GAME.getScreen() != this) return;
+            }
+            if (entradaJugador.consumoMovimientoMouse()) {
+                Vector2 pos = entradaJugador.getCoordenadasMouse(viewport);
+                actualizarSeleccionPorMouse(pos.x, pos.y);
+            }
+            if (entradaJugador.consumoToque()) {
+                Vector2 pos = entradaJugador.getCoordenadasToque(viewport);
+                for (int i = 0; i < OPCIONES_MENU.length; i++) {
+                    float topeY = posicionesYOpciones[i];
+                    float baseY = topeY - ALTURA_HITBOX_OPCION;
+
+                    float minX = posicionesXOpciones[i];
+                    float maxX = minX + anchosOpciones[i];
+
+                    if (pos.y <= topeY && pos.y >= baseY && pos.x >= minX && pos.x <= maxX) {
+                        indiceSeleccionado = i;
+                        ejecutarOpcionSeleccionada();
+                        break;
+                    }
+                }
+                if (GAME.getScreen() != this) return;
             }
         }
     }

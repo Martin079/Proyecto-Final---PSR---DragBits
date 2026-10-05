@@ -10,7 +10,6 @@ import com.afs.dragbits.menurivales.TipoCarrera;
 import com.afs.dragbits.menurivales.VentanaSeleccionRival;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -43,7 +42,6 @@ public class MapaScreen implements Screen {
 
     private VentanaSeleccionRival ventanaRival;
     private EntradaJugador entradaJugador;
-    private InputMultiplexer multiplexer;
 
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
@@ -77,18 +75,14 @@ public class MapaScreen implements Screen {
         ventanaRival = new VentanaSeleccionRival(
             viewport,
             () -> {
-                Gdx.input.setInputProcessor(multiplexer);
+                Gdx.input.setInputProcessor(entradaJugador);
             },
             (indiceRival) -> {
                 GAME.setScreen(new GameScreen(GAME, PROVEEDOR_MUSICA));
             }
         );
 
-        // Multiplexer que combina los toques de Stage con EntradaJugador
-        multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor(interfazCiudad.getStage());
-        multiplexer.addProcessor(entradaJugador);
-        Gdx.input.setInputProcessor(multiplexer);
+        Gdx.input.setInputProcessor(entradaJugador);
 
         mapaTexture = new Texture(Gdx.files.internal("sprites/Ciudad/Mapa.png"));
         mapaTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);

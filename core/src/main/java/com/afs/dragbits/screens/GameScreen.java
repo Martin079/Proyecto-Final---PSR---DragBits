@@ -111,6 +111,7 @@ public class GameScreen implements Screen {
             semaforo.actualizar(autoJugador, delta);
 
             controladorCarrera.actualizar();
+            entradaJugador.descartarToque();
         } else {
             if (entradaJugador.consumoToque()) {
                 Vector2 posTouch = entradaJugador.getCoordenadasToque(viewportUI);
