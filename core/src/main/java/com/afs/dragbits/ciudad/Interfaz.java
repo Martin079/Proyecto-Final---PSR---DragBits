@@ -145,6 +145,7 @@ public class Interfaz implements Disposable {
     public void render() {
         actualizar(Gdx.graphics.getDeltaTime());
         stage.act(Gdx.graphics.getDeltaTime());
+        stage.getViewport().apply();
         stage.draw();
     }
 

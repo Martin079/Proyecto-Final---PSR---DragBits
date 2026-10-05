@@ -21,8 +21,8 @@ public class Semaforo extends ElementoHUD {
 
     private float posXInicialAuto;
 
-    public Semaforo(float anchoPantalla, float altoPantalla, float posXInicialAuto) {
-        super(anchoPantalla, altoPantalla);
+    public Semaforo(float posXInicialAuto) {
+        super();
         this.posXInicialAuto = posXInicialAuto;
 
 
@@ -102,12 +102,10 @@ public class Semaforo extends ElementoHUD {
     public void dibujar(SpriteBatch batch, float anchoPantalla, float altoPantalla) {
         if (estadoActual == EstadoSemaforo.FINALIZADO) return;
 
-        aplicarProyeccion(batch);
-
         // Tamaño
-        float ancho = 120f;
+        float ancho = 168f;
         float posX = (anchoPantalla / 2f) - (ancho / 2f);
-        float alto = 360f;
+        float alto = 504f;
         float posY = altoPantalla - alto - 10f; // 10px de margen respecto al borde superior
 
         int frameIndex = 0;

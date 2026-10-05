@@ -16,11 +16,14 @@ public class Palanca extends ElementoHUD {
     private TextureRegion frameIzquierda; // frame 2: palanca izquierda
     private TextureRegion frameDerecha;   // frame 3: palanca derecha
 
-    private float ancho = 180f;
-    private float alto = 90f;
+    private static final float ANCHO_VIRTUAL = 1920f;
+    private static final float ALTO_VIRTUAL = 1080f;
 
-    public Palanca(float anchoPantalla, float altoPantalla) {
-        super(anchoPantalla, altoPantalla);
+    private float ancho = 252f;
+    private float alto = 126f;
+
+    public Palanca() {
+        super();
 
         spriteSheet = SpriteSheetLoader.cargarTextura("sprites/HUD/palanca -sheet.png");
         TextureRegion[] frames = SpriteSheetLoader.recortar(spriteSheet, 120, 60);
@@ -32,11 +35,9 @@ public class Palanca extends ElementoHUD {
     }
 
     public void dibujar(SpriteBatch batch, CajaDeCambios caja, float anchoPantalla) {
-        aplicarProyeccion(batch);
-
         // izquierda del HUD (arranca en anchoPantalla - 310f)
-        float posX = anchoPantalla - 530f;
-        float posY = 30f; // DEBE SER LA MISMA ALTURA QUE EL HUD PRINCIPAL
+        float posX = anchoPantalla - 560f;
+        float posY = 20f; // DEBE SER LA MISMA ALTURA QUE EL HUD PRINCIPAL
 
         batch.draw(frameEsquema, posX, posY, ancho, alto);
 

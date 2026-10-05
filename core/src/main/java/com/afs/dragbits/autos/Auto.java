@@ -13,8 +13,8 @@ public abstract class Auto {
 
     protected float posX;
     protected float posY;
-    protected float ancho = 200f;
-    protected float alto = 80f;
+    protected float ancho = 280f;
+    protected float alto = 112f;
 
     // Estadísticas
     protected float velocidad;

@@ -9,10 +9,10 @@ public class SeguimientoJugador {
 
     private final OrthographicCamera CAMARA;
 
-    public SeguimientoJugador(float anchoPantalla, float altoPantalla) {
+    public SeguimientoJugador(float anchoVirtual, float altoVirtual) {
         CAMARA = new OrthographicCamera();
-        //resolución virtual de la cámara igual al tamaño de la ventana
-        CAMARA.setToOrtho(false, anchoPantalla, altoPantalla);
+        CAMARA.position.set(anchoVirtual / 2f, altoVirtual / 2f, 0);
+        CAMARA.update();
     }
 
     /** actualiza la posicion de la camara centrando su eje X en la posicion del auto.*/
@@ -25,9 +25,8 @@ public class SeguimientoJugador {
         batch.setProjectionMatrix(CAMARA.combined);
     }
 
-    /**reajusta la vista si cambia el tamaño de la ventana.*/
-    public void resize(float ancho, float alto) {
-        CAMARA.setToOrtho(false, ancho, alto);
+    public OrthographicCamera getCamara() {
+        return CAMARA;
     }
 
 }

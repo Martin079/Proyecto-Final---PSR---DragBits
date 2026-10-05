@@ -155,6 +155,7 @@ public class VentanaSeleccionRival implements Disposable {
     public void render(float delta) {
         if (!visible) return;
         stage.act(delta);
+        stage.getViewport().apply();
         stage.draw();
     }
 

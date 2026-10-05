@@ -30,6 +30,11 @@ Convención utilizada en todo el historial:
 - Se agrego una verificacion tras el procesamiento de entrada para evitar llamadas adicionales a renderizado/dispose de recursos cuando la pantalla cambia.
 - Se limpió el estado de toque persistente durante la carrera ejecutando descartarToque(), evitando que clics pasados activen botones al finalizar la partida.
 - Se diferió la transición a la pantalla de juego (GAME.setScreen(...)) envolviéndola en Gdx.app.postRunnable().
+- Se estandarizó la resolución virtual a 1920×1080 implementando FitViewport independientes para Mundo (viewportMundo) y HUD (viewportHUD), eliminando la dependencia de píxeles reales de ventana.
+- Se separó el flujo de renderizado en dos pasadas independientes, asegurando la llamada a viewport.apply() antes de cada una.
+- Se desproyectaron los clics de la interfaz contra viewportHUD.
+- Se eliminaron referencias a la cámara en las clases hijas de ElementoHUD (Basicos, Palanca, Semaforo).
+- Se reescalaron gráficos y fuentes al espacio 1920×1080 (factor 1.5) y se reemplazaron los offsets fijos de texto por centrado dinámico mediante GlyphLayout.
 
 
 ## [0.8.5] - 2026-10-03
