@@ -15,8 +15,14 @@ Convención utilizada en todo el historial:
 
 ## [0.8.6] - 2026-10-05
 
+### Added
+- Se creó el nuevo enum EstadoJuego para centralizar el control del flujo del juego.
+- Se integró la alternancia del estado con consumirCancelar(). En estado PAUSADO, se omite la actualizacion de fisica, IA, semáforo y stateTime (deteniendo animaciones).
+- En pausa, la tecla de confirmación (consumirConfirmar()) permite regresar al mapa inmediatamente sin otorgar recompensas.
+- Se creó la clase visual CartelPausa para dibujar el mensaje de pausa con un fondo semitransparente durante la pasada del HUD.
+
 ### Fixed
-Añadido de metodos para eventos de navegación, movimiento de mouse y posicionamiento de toque. 
+- Añadido de metodos para eventos de navegacion, movimiento de mouse y posicionamiento de toque. 
 - Se unifico la obtención de coordenadas del mouse.
 - Se elimino el InputAdapter anonimo interno, se delega el control de la interfaz a EntradaJugador mediante procesarEntrada(). 
 - Se evito la seleccion por polling del mouse para no sobreescribir la navegación por teclado.

@@ -9,7 +9,9 @@ import com.afs.dragbits.funcionalidades.CajaDeCambios;
 import com.afs.dragbits.funcionalidades.ControladorCarrera;
 import com.afs.dragbits.funcionalidades.EntradaJugador;
 import com.afs.dragbits.hud.Basicos;
+import com.afs.dragbits.hud.CartelPausa;
 import com.afs.dragbits.hud.CartelResultado;
+import com.afs.dragbits.hud.EstadoJuego;
 import com.afs.dragbits.hud.Palanca;
 import com.afs.dragbits.hud.Semaforo;
 import com.afs.dragbits.jugador.Jugador;
@@ -49,6 +51,8 @@ public class GameScreen implements Screen {
     private Basicos hudBasicos;
     private Palanca hudPalanca;
     private CartelResultado cartelResultado;
+    private CartelPausa cartelPausa;
+    private EstadoJuego estadoJuego;
 
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
@@ -95,14 +99,59 @@ public class GameScreen implements Screen {
         acelerador = new Acelerador();
         cajaDeCambios = new CajaDeCambios();
         semaforo = new Semaforo(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), picodromo.getPosicionSpawnX());
-        hudBasicos = new Basicos(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        hudBasicos = new Basicos(ANCHO_VIRTUAL, ALTO_VIRTUAL);
         hudPalanca = new Palanca(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cartelResultado = new CartelResultado(ANCHO_VIRTUAL, ALTO_VIRTUAL);
+        cartelPausa = new CartelPausa(ANCHO_VIRTUAL, ALTO_VIRTUAL);
+        estadoJuego = EstadoJuego.EN_CURSO;
     }
 
     @Override
     public void render(float delta) {
-        if (!controladorCarrera.isCarreraFinalizada()) {
+        if (entradaJugador.consumirCancelar()) {
+            if (estadoJuego == EstadoJuego.EN_CURSO) {
+                estadoJuego = EstadoJuego.PAUSADO;
+            } else if (estadoJuego == EstadoJuego.PAUSADO) {
+                estadoJuego = EstadoJuego.EN_CURSO;
+            }
+        }
+
+        // Check pause button touch
+        if (estadoJuego == EstadoJuego.EN_CURSO && entradaJugador.consumoToque()) {
+            Vector2 posTouch = entradaJugador.getCoordenadasToque(viewportUI);
+            Vector3 mouseCoords = new Vector3(posTouch.x, posTouch.y, 0);
+            if (hudBasicos.fueBotonPausaTocado(mouseCoords)) {
+                estadoJuego = EstadoJuego.PAUSADO;
+            } else {
+                entradaJugador.descartarToque();
+            }
+        }
+
+        if (estadoJuego == EstadoJuego.PAUSADO) {
+            // Keyboard input
+            if (entradaJugador.consumirCancelar()) {
+                estadoJuego = EstadoJuego.EN_CURSO;
+            }
+            if (entradaJugador.consumirConfirmar()) {
+                GAME.setScreen(new MapaScreen(GAME, proveedorMusica));
+                return;
+            }
+
+            // Touch input
+            if (entradaJugador.consumoToque()) {
+                Vector2 posTouch = entradaJugador.getCoordenadasToque(viewportUI);
+                Vector3 mouseCoords = new Vector3(posTouch.x, posTouch.y, 0);
+
+                if (cartelPausa.fueBotonReanudarTocado(mouseCoords)) {
+                    estadoJuego = EstadoJuego.EN_CURSO;
+                } else if (cartelPausa.fueBotonAbandonarTocado(mouseCoords)) {
+                    GAME.setScreen(new MapaScreen(GAME, proveedorMusica));
+                    return;
+                }
+            }
+        }
+
+        if (!controladorCarrera.isCarreraFinalizada() && estadoJuego == EstadoJuego.EN_CURSO) {
             cajaDeCambios.actualizar(autoJugador, entradaJugador);
             acelerador.actualizar(autoJugador, entradaJugador, delta);
             autoJugador.actualizar(delta);
@@ -138,7 +187,7 @@ public class GameScreen implements Screen {
 
         // Renderizar HUD
         batch.begin();
-        hudBasicos.dibujar(batch, autoJugador, Gdx.graphics.getWidth());
+        hudBasicos.dibujar(batch, autoJugador, ANCHO_VIRTUAL);
         hudPalanca.dibujar(batch, cajaDeCambios, Gdx.graphics.getWidth());
         semaforo.dibujar(batch, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
@@ -156,16 +205,24 @@ public class GameScreen implements Screen {
             );
             batch.end();
         }
+
+        // Renderizar Cartel de Pausa
+        if (estadoJuego == EstadoJuego.PAUSADO) {
+            batch.begin();
+            cartelPausa.dibujar(batch, ANCHO_VIRTUAL, ALTO_VIRTUAL);
+            batch.end();
+        }
     }
 
     @Override
     public void resize(int width, int height) {
         viewportUI.update(width, height, true);
         if (camaraJugador != null) camaraJugador.resize(width, height);
-        if (hudBasicos != null) hudBasicos.resize(width, height);
+        if (hudBasicos != null) hudBasicos.resize(ANCHO_VIRTUAL, ALTO_VIRTUAL);
         if (hudPalanca != null) hudPalanca.resize(width, height);
         if (semaforo != null) semaforo.resize(width, height);
         if (cartelResultado != null) cartelResultado.resize(ANCHO_VIRTUAL, ALTO_VIRTUAL);
+        if (cartelPausa != null) cartelPausa.resize(ANCHO_VIRTUAL, ALTO_VIRTUAL);
     }
 
     @Override public void pause() {}
@@ -187,5 +244,6 @@ public class GameScreen implements Screen {
         if (hudPalanca != null) hudPalanca.dispose();
         if (semaforo != null) semaforo.dispose();
         if (cartelResultado != null) cartelResultado.dispose();
+        if (cartelPausa != null) cartelPausa.dispose();
     }
 }

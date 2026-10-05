@@ -37,7 +37,7 @@ public class RepositorioJugador {
             jugador.setExperienciaActual(xpActual);
             jugador.setDinero(dinero);
 
-            Gdx.app.log("RepositorioJugador", "Progreso cargado con éxito.");
+            Gdx.app.log("RepositorioJugador", "Progreso cargado con exito.");
         }
     }
 
