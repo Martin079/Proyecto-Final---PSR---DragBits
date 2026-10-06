@@ -16,41 +16,39 @@ public abstract class Auto {
     protected float ancho = 280f;
     protected float alto = 112f;
 
-    // Estadísticas
     protected float velocidad;
     protected float velocidadMaxima;
     protected float aceleracion;
     protected float traccion;
     protected float potenciaNitro;
-    protected float capacidadNitro;    // tiempo  de nitro en segundos
+    protected float capacidadNitro;
     protected float nitroRestante;
-    protected float zonaSincronizacion;// ampliacion de la zona de cambio de marcha
+    protected float zonaSincronizacion;
 
     protected float rpm;
     protected float rpmMaximas;
 
 
-    protected int marchaActual; // 0 = Neutral, 1..5
+    protected int marchaActual;
     protected boolean embraguePresionado;
     protected boolean nitroActivo;
     protected float[] relacionesTransmision = {0f, 0.30f, 0.50f, 0.70f, 0.85f, 1.0f};
 
     protected boolean patinando;
 
-    // sprites
+
     private Texture spriteSheet;
-    private TextureRegion frameEstatico;           // Frame 1
-    private Animation<TextureRegion> animAvanzando; // Frames 2 y 3
-    private Animation<TextureRegion> animCambio;    // Frames 4 y 5
-    private Animation<TextureRegion> animNitro;     // Frames 6 y 7
+    private TextureRegion frameEstatico;
+    private Animation<TextureRegion> animAvanzando;
+    private Animation<TextureRegion> animCambio;
+    private Animation<TextureRegion> animNitro;
 
     private float stateTime;
     private Texture texturaFallback;
 
-    // dar mas sensacion de velocidad
     private static final float FACTOR_MOVIMIENTO = 4.2f;
 
-    // fisicas y aceleracion
+
     private static final float UMBRAL_ARRANQUE = 25f;
     private static final float FACTOR_ARRANQUE = 1.25f;
     private static final float PISO_CURVA_ACELERACION = 0.4f;
@@ -104,16 +102,12 @@ public abstract class Auto {
 
         TextureRegion[] frames = SpriteSheetLoader.recortar(spriteSheet, anchoFrame, altoFrame);
 
-        //Primer frame: Estático
         frameEstatico = frames[0];
 
-        //Segundo y tercer frame: En movimiento
         animAvanzando = new Animation<>(0.12f, frames[1], frames[2]);
 
-        //Cuarto y quinto frame: Cambio de marcha
         animCambio = new Animation<>(0.15f, frames[3], frames[4]);
 
-        //Sexto y séptimo frame: Nitro
         animNitro = new Animation<>(0.10f, frames[5], frames[6]);
     }
 
@@ -246,7 +240,6 @@ public abstract class Auto {
         if (texturaFallback != null) texturaFallback.dispose();
     }
 
-    // Getters y Setters
     public float getVelocidad() { return velocidad; }
     public float getRpm() { return rpm; }
     public float getPosX() { return posX; }

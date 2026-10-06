@@ -23,26 +23,22 @@ public class Interfaz implements Disposable {
     private Stage stage;
     private Jugador jugador;
 
-    // texturas y frames
     private Texture fondoGrisTexture;
     private Texture billeteTexture;
     private Texture nivelSheetTexture;
     private TextureRegion[] framesNivel;
 
-    //UI
     private Image imgIconoNivel;
     private Label labelDinero;
     private Label labelNivel;
     private BitmapFont font;
 
-    // animacion de Level Up
     private int nivelAnterior;
     private boolean animandoSubidaNivel = false;
     private float tiempoAnimacion = 0f;
 
-    // tiempos de animación
-    private static final float DURACION_CICLO_XP = 0.3f; // 0.3s para recorrer frames 0 a 7
-    private static final float DURACION_PAUSA_FRAME9 = 0.5f; // pausa mostrando el frame 8
+    private static final float DURACION_CICLO_XP = 0.3f;
+    private static final float DURACION_PAUSA_FRAME9 = 0.5f;
     private static final float DURACION_TOTAL_ANIM = DURACION_CICLO_XP + DURACION_PAUSA_FRAME9;
 
     public Interfaz(SpriteBatch batch, Jugador jugador) {
@@ -55,7 +51,6 @@ public class Interfaz implements Disposable {
     }
 
     private void cargarRecursos() {
-        //gris oscuro semitransparente
         fondoGrisTexture = TexturaSolidaFactory.crearTextura(new Color(0.15f, 0.15f, 0.15f, 0.75f));
 
         billeteTexture = SpriteSheetLoader.cargarTextura("sprites/Ciudad/Billete.png");
@@ -63,7 +58,6 @@ public class Interfaz implements Disposable {
         nivelSheetTexture = SpriteSheetLoader.cargarTextura("sprites/Ciudad/Nivel-sheet.png");
         framesNivel = SpriteSheetLoader.recortar(nivelSheetTexture, 41, 41, 9);
 
-        //fuente
         font = new BitmapFont();
         font.getData().setScale(1.2f);
     }

@@ -13,7 +13,6 @@ public class Jugador {
         this(1, 0, 0);
     }
 
-    //cargar partidas
     public Jugador(int nivelInicial, long experienciaInicial, long dineroInicial) {
         this.nivel = Math.max(1, nivelInicial);
         this.experienciaActual = Math.max(0, experienciaInicial);
@@ -61,8 +60,6 @@ public class Jugador {
         }
         return false;
     }
-
-    // GETTERS Y SETTERS
 
     public int getNivel() { return nivel; }
     public long getExperienciaActual() { return experienciaActual; }

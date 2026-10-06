@@ -18,7 +18,7 @@ public class RepositorioJugador {
         prefs.putInteger(KEY_NIVEL, jugador.getNivel());
         prefs.putLong(KEY_XP_ACTUAL, jugador.getExperienciaActual());
         prefs.putLong(KEY_DINERO, jugador.getDinero());
-        prefs.flush(); // Fuerza la escritura física en archivo
+        prefs.flush();
 
         Gdx.app.log("RepositorioJugador", "Progreso guardado correctamente.");
     }

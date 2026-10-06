@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.afs.dragbits.autos.Auto;
 
-/**sigue la posición X del auto del jugador*/
 public class SeguimientoJugador {
 
     private final OrthographicCamera CAMARA;
@@ -15,7 +14,6 @@ public class SeguimientoJugador {
         CAMARA.update();
     }
 
-    /** actualiza la posicion de la camara centrando su eje X en la posicion del auto.*/
     public void actualizar(Auto auto) {
         CAMARA.position.x = auto.getPosX() + 100f;
         CAMARA.update();

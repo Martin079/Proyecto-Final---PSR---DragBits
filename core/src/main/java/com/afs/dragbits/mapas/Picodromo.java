@@ -12,13 +12,12 @@ public class Picodromo {
     private TextureRegion regionMeta;
 
     private static final float ANCHO_SECCION = 1080f;
-    private static final int CANTIDAD_INTERMEDIAS = 5; // Configura la longitud de la pista
+    private static final int CANTIDAD_INTERMEDIAS = 5;
     private final float X_META;
 
     public Picodromo() {
         spriteSheet = new Texture("sprites/Pistas/Pista-sheet.png");
 
-        //sheet de 1080x1080px
         TextureRegion[][] regiones = TextureRegion.split(spriteSheet, 1080, 1080);
         regionLargada = regiones[0][0];
         regionIntermedia = regiones[0][1];
@@ -30,24 +29,19 @@ public class Picodromo {
     public void dibujar(SpriteBatch batch, float altoPantalla) {
         float xActual = 0f;
 
-        // Sección extra antes de la largada para evitar borde negro
         batch.draw(regionIntermedia, xActual - ANCHO_SECCION, 0, ANCHO_SECCION, altoPantalla);
 
-        // Largada
         batch.draw(regionLargada, xActual, 0, ANCHO_SECCION, altoPantalla);
         xActual += ANCHO_SECCION;
 
-        // Secciones Intermedias
         for (int i = 0; i < CANTIDAD_INTERMEDIAS; i++) {
             batch.draw(regionIntermedia, xActual, 0, ANCHO_SECCION, altoPantalla);
             xActual += ANCHO_SECCION;
         }
 
-        //Meta
         batch.draw(regionMeta, xActual, 0, ANCHO_SECCION, altoPantalla);
         xActual += ANCHO_SECCION;
 
-        // Sección extra después de la meta para evitar borde negro
         batch.draw(regionIntermedia, xActual, 0, ANCHO_SECCION, altoPantalla);
     }
 

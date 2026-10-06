@@ -11,8 +11,8 @@ public class GestorDeAudio implements Disposable {
     private Music musicaFondo;
     private final ObjectMap<String, Sound> SONIDOS;
 
-    private float volumenMaestro = 1.0f;       // Configurable por el jugador (0.0 a 1.0)
-    private float modificadorPantalla = 1.0f;  // Ajuste contextual (0.2 carrera, 0.4 mapa, 1.0 menú)
+    private float volumenMaestro = 1.0f;
+    private float modificadorPantalla = 1.0f;
     private boolean muteado = false;
     private float volumenPrevioMute = 1.0f;
 
@@ -30,7 +30,6 @@ public class GestorDeAudio implements Disposable {
     }
 
     private void cargarEfectos() {
-        // Carga defensiva: comprueba la existencia de archivos antes de instanciarlos
         cargarSonidoSiExiste("cambio_marcha", "audio/Sonidos/cambio_marcha.wav");
         cargarSonidoSiExiste("motor", "audio/Sonidos/motor.wav");
         cargarSonidoSiExiste("patinaje", "audio/Sonidos/patinaje.wav");

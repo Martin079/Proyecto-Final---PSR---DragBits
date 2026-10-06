@@ -11,10 +11,10 @@ public class Palanca extends ElementoHUD {
 
     private Texture spriteSheet;
 
-    private TextureRegion frameEsquema;   // frame 0: diagrama
-    private TextureRegion frameCentro;    // frame 1: palanca centro
-    private TextureRegion frameIzquierda; // frame 2: palanca izquierda
-    private TextureRegion frameDerecha;   // frame 3: palanca derecha
+    private TextureRegion frameEsquema;
+    private TextureRegion frameCentro;
+    private TextureRegion frameIzquierda;
+    private TextureRegion frameDerecha;
 
     private float ancho = 252f;
     private float alto = 126f;
@@ -32,9 +32,8 @@ public class Palanca extends ElementoHUD {
     }
 
     public void dibujar(SpriteBatch batch, CajaDeCambios caja, float anchoPantalla) {
-        // izquierda del HUD (arranca en anchoPantalla - 310f)
         float posX = anchoPantalla - 560f;
-        float posY = 20f; // DEBE SER LA MISMA ALTURA QUE EL HUD PRINCIPAL
+        float posY = 20f;
 
         batch.draw(frameEsquema, posX, posY, ancho, alto);
 
@@ -46,10 +45,10 @@ public class Palanca extends ElementoHUD {
 
         if (pX == -1) {
             perillaActual = frameIzquierda;
-            offsetX = -44f; // a la izquierda
+            offsetX = -44f;
         } else if (pX == 1) {
             perillaActual = frameDerecha;
-            offsetX = 44f;  // a la derecha
+            offsetX = 44f;
         } else {
             perillaActual = frameCentro;
             offsetX = 0f;
@@ -57,9 +56,9 @@ public class Palanca extends ElementoHUD {
 
         float offsetY = 0f;
         if (pY == 1) {
-            offsetY = 18f;  // arriba
+            offsetY = 18f;
         } else if (pY == -1) {
-            offsetY = -18f; // abajo
+            offsetY = -18f;
         }
 
         batch.draw(perillaActual, posX + offsetX, posY + offsetY, ancho, alto);

@@ -14,7 +14,6 @@ public class Semaforo extends ElementoHUD {
     private final Texture SPRITE_SHEET;
     private final TextureRegion[] FRAMES;
 
-    // Temporizadores
     private float tiempoParaSiguienteLuz;
     private float temporizador;
 
@@ -28,7 +27,6 @@ public class Semaforo extends ElementoHUD {
 
         SPRITE_SHEET = SpriteSheetLoader.cargarTextura("sprites/HUD/Semaforo-sheet.png");
 
-        // 6 frames de 60x180 px
         FRAMES = SpriteSheetLoader.recortar(SPRITE_SHEET, 60, 180, 6);
 
         iniciarSecuencia();
@@ -38,7 +36,6 @@ public class Semaforo extends ElementoHUD {
     public void iniciarSecuencia() {
         estadoActual = EstadoSemaforo.APAGADO;
         temporizador = 0f;
-        //tiempo aleatorio entre 0.3s y 0.8s
         tiempoParaSiguienteLuz = MathUtils.random(0.3f, 0.8f);
     }
 
@@ -46,8 +43,6 @@ public class Semaforo extends ElementoHUD {
     public void actualizar(Auto auto, float delta) {
         if (estadoActual == EstadoSemaforo.FINALIZADO) return;
 
-        // SALIDA EN FALSO
-        // Si el semaforo no esta en VERDE y el auto tiene movimiento
         if (estadoActual != EstadoSemaforo.VERDE && estadoActual != EstadoSemaforo.SALIDA_FALSO) {
             if (auto.getVelocidad() > 0) {
                 estadoActual = EstadoSemaforo.SALIDA_FALSO;
@@ -59,8 +54,6 @@ public class Semaforo extends ElementoHUD {
         temporizador += delta;
 
         if (estadoActual == EstadoSemaforo.VERDE) {
-            // en verde se mantiene 1 segundo y luego desaparecer
-            // en verde antes de desaparecer
             float tiempoVerdeEnPantalla = 1.0f;
             if (temporizador >= tiempoVerdeEnPantalla) {
                 estadoActual = EstadoSemaforo.FINALIZADO;
@@ -102,11 +95,10 @@ public class Semaforo extends ElementoHUD {
     public void dibujar(SpriteBatch batch, float anchoPantalla, float altoPantalla) {
         if (estadoActual == EstadoSemaforo.FINALIZADO) return;
 
-        // Tamaño
         float ancho = 168f;
         float posX = (anchoPantalla / 2f) - (ancho / 2f);
         float alto = 504f;
-        float posY = altoPantalla - alto - 10f; // 10px de margen respecto al borde superior
+        float posY = altoPantalla - alto - 10f;
 
         int frameIndex = 0;
         switch (estadoActual) {
