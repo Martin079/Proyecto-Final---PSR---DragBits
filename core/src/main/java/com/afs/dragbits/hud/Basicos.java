@@ -13,13 +13,10 @@ public class Basicos extends ElementoHUD {
     private final Texture TEXTURA_BOTON_PAUSA;
     private final Rectangle BOUNDS_BOTON_PAUSA;
 
-    private static final float ANCHO_VIRTUAL = 1920f;
-    private static final float ALTO_VIRTUAL = 1080f;
-
     private static final float ANCHO_BOTON_PAUSA = 105f;
     private static final float ALTO_BOTON_PAUSA = 56f;
 
-    public Basicos() {
+    public Basicos(float anchoVirtual, float altoVirtual) {
         super();
 
         FUENTE = new BitmapFont();
@@ -28,18 +25,17 @@ public class Basicos extends ElementoHUD {
 
         TEXTURA_BOTON_PAUSA = new Texture("sprites/Botones/Boton pausa.png");
 
-        float btnX = ANCHO_VIRTUAL - 112f;
-        float btnY = ALTO_VIRTUAL - 112f;
+        float btnX = anchoVirtual - 112f;
+        float btnY = altoVirtual - 112f;
         BOUNDS_BOTON_PAUSA = new Rectangle(btnX, btnY, ANCHO_BOTON_PAUSA, ALTO_BOTON_PAUSA);
     }
 
-    public void dibujar(SpriteBatch batch, Auto auto, float anchoPantalla) {
+    public void dibujar(SpriteBatch batch, Auto auto, float anchoPantalla, boolean dibujarBotonPausa) {
         int velKmH = (int) auto.getVelocidad();
         int rpm = (int) auto.getRpm();
         String marchaStr = (auto.getMarchaActual() == 0) ? "N" : String.valueOf(auto.getMarchaActual());
         String embragueStr = auto.isEmbraguePresionado() ? " [EMBRAGUE]" : "";
 
-        //izquierda
         float posX = anchoPantalla - 310f;
         float posY = 110f;
 
@@ -47,8 +43,9 @@ public class Basicos extends ElementoHUD {
         FUENTE.draw(batch, "RPM: " + rpm, posX, posY - 35f);
         FUENTE.draw(batch, "MARCHA: " + marchaStr + embragueStr, posX, posY - 70f);
 
-        // Dibujar botón de pausa
-        batch.draw(TEXTURA_BOTON_PAUSA, BOUNDS_BOTON_PAUSA.x, BOUNDS_BOTON_PAUSA.y, BOUNDS_BOTON_PAUSA.width, BOUNDS_BOTON_PAUSA.height);
+        if (dibujarBotonPausa) {
+            batch.draw(TEXTURA_BOTON_PAUSA, BOUNDS_BOTON_PAUSA.x, BOUNDS_BOTON_PAUSA.y, BOUNDS_BOTON_PAUSA.width, BOUNDS_BOTON_PAUSA.height);
+        }
     }
 
     public boolean fueBotonPausaTocado(float x, float y) {

@@ -44,11 +44,6 @@ public class CartelPausa extends ElementoHUD {
         float cartelX = (anchoPantalla - ANCHO_CARTEL) / 2f;
         float cartelY = (altoPantalla - ALTO_CARTEL) / 2f;
 
-        // Update button bounds to match current viewport dimensions
-        float btnY = cartelY + 45f;
-        BOUNDS_REANUDAR.set(cartelX + 45f, btnY, ANCHO_BOTON, ALTO_BOTON);
-        BOUNDS_ABANDONAR.set(cartelX + ANCHO_CARTEL - 45f - ANCHO_BOTON, btnY, ANCHO_BOTON, ALTO_BOTON);
-
         batch.draw(TEXTURA_FONDO, cartelX, cartelY);
 
         GlyphLayout layout = new GlyphLayout();
@@ -57,14 +52,12 @@ public class CartelPausa extends ElementoHUD {
         layout.setText(FUENTE_TEXTO, "PAUSA");
         FUENTE_TEXTO.draw(batch, "PAUSA", cartelX + (ANCHO_CARTEL - layout.width) / 2f, cartelY + 300f);
 
-        // Dibujar botón reanudar (verde)
         batch.draw(TEXTURA_BOTON_REANUDAR, BOUNDS_REANUDAR.x, BOUNDS_REANUDAR.y, BOUNDS_REANUDAR.width, BOUNDS_REANUDAR.height);
         FUENTE_TEXTO.getData().setScale(1.8f);
         FUENTE_TEXTO.setColor(Color.WHITE);
         layout.setText(FUENTE_TEXTO, "REANUDAR");
         FUENTE_TEXTO.draw(batch, "REANUDAR", BOUNDS_REANUDAR.x + (ANCHO_BOTON - layout.width) / 2f, BOUNDS_REANUDAR.y + 45f);
 
-        // Dibujar botón abandonar (rojo)
         batch.draw(TEXTURA_BOTON_ABANDONAR, BOUNDS_ABANDONAR.x, BOUNDS_ABANDONAR.y, BOUNDS_ABANDONAR.width, BOUNDS_ABANDONAR.height);
         layout.setText(FUENTE_TEXTO, "ABANDONAR");
         FUENTE_TEXTO.draw(batch, "ABANDONAR", BOUNDS_ABANDONAR.x + (ANCHO_BOTON - layout.width) / 2f, BOUNDS_ABANDONAR.y + 45f);

@@ -40,10 +40,6 @@ public class CartelResultado extends ElementoHUD {
         float cartelX = (anchoPantalla - ANCHO_CARTEL) / 2f;
         float cartelY = (altoPantalla - ALTO_CARTEL) / 2f;
 
-        float btnX = (anchoPantalla - ANCHO_BOTON) / 2f;
-        float btnY = cartelY + 30f;
-        BOUNDS_BUTTON.set(btnX, btnY, ANCHO_BOTON, ALTO_BOTON);
-
         batch.draw(TEXTURA_CARTEL, cartelX, cartelY);
 
         GlyphLayout layout = new GlyphLayout();

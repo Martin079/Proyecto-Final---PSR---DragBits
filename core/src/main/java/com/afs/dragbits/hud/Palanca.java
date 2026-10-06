@@ -16,9 +16,6 @@ public class Palanca extends ElementoHUD {
     private TextureRegion frameIzquierda; // frame 2: palanca izquierda
     private TextureRegion frameDerecha;   // frame 3: palanca derecha
 
-    private static final float ANCHO_VIRTUAL = 1920f;
-    private static final float ALTO_VIRTUAL = 1080f;
-
     private float ancho = 252f;
     private float alto = 126f;
 

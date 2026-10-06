@@ -20,10 +20,8 @@ import com.afs.dragbits.mapas.Picodromo;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -56,6 +54,8 @@ public class GameScreen implements Screen {
 
     private static final float ANCHO_VIRTUAL = 1920f;
     private static final float ALTO_VIRTUAL = 1080f;
+    private static final float Y_JUGADOR = 199f;
+    private static final float Y_RIVAL = 352f;
 
     private EntradaJugador entradaJugador;
 
@@ -83,14 +83,10 @@ public class GameScreen implements Screen {
         viewportMundo = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camaraJugador.getCamara());
         viewportHUD = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL);
 
-        float altoVentana = Gdx.graphics.getHeight();
-        float yJugador = 130f * ALTO_VIRTUAL / altoVentana;
-        float yRival = 230f * ALTO_VIRTUAL / altoVentana;
-
-        autoJugador = new AutoJugador(picodromo.getPosicionSpawnX(), yJugador);
+        autoJugador = new AutoJugador(picodromo.getPosicionSpawnX(), Y_JUGADOR);
         autoRival = new AutoRival(
             picodromo.getPosicionSpawnX(),
-            yRival,
+            Y_RIVAL,
             155f,
             45f,
             70f,
@@ -103,7 +99,7 @@ public class GameScreen implements Screen {
         acelerador = new Acelerador();
         cajaDeCambios = new CajaDeCambios();
         semaforo = new Semaforo(picodromo.getPosicionSpawnX());
-        hudBasicos = new Basicos();
+        hudBasicos = new Basicos(ANCHO_VIRTUAL, ALTO_VIRTUAL);
         hudPalanca = new Palanca();
         cartelResultado = new CartelResultado(ANCHO_VIRTUAL, ALTO_VIRTUAL);
         cartelPausa = new CartelPausa(ANCHO_VIRTUAL, ALTO_VIRTUAL);
@@ -120,7 +116,6 @@ public class GameScreen implements Screen {
             }
         }
 
-        // Check pause button touch
         if (estadoJuego == EstadoJuego.EN_CURSO && entradaJugador.consumoToque()) {
             Vector2 toque = entradaJugador.getCoordenadasToque(viewportHUD);
             if (hudBasicos.fueBotonPausaTocado(toque.x, toque.y)) {
@@ -131,16 +126,10 @@ public class GameScreen implements Screen {
         }
 
         if (estadoJuego == EstadoJuego.PAUSADO) {
-            // Keyboard input
             if (entradaJugador.consumirCancelar()) {
                 estadoJuego = EstadoJuego.EN_CURSO;
             }
-            if (entradaJugador.consumirConfirmar()) {
-                Gdx.app.postRunnable(() -> GAME.setScreen(new MapaScreen(GAME, proveedorMusica)));
-                return;
-            }
 
-            // Touch input
             if (entradaJugador.consumoToque()) {
                 Vector2 toque = entradaJugador.getCoordenadasToque(viewportHUD);
 
@@ -183,7 +172,6 @@ public class GameScreen implements Screen {
 
         ScreenUtils.clear(0, 0, 0, 1);
 
-        // Renderizar Mundo
         viewportMundo.apply();
         camaraJugador.aplicarACamara(batch);
         batch.begin();
@@ -192,11 +180,10 @@ public class GameScreen implements Screen {
         autoRival.dibujar(batch);
         batch.end();
 
-        // Renderizar HUD
         viewportHUD.apply();
         batch.setProjectionMatrix(viewportHUD.getCamera().combined);
         batch.begin();
-        hudBasicos.dibujar(batch, autoJugador, ANCHO_VIRTUAL);
+        hudBasicos.dibujar(batch, autoJugador, ANCHO_VIRTUAL, estadoJuego != EstadoJuego.FINALIZADO);
         hudPalanca.dibujar(batch, cajaDeCambios, ANCHO_VIRTUAL);
         semaforo.dibujar(batch, ANCHO_VIRTUAL, ALTO_VIRTUAL);
         if (controladorCarrera.isCarreraFinalizada()) {
@@ -205,7 +192,6 @@ public class GameScreen implements Screen {
         }
         batch.end();
 
-        // Renderizar Cartel de Pausa
         if (estadoJuego == EstadoJuego.PAUSADO) {
             batch.begin();
             cartelPausa.dibujar(batch, ANCHO_VIRTUAL, ALTO_VIRTUAL);
