@@ -42,6 +42,7 @@ public class MapaScreen implements Screen {
 
     private VentanaSeleccionRival ventanaRival;
     private EntradaJugador entradaJugador;
+    private TipoCarrera tipoSeleccionado = TipoCarrera.LEGAL;
 
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
@@ -78,7 +79,7 @@ public class MapaScreen implements Screen {
                 Gdx.input.setInputProcessor(entradaJugador);
             },
             (indiceRival) -> {
-                Gdx.app.postRunnable(() -> GAME.setScreen(new GameScreen(GAME, PROVEEDOR_MUSICA)));
+                Gdx.app.postRunnable(() -> GAME.setScreen(new GameScreen(GAME, PROVEEDOR_MUSICA, tipoSeleccionado)));
             }
         );
 
@@ -119,6 +120,7 @@ public class MapaScreen implements Screen {
     }
 
     private void abrirVentanaRival(TipoCarrera tipo, int maxDesbloqueado) {
+        this.tipoSeleccionado = tipo;
         ventanaRival.mostrar(tipo, maxDesbloqueado);
         Gdx.input.setInputProcessor(ventanaRival.getStage());
     }

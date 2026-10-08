@@ -17,6 +17,9 @@ import com.afs.dragbits.hud.Semaforo;
 import com.afs.dragbits.jugador.Jugador;
 import com.afs.dragbits.jugador.RepositorioJugador;
 import com.afs.dragbits.mapas.Picodromo;
+import com.afs.dragbits.mapas.Pista;
+import com.afs.dragbits.mapas.PistaCiudad;
+import com.afs.dragbits.menurivales.TipoCarrera;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -32,7 +35,8 @@ public class GameScreen implements Screen {
     private ProveedorMusica proveedorMusica;
 
     private SpriteBatch batch;
-    private Picodromo picodromo;
+    private Pista pista;
+    private final TipoCarrera TIPO_CARRERA;
     private AutoJugador autoJugador;
     private AutoRival autoRival;
     private SeguimientoJugador camaraJugador;
@@ -54,14 +58,13 @@ public class GameScreen implements Screen {
 
     private static final float ANCHO_VIRTUAL = 1920f;
     private static final float ALTO_VIRTUAL = 1080f;
-    private static final float Y_JUGADOR = 199f;
-    private static final float Y_RIVAL = 352f;
 
     private EntradaJugador entradaJugador;
 
-    public GameScreen(Game game, ProveedorMusica proveedorMusica) {
+    public GameScreen(Game game, ProveedorMusica proveedorMusica, TipoCarrera tipoCarrera) {
         this.GAME = game;
         this.proveedorMusica = proveedorMusica;
+        this.TIPO_CARRERA = tipoCarrera;
     }
 
     @Override
@@ -75,7 +78,7 @@ public class GameScreen implements Screen {
             proveedorMusica.getGestorDeAudio().setModificadorPantalla(0.2f);
         }
 
-        picodromo = new Picodromo();
+        pista = (TIPO_CARRERA == TipoCarrera.ILEGAL) ? new PistaCiudad() : new Picodromo();
         RepositorioJugador repositorioJugador = new RepositorioJugador();
         datosJugador = repositorioJugador.cargarJugador();
 
@@ -83,10 +86,10 @@ public class GameScreen implements Screen {
         viewportMundo = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camaraJugador.getCamara());
         viewportHUD = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL);
 
-        autoJugador = new AutoJugador(picodromo.getPosicionSpawnX(), Y_JUGADOR);
+        autoJugador = new AutoJugador(pista.getPosicionSpawnX(), pista.getYJugador());
         autoRival = new AutoRival(
-            picodromo.getPosicionSpawnX(),
-            Y_RIVAL,
+            pista.getPosicionSpawnX(),
+            pista.getYRival(),
             155f,
             45f,
             70f,
@@ -94,11 +97,11 @@ public class GameScreen implements Screen {
             "sprites/Autos/Legales/renault 12-sheet.png"
         );
 
-        controladorCarrera = new ControladorCarrera(picodromo, autoJugador, autoRival, datosJugador);
+        controladorCarrera = new ControladorCarrera(pista, autoJugador, autoRival, datosJugador);
 
         acelerador = new Acelerador();
         cajaDeCambios = new CajaDeCambios();
-        semaforo = new Semaforo(picodromo.getPosicionSpawnX());
+        semaforo = new Semaforo(pista.getPosicionSpawnX());
         hudBasicos = new Basicos(ANCHO_VIRTUAL, ALTO_VIRTUAL);
         hudPalanca = new Palanca();
         cartelResultado = new CartelResultado(ANCHO_VIRTUAL, ALTO_VIRTUAL);
@@ -175,7 +178,7 @@ public class GameScreen implements Screen {
         viewportMundo.apply();
         camaraJugador.aplicarACamara(batch);
         batch.begin();
-        picodromo.dibujar(batch, ALTO_VIRTUAL);
+        pista.dibujar(batch, ALTO_VIRTUAL);
         autoJugador.dibujar(batch);
         autoRival.dibujar(batch);
         batch.end();
@@ -217,7 +220,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         if (batch != null) batch.dispose();
-        if (picodromo != null) picodromo.dispose();
+        if (pista != null) pista.dispose();
         if (autoJugador != null) autoJugador.dispose();
         if (autoRival != null) autoRival.dispose();
         if (hudBasicos != null) hudBasicos.dispose();

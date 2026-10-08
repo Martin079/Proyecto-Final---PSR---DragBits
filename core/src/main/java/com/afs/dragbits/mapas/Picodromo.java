@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Picodromo {
+public class Picodromo implements Pista {
 
     private Texture spriteSheet;
     private TextureRegion regionLargada;
@@ -26,6 +26,7 @@ public class Picodromo {
         this.X_META = (1 + CANTIDAD_INTERMEDIAS) * ANCHO_SECCION;
     }
 
+    @Override
     public void dibujar(SpriteBatch batch, float altoPantalla) {
         float xActual = 0f;
 
@@ -46,16 +47,25 @@ public class Picodromo {
     }
 
 
+    @Override
     public float getPosicionLineaMeta() {
         return X_META + (ANCHO_SECCION / 2f);
     }
 
 
+    @Override
     public float getPosicionSpawnX() {
         return ANCHO_SECCION * 0.45f;
     }
 
+    @Override
     public void dispose() {
         if (spriteSheet != null) spriteSheet.dispose();
     }
+
+    @Override
+    public float getYJugador() { return 199f; }
+
+    @Override
+    public float getYRival() { return 352f; }
 }

@@ -17,6 +17,14 @@ Convención utilizada en todo el historial:
 ### Added
 - Se añadio los sprites de todos los autos en la carpeta sheet. Aun no implementados en el juego.
 - Se añadio la imagen del mapa de la ciudad para las carreras ilegales en la carpeta sheet
+- Interfaz `Pista` para abstraer el comportamiento y constantes espaciales de los circuitos (`getYJugador`, `getYRival`, `getPosicionSpawnX`, `getPosicionLineaMeta`, `dibujar`).
+- Implementación `PistaCiudad` utilizando el recurso gráfico `sprites/Pistas/Ciudad.png` dibujado en mosaico y línea de meta blanca provisoria.
+
+### Changed
+- `Picodromo` ahora implementa la interfaz `Pista` y encapsula las posiciones verticales de spawn de los autos.
+- `ControladorCarrera` desacoplado de `Picodromo`, aceptando cualquier instancia de `Pista`.
+- `GameScreen` pasa a recibir `TipoCarrera` en su constructor e instancia dinámicamente `Picodromo` (carrera legal) o `PistaCiudad` (carrera ilegal).
+- `MapaScreen` almacena y propaga el `tipoSeleccionado` hacia `GameScreen` al iniciar la carrera desde el menú de selección de rival.
 
 ### Fixed 
 - Posicion de largada de los autos se movio para atras, para que coincida con la linea de largada
