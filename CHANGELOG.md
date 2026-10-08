@@ -12,6 +12,14 @@ Convención utilizada en todo el historial:
 
 ## [Unreleased]
 
+## [0.8.7] - 2026-10-07
+
+### Added
+- Se añadio los sprites de todos los autos en la carpeta sheet. Aun no implementados en el juego.
+- Se añadio la imagen del mapa de la ciudad para las carreras ilegales en la carpeta sheet
+
+### Fixed 
+- Posicion de largada de los autos se movio para atras, para que coincida con la linea de largada
 
 ## [0.8.6] - 2026-10-05
 

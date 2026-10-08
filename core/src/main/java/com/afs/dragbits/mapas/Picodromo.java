@@ -52,7 +52,7 @@ public class Picodromo {
 
 
     public float getPosicionSpawnX() {
-        return ANCHO_SECCION * 0.55f;
+        return ANCHO_SECCION * 0.45f;
     }
 
     public void dispose() {

@@ -91,7 +91,7 @@ public class GameScreen implements Screen {
             45f,
             70f,
             800,
-            "sprites/Autos/renault 12-sheet.png"
+            "sprites/Autos/Legales/renault 12-sheet.png"
         );
 
         controladorCarrera = new ControladorCarrera(picodromo, autoJugador, autoRival, datosJugador);
