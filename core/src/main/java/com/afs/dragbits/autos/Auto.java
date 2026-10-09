@@ -46,6 +46,9 @@ public abstract class Auto {
     private float stateTime;
     private Texture texturaFallback;
 
+    public static final float ESCALA_SPRITE = 2.8f;
+    public static final float ANCHO_BASE = 280f;
+
     private static final float FACTOR_MOVIMIENTO = 4.2f;
 
 
@@ -99,6 +102,9 @@ public abstract class Auto {
 
         int anchoFrame = spriteSheet.getWidth() / 7;
         int altoFrame = spriteSheet.getHeight();
+
+        this.ancho = anchoFrame * ESCALA_SPRITE;
+        this.alto = altoFrame * ESCALA_SPRITE;
 
         TextureRegion[] frames = SpriteSheetLoader.recortar(spriteSheet, anchoFrame, altoFrame);
 
@@ -268,5 +274,17 @@ public abstract class Auto {
 
     public float getFrenteX() {
         return posX + ancho;
+    }
+
+    public void alinearFrente(float frenteX) {
+        this.posX = frenteX - ancho;
+    }
+
+    public float getAncho() {
+        return ancho;
+    }
+
+    public float getAlto() {
+        return alto;
     }
 }

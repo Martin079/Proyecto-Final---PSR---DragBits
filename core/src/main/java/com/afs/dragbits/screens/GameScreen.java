@@ -1,6 +1,7 @@
 package com.afs.dragbits.screens;
 
 import com.afs.dragbits.audio.ProveedorMusica;
+import com.afs.dragbits.autos.Auto;
 import com.afs.dragbits.autos.AutoJugador;
 import com.afs.dragbits.autos.AutoRival;
 import com.afs.dragbits.camara.SeguimientoJugador;
@@ -96,6 +97,9 @@ public class GameScreen implements Screen {
             800,
             "sprites/Autos/Legales/renault 12-sheet.png"
         );
+
+        float frenteLargada = pista.getPosicionSpawnX() + Auto.ANCHO_BASE;
+        autoRival.alinearFrente(frenteLargada);
 
         controladorCarrera = new ControladorCarrera(pista, autoJugador, autoRival, datosJugador);
 

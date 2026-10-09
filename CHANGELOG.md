@@ -17,6 +17,11 @@ Convención utilizada en todo el historial:
 ### Added
 - Catálogo de rivales con paquete `com.afs.dragbits.rivales` y clases `RivalConfig` (configuración inmutable de rival) y `CatalogoRivales` (datos de 10 rivales legales e ilegales con estadísticas calibradas).
 
+### Changed
+- `Auto` ahora calcula dinámicamente el ancho y alto del sprite según el tamaño del frame original multiplicado por `ESCALA_SPRITE` (2.8f), permitiendo que sprites de diferentes tamaños (100x40 vs 200x80) se dibujen correctamente.
+- Agregada constante `ANCHO_BASE` (280f) y método `alinearFrente(float frenteX)` en `Auto` para alinear el frente de cualquier auto a una posición X específica, evitando ventajas por diferencias de longitud.
+- `GameScreen` ahora alinea el frente del rival con la línea de largada usando `alinearFrente()`, asegurando que todos los autos larguen en igualdad de condiciones.
+
 ## [0.8.7] - 2026-10-07
 
 ### Added
