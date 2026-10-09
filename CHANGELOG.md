@@ -12,6 +12,11 @@ Convención utilizada en todo el historial:
 
 ## [Unreleased]
 
+## [0.8.8] - 2026-10-09
+
+### Added
+- Catálogo de rivales con paquete `com.afs.dragbits.rivales` y clases `RivalConfig` (configuración inmutable de rival) y `CatalogoRivales` (datos de 10 rivales legales e ilegales con estadísticas calibradas).
+
 ## [0.8.7] - 2026-10-07
 
 ### Added
