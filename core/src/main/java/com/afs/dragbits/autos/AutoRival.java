@@ -1,12 +1,14 @@
 package com.afs.dragbits.autos;
 
 import com.afs.dragbits.hud.EstadoSemaforo;
-import com.badlogic.gdx.graphics.Color;
+import com.afs.dragbits.rivales.RivalConfig;
 
 public class AutoRival extends Auto {
 
     private int recompensa;
     private float tiempoSiguienteCambio;
+
+    private static final int MARCHA_ACTIVACION_NITRO = 3;
 
     public AutoRival(float posX, float posY, float velocidadMaxima, float aceleracion, float traccion, int recompensa, String rutaSpriteSheet) {
         super(posX, posY, velocidadMaxima, aceleracion, traccion, rutaSpriteSheet);
@@ -15,11 +17,11 @@ public class AutoRival extends Auto {
         this.nitroRestante = 0f;
     }
 
-    public AutoRival(float posX, float posY, float velocidadMaxima, float aceleracion, float traccion, int recompensa, Color colorFallback) {
-        super(posX, posY, velocidadMaxima, aceleracion, traccion, colorFallback);
+    public AutoRival(float posX, float posY, RivalConfig config, int recompensa) {
+        super(posX, posY, config.getVelocidadMaxima(), config.getAceleracion(), config.getTraccion(), config.getRutaSprite());
         this.recompensa = recompensa;
-        this.capacidadNitro = 0f;
-        this.nitroRestante = 0f;
+        this.capacidadNitro = config.getNitroSegundos();
+        this.nitroRestante = config.getNitroSegundos();
     }
 
 
@@ -35,6 +37,9 @@ public class AutoRival extends Auto {
                     embraguePresionado = false;
                 }
             } else {
+                if (!nitroActivo && nitroRestante > 0 && marchaActual >= MARCHA_ACTIVACION_NITRO) {
+                    nitroActivo = true;
+                }
                 acelerar(delta);
 
                 if (rpm >= (rpmMaximas - 600f) && marchaActual < (relacionesTransmision.length - 1)) {

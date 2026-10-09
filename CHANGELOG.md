@@ -21,6 +21,10 @@ Convención utilizada en todo el historial:
 - `Auto` ahora calcula dinámicamente el ancho y alto del sprite según el tamaño del frame original multiplicado por `ESCALA_SPRITE` (2.8f), permitiendo que sprites de diferentes tamaños (100x40 vs 200x80) se dibujen correctamente.
 - Agregada constante `ANCHO_BASE` (280f) y método `alinearFrente(float frenteX)` en `Auto` para alinear el frente de cualquier auto a una posición X específica, evitando ventajas por diferencias de longitud.
 - `GameScreen` ahora alinea el frente del rival con la línea de largada usando `alinearFrente()`, asegurando que todos los autos larguen en igualdad de condiciones.
+- `AutoRival` agregó constructor que acepta `RivalConfig` para inicializar estadísticas desde el catálogo de rivales, configurando capacidad y nitro restante según el rival.
+- `AutoRival` ahora activa nitro automáticamente en la IA cuando alcanza la marcha 3 o superior y tiene nitro disponible (constante `MARCHA_ACTIVACION_NITRO = 3`).
+- `AutoJugador` ajustó aceleración de 80f a 24f para coherencia con las notas de diseño (tiempo 0-100 km/h ~9.5s).
+- Eliminado constructor `Color` fallback de `AutoRival` al no tener usos en el código.
 
 ## [0.8.7] - 2026-10-07
 
