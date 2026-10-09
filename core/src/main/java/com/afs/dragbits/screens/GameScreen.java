@@ -192,7 +192,9 @@ public class GameScreen implements Screen {
         semaforo.dibujar(batch, ANCHO_VIRTUAL, ALTO_VIRTUAL);
         if (controladorCarrera.isCarreraFinalizada()) {
             cartelResultado.dibujar(batch, controladorCarrera.isJugadorGano(),
-                autoRival.getRecompensa(), datosJugador.getDinero(), ANCHO_VIRTUAL, ALTO_VIRTUAL);
+                TIPO_CARRERA, controladorCarrera.getRecompensaObtenida(),
+                controladorCarrera.isPrimeraVictoria(), controladorCarrera.isSubioDeNivel(),
+                datosJugador, ANCHO_VIRTUAL, ALTO_VIRTUAL);
         }
         batch.end();
 

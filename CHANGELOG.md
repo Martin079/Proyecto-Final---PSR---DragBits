@@ -32,6 +32,11 @@ Convención utilizada en todo el historial:
 - `RepositorioJugador` ahora guarda y carga el progreso de rivales derrotados en disco con claves `KEY_DERROTADOS_LEGALES` y `KEY_DERROTADOS_ILEGALES`, con default 0 para compatibilidad con guardados viejos.
 - `MapaScreen` ahora usa `jugador.getMaxRivalDesbloqueado()` para pasar el progreso real al menú de selección de rival, desbloqueando rivales secuencialmente.
 - `ControladorCarrera` ahora recibe `TipoCarrera` e `indiceRival` en el constructor y llama a `jugador.registrarVictoria()` cuando el jugador gana, permitiendo que el siguiente rival se desbloquee correctamente.
+- `ControladorCarrera` agregó campos `recompensaObtenida`, `primeraVictoria` y `subioDeNivel` con getters para rastrear los resultados de la carrera.
+- `ControladorCarrera` ahora calcula recompensas con bonus de primera victoria (+50%) y otorga dinero en carreras legales o experiencia en carreras ilegales según el tipo.
+- `CartelResultado` actualizó firma de `dibujar()` para recibir `TipoCarrera`, `primeraVictoria`, `subioDeNivel` y `Jugador`, mostrando recompensas diferenciadas por tipo (LEGAL: dinero, ILEGAL: XP con nivel).
+- `CartelResultado` ahora muestra mensaje de bonus de primera victoria (+50%) y notificación de subió de nivel cuando corresponda.
+- `GameScreen` actualizó llamada a `cartelResultado.dibujar()` usando los getters del `ControladorCarrera` en lugar de valores hardcodeados.
 
 ## [0.8.7] - 2026-10-07
 

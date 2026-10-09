@@ -20,6 +20,9 @@ public class ControladorCarrera {
     private boolean carreraFinalizada;
     private boolean jugadorGano;
     private boolean recompensaOtorgada;
+    private int recompensaObtenida;
+    private boolean primeraVictoria;
+    private boolean subioDeNivel;
 
     public ControladorCarrera(Pista pista, AutoJugador autoJugador, AutoRival autoRival, Jugador datosJugador, TipoCarrera tipoCarrera, int indiceRival) {
         this.PISTA = pista;
@@ -33,6 +36,9 @@ public class ControladorCarrera {
         this.carreraFinalizada = false;
         this.jugadorGano = false;
         this.recompensaOtorgada = false;
+        this.recompensaObtenida = 0;
+        this.primeraVictoria = false;
+        this.subioDeNivel = false;
     }
 
     public void actualizar() {
@@ -47,10 +53,21 @@ public class ControladorCarrera {
             jugadorGano = AUTO_JUGADOR.getFrenteX() >= AUTO_RIVAL.getFrenteX();
 
             if (jugadorGano && !recompensaOtorgada) {
-                DATOS_JUGADOR.sumarDinero(AUTO_RIVAL.getRecompensa());
+                primeraVictoria = DATOS_JUGADOR.esPrimeraVictoria(TIPO_CARRERA, INDICE_RIVAL);
+                int base = AUTO_RIVAL.getRecompensa();
+                recompensaObtenida = primeraVictoria ? Math.round(base * 1.5f) : base;
+                
+                if (TIPO_CARRERA == TipoCarrera.LEGAL) {
+                    DATOS_JUGADOR.sumarDinero(recompensaObtenida);
+                } else {
+                    subioDeNivel = DATOS_JUGADOR.sumarExperiencia(recompensaObtenida);
+                }
+                
                 DATOS_JUGADOR.registrarVictoria(TIPO_CARRERA, INDICE_RIVAL);
                 REPOSITORIO_JUGADOR.guardarProgreso(DATOS_JUGADOR);
                 recompensaOtorgada = true;
+            } else if (!jugadorGano) {
+                recompensaObtenida = 0;
             }
         }
     }
@@ -61,5 +78,17 @@ public class ControladorCarrera {
 
     public boolean isJugadorGano() {
         return jugadorGano;
+    }
+
+    public int getRecompensaObtenida() {
+        return recompensaObtenida;
+    }
+
+    public boolean isPrimeraVictoria() {
+        return primeraVictoria;
+    }
+
+    public boolean isSubioDeNivel() {
+        return subioDeNivel;
     }
 }
