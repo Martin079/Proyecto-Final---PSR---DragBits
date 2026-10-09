@@ -98,7 +98,7 @@ public class GameScreen implements Screen {
         float frenteLargada = pista.getPosicionSpawnX() + Auto.ANCHO_BASE;
         autoRival.alinearFrente(frenteLargada);
 
-        controladorCarrera = new ControladorCarrera(pista, autoJugador, autoRival, datosJugador);
+        controladorCarrera = new ControladorCarrera(pista, autoJugador, autoRival, datosJugador, TIPO_CARRERA, INDICE_RIVAL);
 
         acelerador = new Acelerador();
         cajaDeCambios = new CajaDeCambios();

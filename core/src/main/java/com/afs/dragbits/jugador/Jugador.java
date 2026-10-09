@@ -1,5 +1,6 @@
 package com.afs.dragbits.jugador;
 
+import com.afs.dragbits.menurivales.TipoCarrera;
 import com.badlogic.gdx.Gdx;
 
 public class Jugador {
@@ -8,6 +9,8 @@ public class Jugador {
     private long experienciaActual;
     private long experienciaSiguienteNivel;
     private long dinero;
+    private int derrotadosLegales;
+    private int derrotadosIlegales;
 
     public Jugador() {
         this(1, 0, 0);
@@ -18,6 +21,8 @@ public class Jugador {
         this.experienciaActual = Math.max(0, experienciaInicial);
         this.dinero = Math.max(0, dineroInicial);
         this.experienciaSiguienteNivel = calcularExperienciaRequerida(this.nivel);
+        this.derrotadosLegales = 0;
+        this.derrotadosIlegales = 0;
     }
 
 
@@ -78,5 +83,40 @@ public class Jugador {
 
     public void setDinero(long dinero) {
         this.dinero = Math.max(0, dinero);
+    }
+
+    public int getDerrotados(TipoCarrera tipo) {
+        if (tipo == TipoCarrera.LEGAL) {
+            return derrotadosLegales;
+        } else {
+            return derrotadosIlegales;
+        }
+    }
+
+    public void setDerrotados(TipoCarrera tipo, int cantidad) {
+        cantidad = Math.max(0, Math.min(5, cantidad));
+        if (tipo == TipoCarrera.LEGAL) {
+            this.derrotadosLegales = cantidad;
+        } else {
+            this.derrotadosIlegales = cantidad;
+        }
+    }
+
+    public int getMaxRivalDesbloqueado(TipoCarrera tipo) {
+        return Math.min(getDerrotados(tipo), 4);
+    }
+
+    public boolean esPrimeraVictoria(TipoCarrera tipo, int indice) {
+        return indice == getDerrotados(tipo);
+    }
+
+    public void registrarVictoria(TipoCarrera tipo, int indice) {
+        if (esPrimeraVictoria(tipo, indice)) {
+            if (tipo == TipoCarrera.LEGAL) {
+                derrotadosLegales++;
+            } else {
+                derrotadosIlegales++;
+            }
+        }
     }
 }

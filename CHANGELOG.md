@@ -27,6 +27,11 @@ Convención utilizada en todo el historial:
 - Eliminado constructor `Color` fallback de `AutoRival` al no tener usos en el código.
 - `GameScreen` ahora recibe `indiceRival` en el constructor y usa `CatalogoRivales.obtener()` para cargar las estadísticas del rival seleccionado en lugar de valores hardcodeados.
 - `MapaScreen` ahora pasa el `indiceRival` seleccionado por el jugador al crear `GameScreen`, permitiendo elegir cualquier rival del catálogo.
+- `Jugador` agregó campos `derrotadosLegales` y `derrotadosIlegales` (0-5) para rastrear el progreso de desbloqueo de rivales.
+- `Jugador` agregó métodos `getDerrotados()`, `setDerrotados()`, `getMaxRivalDesbloqueado()`, `esPrimeraVictoria()` y `registrarVictoria()` para gestionar el sistema de desbloqueo progresivo.
+- `RepositorioJugador` ahora guarda y carga el progreso de rivales derrotados en disco con claves `KEY_DERROTADOS_LEGALES` y `KEY_DERROTADOS_ILEGALES`, con default 0 para compatibilidad con guardados viejos.
+- `MapaScreen` ahora usa `jugador.getMaxRivalDesbloqueado()` para pasar el progreso real al menú de selección de rival, desbloqueando rivales secuencialmente.
+- `ControladorCarrera` ahora recibe `TipoCarrera` e `indiceRival` en el constructor y llama a `jugador.registrarVictoria()` cuando el jugador gana, permitiendo que el siguiente rival se desbloquee correctamente.
 
 ## [0.8.7] - 2026-10-07
 

@@ -107,11 +107,11 @@ public class MapaScreen implements Screen {
         float offsetY = altoBurbuja / 2f;
 
         burbujas.add(new Burbuja(100f - offsetX, 170f - offsetY, anchoBurbuja, altoBurbuja, frameLegales, () -> {
-            abrirVentanaRival(TipoCarrera.LEGAL, 4);
+            abrirVentanaRival(TipoCarrera.LEGAL, jugador.getMaxRivalDesbloqueado(TipoCarrera.LEGAL));
         }));
 
         burbujas.add(new Burbuja(580f - offsetX, 590f - offsetY, anchoBurbuja, altoBurbuja, frameIlegales, () -> {
-            abrirVentanaRival(TipoCarrera.ILEGAL, 4);
+            abrirVentanaRival(TipoCarrera.ILEGAL, jugador.getMaxRivalDesbloqueado(TipoCarrera.ILEGAL));
         }));
 
         burbujas.add(new Burbuja(1015f - offsetX, 390f - offsetY, anchoBurbuja, altoBurbuja, frameMejoras, () -> {}));
