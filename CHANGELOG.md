@@ -25,6 +25,8 @@ Convención utilizada en todo el historial:
 - `AutoRival` ahora activa nitro automáticamente en la IA cuando alcanza la marcha 3 o superior y tiene nitro disponible (constante `MARCHA_ACTIVACION_NITRO = 3`).
 - `AutoJugador` ajustó aceleración de 80f a 24f para coherencia con las notas de diseño (tiempo 0-100 km/h ~9.5s).
 - Eliminado constructor `Color` fallback de `AutoRival` al no tener usos en el código.
+- `GameScreen` ahora recibe `indiceRival` en el constructor y usa `CatalogoRivales.obtener()` para cargar las estadísticas del rival seleccionado en lugar de valores hardcodeados.
+- `MapaScreen` ahora pasa el `indiceRival` seleccionado por el jugador al crear `GameScreen`, permitiendo elegir cualquier rival del catálogo.
 
 ## [0.8.7] - 2026-10-07
 

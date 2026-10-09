@@ -79,7 +79,7 @@ public class MapaScreen implements Screen {
                 Gdx.input.setInputProcessor(entradaJugador);
             },
             (indiceRival) -> {
-                Gdx.app.postRunnable(() -> GAME.setScreen(new GameScreen(GAME, PROVEEDOR_MUSICA, tipoSeleccionado)));
+                Gdx.app.postRunnable(() -> GAME.setScreen(new GameScreen(GAME, PROVEEDOR_MUSICA, tipoSeleccionado, indiceRival)));
             }
         );
 
@@ -107,11 +107,11 @@ public class MapaScreen implements Screen {
         float offsetY = altoBurbuja / 2f;
 
         burbujas.add(new Burbuja(100f - offsetX, 170f - offsetY, anchoBurbuja, altoBurbuja, frameLegales, () -> {
-            abrirVentanaRival(TipoCarrera.LEGAL, 0);
+            abrirVentanaRival(TipoCarrera.LEGAL, 4);
         }));
 
         burbujas.add(new Burbuja(580f - offsetX, 590f - offsetY, anchoBurbuja, altoBurbuja, frameIlegales, () -> {
-            abrirVentanaRival(TipoCarrera.ILEGAL, 0);
+            abrirVentanaRival(TipoCarrera.ILEGAL, 4);
         }));
 
         burbujas.add(new Burbuja(1015f - offsetX, 390f - offsetY, anchoBurbuja, altoBurbuja, frameMejoras, () -> {}));

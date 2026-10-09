@@ -21,6 +21,8 @@ import com.afs.dragbits.mapas.Picodromo;
 import com.afs.dragbits.mapas.Pista;
 import com.afs.dragbits.mapas.PistaCiudad;
 import com.afs.dragbits.menurivales.TipoCarrera;
+import com.afs.dragbits.rivales.CatalogoRivales;
+import com.afs.dragbits.rivales.RivalConfig;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -38,6 +40,7 @@ public class GameScreen implements Screen {
     private SpriteBatch batch;
     private Pista pista;
     private final TipoCarrera TIPO_CARRERA;
+    private final int INDICE_RIVAL;
     private AutoJugador autoJugador;
     private AutoRival autoRival;
     private SeguimientoJugador camaraJugador;
@@ -62,10 +65,11 @@ public class GameScreen implements Screen {
 
     private EntradaJugador entradaJugador;
 
-    public GameScreen(Game game, ProveedorMusica proveedorMusica, TipoCarrera tipoCarrera) {
+    public GameScreen(Game game, ProveedorMusica proveedorMusica, TipoCarrera tipoCarrera, int indiceRival) {
         this.GAME = game;
         this.proveedorMusica = proveedorMusica;
         this.TIPO_CARRERA = tipoCarrera;
+        this.INDICE_RIVAL = indiceRival;
     }
 
     @Override
@@ -88,15 +92,8 @@ public class GameScreen implements Screen {
         viewportHUD = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL);
 
         autoJugador = new AutoJugador(pista.getPosicionSpawnX(), pista.getYJugador());
-        autoRival = new AutoRival(
-            pista.getPosicionSpawnX(),
-            pista.getYRival(),
-            155f,
-            45f,
-            70f,
-            800,
-            "sprites/Autos/Legales/renault 12-sheet.png"
-        );
+        RivalConfig config = CatalogoRivales.obtener(TIPO_CARRERA, INDICE_RIVAL);
+        autoRival = new AutoRival(pista.getPosicionSpawnX(), pista.getYRival(), config, config.getRecompensaBase());
 
         float frenteLargada = pista.getPosicionSpawnX() + Auto.ANCHO_BASE;
         autoRival.alinearFrente(frenteLargada);
