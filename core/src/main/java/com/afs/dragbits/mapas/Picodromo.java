@@ -18,7 +18,7 @@ public class Picodromo implements Pista {
     public Picodromo() {
         spriteSheet = new Texture("sprites/Pistas/Pista-sheet.png");
 
-        TextureRegion[][] regiones = TextureRegion.split(spriteSheet, 1080, 1080);
+        TextureRegion[][] regiones = TextureRegion.split(spriteSheet, 1024, 1024);
         regionLargada = regiones[0][0];
         regionIntermedia = regiones[0][1];
         regionMeta = regiones[0][2];
@@ -55,7 +55,7 @@ public class Picodromo implements Pista {
 
     @Override
     public float getPosicionSpawnX() {
-        return ANCHO_SECCION * 0.45f;
+        return ANCHO_SECCION * 0.25f;
     }
 
     @Override
@@ -67,5 +67,5 @@ public class Picodromo implements Pista {
     public float getYJugador() { return 199f; }
 
     @Override
-    public float getYRival() { return 352f; }
+    public float getYRival() { return 400f; }
 }

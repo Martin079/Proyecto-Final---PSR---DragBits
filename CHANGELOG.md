@@ -38,6 +38,10 @@ Convención utilizada en todo el historial:
 - `CartelResultado` ahora muestra mensaje de bonus de primera victoria (+50%) y notificación de subió de nivel cuando corresponda.
 - `GameScreen` actualizó llamada a `cartelResultado.dibujar()` usando los getters del `ControladorCarrera` en lugar de valores hardcodeados.
 
+### Updated
+- Actualizado el sprite de la pista de carreras, y cambiada las posiciones de inicio y del rival para encajar con el nuevo sprite.
+
+
 ## [0.8.7] - 2026-10-07
 
 ### Added
