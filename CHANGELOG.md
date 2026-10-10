@@ -40,6 +40,7 @@ Convención utilizada en todo el historial:
 
 ### Updated
 - Actualizado el sprite de la pista de carreras, y cambiada las posiciones de inicio y del rival para encajar con el nuevo sprite.
+- Actualizado el mapa principal y reacomodada las burbujas para que coincidan con el nuevo mapa.
 
 
 ## [0.8.7] - 2026-10-07
