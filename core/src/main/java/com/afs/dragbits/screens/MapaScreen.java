@@ -1,0 +1,183 @@
+package com.afs.dragbits.screens;
+
+import com.afs.dragbits.Main;
+import com.afs.dragbits.audio.ProveedorMusica;
+import com.afs.dragbits.ciudad.Burbuja;
+import com.afs.dragbits.ciudad.Interfaz;
+import com.afs.dragbits.funcionalidades.EntradaJugador;
+import com.afs.dragbits.jugador.Jugador;
+import com.afs.dragbits.jugador.RepositorioJugador;
+import com.afs.dragbits.menurivales.TipoCarrera;
+import com.afs.dragbits.menurivales.VentanaSeleccionRival;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.ArrayList;
+
+public class MapaScreen implements Screen {
+
+    private final Game GAME;
+    private final Main MAIN_GAME;
+
+    private SpriteBatch batch;
+    private OrthographicCamera camara;
+    private Viewport viewport;
+
+    private Texture mapaTexture;
+    private Texture burbujasSheet;
+
+    private ArrayList<Burbuja> burbujas;
+
+    private Jugador jugador;
+    private final RepositorioJugador REPOSITORIO_JUGADOR;
+    private Interfaz interfazCiudad;
+
+    private VentanaSeleccionRival ventanaRival;
+    private EntradaJugador entradaJugador;
+    private TipoCarrera tipoSeleccionado = TipoCarrera.LEGAL;
+
+    private static final float ANCHO_VIRTUAL = 1280f;
+    private static final float ALTO_VIRTUAL = 720f;
+
+    public MapaScreen(Game game, Main mainGame) {
+        this.GAME = game;
+        this.MAIN_GAME = mainGame;
+        this.REPOSITORIO_JUGADOR = new RepositorioJugador();
+        this.jugador = REPOSITORIO_JUGADOR.cargarJugador();
+    }
+
+    @Override
+    public void show() {
+        batch = new SpriteBatch();
+        entradaJugador = new EntradaJugador();
+
+        if (MAIN_GAME != null && MAIN_GAME.getGestorDeAudio() != null) {
+            MAIN_GAME.getGestorDeAudio().setModificadorPantalla(0.4f);
+        }
+
+        if (jugador != null) {
+            REPOSITORIO_JUGADOR.cargarProgreso(jugador);
+        }
+
+        camara = new OrthographicCamera();
+        viewport = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camara);
+
+        interfazCiudad = new Interfaz(batch, jugador);
+
+
+        ventanaRival = new VentanaSeleccionRival(
+            viewport,
+            () -> {
+                Gdx.input.setInputProcessor(entradaJugador);
+            },
+            (indiceRival) -> {
+                Gdx.app.postRunnable(() -> GAME.setScreen(new GameScreen(GAME, MAIN_GAME, tipoSeleccionado, indiceRival)));
+            }
+        );
+
+        Gdx.input.setInputProcessor(entradaJugador);
+
+        mapaTexture = new Texture(Gdx.files.internal("sprites/Ciudad/Mapa.png"));
+        mapaTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        burbujasSheet = new Texture(Gdx.files.internal("sprites/Ciudad/Burbuja mapa-sheet.png"));
+        burbujasSheet.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        TextureRegion[][] tmp = TextureRegion.split(burbujasSheet, 31, 45);
+
+        TextureRegion frameLegales   = tmp[0][0];
+        TextureRegion frameIlegales  = tmp[0][1];
+        TextureRegion frameMejoras   = tmp[0][2];
+        TextureRegion frameAutos     = tmp[0][3];
+        TextureRegion frameOnline    = tmp[0][4];
+
+        burbujas = new ArrayList<>();
+
+        float anchoBurbuja = 62f;
+        float altoBurbuja = 90f;
+        float offsetX = anchoBurbuja / 2f;
+        float offsetY = altoBurbuja / 2f;
+
+        burbujas.add(new Burbuja(260f - offsetX, 200f - offsetY, anchoBurbuja, altoBurbuja, frameLegales, () -> {
+            abrirVentanaRival(TipoCarrera.LEGAL, jugador.getMaxRivalDesbloqueado(TipoCarrera.LEGAL));
+        }));
+
+        burbujas.add(new Burbuja(580f - offsetX, 590f - offsetY, anchoBurbuja, altoBurbuja, frameIlegales, () -> {
+            abrirVentanaRival(TipoCarrera.ILEGAL, jugador.getMaxRivalDesbloqueado(TipoCarrera.ILEGAL));
+        }));
+
+        burbujas.add(new Burbuja(1015f - offsetX, 600f - offsetY, anchoBurbuja, altoBurbuja, frameMejoras, () -> {}));
+        burbujas.add(new Burbuja(350f - offsetX, 594f - offsetY, anchoBurbuja, altoBurbuja, frameAutos, () -> {}));
+        burbujas.add(new Burbuja(1010f - offsetX, 180f - offsetY, anchoBurbuja, altoBurbuja, frameOnline, () -> {}));
+    }
+
+    private void abrirVentanaRival(TipoCarrera tipo, int maxDesbloqueado) {
+        this.tipoSeleccionado = tipo;
+        ventanaRival.mostrar(tipo, maxDesbloqueado);
+        Gdx.input.setInputProcessor(ventanaRival.getStage());
+    }
+
+    @Override
+    public void render(float delta) {
+        if (!ventanaRival.isVisible()) {
+            if (entradaJugador.consumoToque()) {
+                Vector2 coords = entradaJugador.getCoordenadasToque(viewport);
+                for (Burbuja b : burbujas) {
+                    if (b.verificarClic(coords.x, coords.y)) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        ScreenUtils.clear(0, 0, 0, 1);
+
+        viewport.apply();
+        batch.setProjectionMatrix(camara.combined);
+
+        batch.begin();
+        batch.draw(mapaTexture, 0, 0, ANCHO_VIRTUAL, ALTO_VIRTUAL);
+
+        for (Burbuja b : burbujas) {
+            b.dibujar(batch);
+        }
+        batch.end();
+
+        interfazCiudad.render();
+        ventanaRival.render(delta);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+        if (interfazCiudad != null) interfazCiudad.resize(width, height);
+        if (ventanaRival != null) ventanaRival.resize(width, height);
+    }
+
+    @Override public void pause() {}
+    @Override public void resume() {}
+
+    @Override
+    public void hide() {
+        Gdx.input.setInputProcessor(null);
+        dispose();
+    }
+
+    @Override
+    public void dispose() {
+        if (batch != null) batch.dispose();
+        if (mapaTexture != null) mapaTexture.dispose();
+        if (burbujasSheet != null) burbujasSheet.dispose();
+        if (interfazCiudad != null) interfazCiudad.dispose();
+        if (ventanaRival != null) ventanaRival.dispose();
+    }
+}
