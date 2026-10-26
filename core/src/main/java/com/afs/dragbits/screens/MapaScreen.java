@@ -1,6 +1,6 @@
 package com.afs.dragbits.screens;
 
-import com.afs.dragbits.audio.ProveedorMusica;
+import com.afs.dragbits.Main;
 import com.afs.dragbits.ciudad.Burbuja;
 import com.afs.dragbits.ciudad.Interfaz;
 import com.afs.dragbits.funcionalidades.EntradaJugador;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class MapaScreen implements Screen {
 
     private final Game GAME;
-    private final ProveedorMusica PROVEEDOR_MUSICA;
+    private final Main MAIN_GAME;
 
     private SpriteBatch batch;
     private OrthographicCamera camara;
@@ -47,9 +47,9 @@ public class MapaScreen implements Screen {
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
 
-    public MapaScreen(Game game, ProveedorMusica proveedorMusica) {
+    public MapaScreen(Game game, Main mainGame) {
         this.GAME = game;
-        this.PROVEEDOR_MUSICA = proveedorMusica;
+        this.MAIN_GAME = mainGame;
         this.REPOSITORIO_JUGADOR = new RepositorioJugador();
         this.jugador = REPOSITORIO_JUGADOR.cargarJugador();
     }
@@ -59,8 +59,8 @@ public class MapaScreen implements Screen {
         batch = new SpriteBatch();
         entradaJugador = new EntradaJugador();
 
-        if (PROVEEDOR_MUSICA != null && PROVEEDOR_MUSICA.getGestorDeAudio() != null) {
-            PROVEEDOR_MUSICA.getGestorDeAudio().setModificadorPantalla(0.4f);
+        if (MAIN_GAME != null && MAIN_GAME.getGestorDeAudio() != null) {
+            MAIN_GAME.getGestorDeAudio().setModificadorPantalla(0.4f);
         }
 
         if (jugador != null) {
@@ -79,7 +79,7 @@ public class MapaScreen implements Screen {
                 Gdx.input.setInputProcessor(entradaJugador);
             },
             (indiceRival) -> {
-                Gdx.app.postRunnable(() -> GAME.setScreen(new GameScreen(GAME, PROVEEDOR_MUSICA, tipoSeleccionado, indiceRival)));
+                Gdx.app.postRunnable(() -> GAME.setScreen(new GameScreen(GAME, MAIN_GAME, tipoSeleccionado, indiceRival)));
             }
         );
 

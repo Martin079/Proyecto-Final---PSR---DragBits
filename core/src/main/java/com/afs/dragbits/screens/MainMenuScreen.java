@@ -1,5 +1,6 @@
 package com.afs.dragbits.screens;
 
+import com.afs.dragbits.Main;
 import com.afs.dragbits.audio.ProveedorMusica;
 import com.afs.dragbits.funcionalidades.EntradaJugador;
 import com.badlogic.gdx.Game;
@@ -20,7 +21,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class MainMenuScreen implements Screen {
 
     private final Game GAME;
-    private final ProveedorMusica PROVEEDOR_MUSICA;
+    private final Main MAIN_GAME;
 
     private OrthographicCamera camara;
     private Viewport viewport;
@@ -31,16 +32,16 @@ public class MainMenuScreen implements Screen {
     private GlyphLayout layoutTexto;
 
     private static final String TEXTO_TITULO = "DRAG BITS";
-    private static final String[] OPCIONES_MENU = {"START GAME", "CONTROLES", "EXIT"};
+    private static final String[] OPCIONES_MENU = {"START GAME", "CONTROLES", "AUDIO", "EXIT"};
     private int indiceSeleccionado = 0;
 
     private static final float ESCALA_NORMAL = 2.0f;
     private static final float ESCALA_SELECCIONADA = 2.5f;
-    private float[] escalasActuales = {ESCALA_NORMAL, ESCALA_NORMAL, ESCALA_NORMAL};
+    private float[] escalasActuales = {ESCALA_NORMAL, ESCALA_NORMAL, ESCALA_NORMAL, ESCALA_NORMAL};
 
-    private float[] posicionesYOpciones = new float[3];
-    private float[] posicionesXOpciones = new float[3];
-    private float[] anchosOpciones = new float[3];
+    private float[] posicionesYOpciones = new float[4];
+    private float[] posicionesXOpciones = new float[4];
+    private float[] anchosOpciones = new float[4];
 
     private static final float ALTURA_HITBOX_OPCION = 60f;
 
@@ -49,9 +50,9 @@ public class MainMenuScreen implements Screen {
 
     private EntradaJugador entradaJugador;
 
-    public MainMenuScreen(Game game, ProveedorMusica proveedorMusica) {
+    public MainMenuScreen(Game game, Main mainGame) {
         this.GAME = game;
-        this.PROVEEDOR_MUSICA = proveedorMusica;
+        this.MAIN_GAME = mainGame;
 
         camara = new OrthographicCamera();
         viewport = new FitViewport(1280f, 720f, camara);
@@ -69,9 +70,9 @@ public class MainMenuScreen implements Screen {
         entradaJugador = new EntradaJugador();
         Gdx.input.setInputProcessor(entradaJugador);
 
-        if (PROVEEDOR_MUSICA != null && PROVEEDOR_MUSICA.getGestorDeAudio() != null) {
-            PROVEEDOR_MUSICA.getGestorDeAudio().setModificadorPantalla(1.0f);
-            PROVEEDOR_MUSICA.getGestorDeAudio().reproducirMusica();
+        if (MAIN_GAME != null && MAIN_GAME.getGestorDeAudio() != null) {
+            MAIN_GAME.getGestorDeAudio().setModificadorPantalla(1.0f);
+            MAIN_GAME.getGestorDeAudio().reproducirMusica();
         }
     }
 
@@ -222,12 +223,15 @@ public class MainMenuScreen implements Screen {
     private void ejecutarOpcionSeleccionada() {
         switch (indiceSeleccionado) {
             case 0:
-                GAME.setScreen(new MapaScreen(GAME, PROVEEDOR_MUSICA));
+                GAME.setScreen(new MapaScreen(GAME, MAIN_GAME));
                 break;
             case 1:
                 estaMostrandoControles = true;
                 break;
             case 2:
+                GAME.setScreen(new AudioMenuScreen(GAME, MAIN_GAME));
+                break;
+            case 3:
                 Gdx.app.exit();
                 break;
         }
