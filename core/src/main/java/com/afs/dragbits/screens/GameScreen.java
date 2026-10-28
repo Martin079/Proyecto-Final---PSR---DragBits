@@ -1,5 +1,6 @@
 package com.afs.dragbits.screens;
 
+import com.afs.dragbits.Main;
 import com.afs.dragbits.audio.ProveedorMusica;
 import com.afs.dragbits.autos.Auto;
 import com.afs.dragbits.autos.AutoJugador;
@@ -35,7 +36,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class GameScreen implements Screen {
 
     private final Game GAME;
-    private ProveedorMusica proveedorMusica;
+    private Main mainGame;
 
     private SpriteBatch batch;
     private Pista pista;
@@ -65,9 +66,9 @@ public class GameScreen implements Screen {
 
     private EntradaJugador entradaJugador;
 
-    public GameScreen(Game game, ProveedorMusica proveedorMusica, TipoCarrera tipoCarrera, int indiceRival) {
+    public GameScreen(Game game, Main mainGame, TipoCarrera tipoCarrera, int indiceRival) {
         this.GAME = game;
-        this.proveedorMusica = proveedorMusica;
+        this.mainGame = mainGame;
         this.TIPO_CARRERA = tipoCarrera;
         this.INDICE_RIVAL = indiceRival;
     }
@@ -79,8 +80,8 @@ public class GameScreen implements Screen {
 
         batch = new SpriteBatch();
 
-        if (proveedorMusica != null && proveedorMusica.getGestorDeAudio() != null) {
-            proveedorMusica.getGestorDeAudio().setModificadorPantalla(0.2f);
+        if (mainGame != null && mainGame.getGestorDeAudio() != null) {
+            mainGame.getGestorDeAudio().setModificadorPantalla(0.2f);
         }
 
         pista = (TIPO_CARRERA == TipoCarrera.ILEGAL) ? new PistaCiudad() : new Picodromo();
@@ -91,9 +92,9 @@ public class GameScreen implements Screen {
         viewportMundo = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camaraJugador.getCamara());
         viewportHUD = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL);
 
-        autoJugador = new AutoJugador(pista.getPosicionSpawnX(), pista.getYJugador());
+        autoJugador = new AutoJugador(pista.getPosicionSpawnX(), pista.getYJugador(), mainGame);
         RivalConfig config = CatalogoRivales.obtener(TIPO_CARRERA, INDICE_RIVAL);
-        autoRival = new AutoRival(pista.getPosicionSpawnX(), pista.getYRival(), config, config.getRecompensaBase());
+        autoRival = new AutoRival(pista.getPosicionSpawnX(), pista.getYRival(), config, config.getRecompensaBase(), mainGame);
 
         float frenteLargada = pista.getPosicionSpawnX() + Auto.ANCHO_BASE;
         autoRival.alinearFrente(frenteLargada);
@@ -115,6 +116,8 @@ public class GameScreen implements Screen {
         if (entradaJugador.consumirCancelar()) {
             if (estadoJuego == EstadoJuego.EN_CURSO) {
                 estadoJuego = EstadoJuego.PAUSADO;
+                autoJugador.apagarMotor();
+                autoRival.apagarMotor();
             } else if (estadoJuego == EstadoJuego.PAUSADO) {
                 estadoJuego = EstadoJuego.EN_CURSO;
             }
@@ -124,6 +127,8 @@ public class GameScreen implements Screen {
             Vector2 toque = entradaJugador.getCoordenadasToque(viewportHUD);
             if (hudBasicos.fueBotonPausaTocado(toque.x, toque.y)) {
                 estadoJuego = EstadoJuego.PAUSADO;
+                autoJugador.apagarMotor();
+                autoRival.apagarMotor();
             } else {
                 entradaJugador.descartarToque();
             }
@@ -140,7 +145,9 @@ public class GameScreen implements Screen {
                 if (cartelPausa.fueBotonReanudarTocado(toque.x, toque.y)) {
                     estadoJuego = EstadoJuego.EN_CURSO;
                 } else if (cartelPausa.fueBotonAbandonarTocado(toque.x, toque.y)) {
-                    Gdx.app.postRunnable(() -> GAME.setScreen(new MapaScreen(GAME, proveedorMusica)));
+                    autoJugador.apagarMotor();
+                    autoRival.apagarMotor();
+                    Gdx.app.postRunnable(() -> GAME.setScreen(new MapaScreen(GAME, mainGame)));
                     return;
                 }
             }
@@ -164,7 +171,9 @@ public class GameScreen implements Screen {
             if (entradaJugador.consumoToque()) {
                 Vector2 toque = entradaJugador.getCoordenadasToque(viewportHUD);
                 if (cartelResultado.fueBotonTocado(toque.x, toque.y)) {
-                    Gdx.app.postRunnable(() -> GAME.setScreen(new MapaScreen(GAME, proveedorMusica)));
+                    autoJugador.apagarMotor();
+                    autoRival.apagarMotor();
+                    Gdx.app.postRunnable(() -> GAME.setScreen(new MapaScreen(GAME, mainGame)));
                     return;
                 } else {
                     entradaJugador.descartarToque();

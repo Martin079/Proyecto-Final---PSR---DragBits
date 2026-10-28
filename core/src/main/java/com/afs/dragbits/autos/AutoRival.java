@@ -1,5 +1,6 @@
 package com.afs.dragbits.autos;
 
+import com.afs.dragbits.Main;
 import com.afs.dragbits.hud.EstadoSemaforo;
 import com.afs.dragbits.rivales.RivalConfig;
 
@@ -10,15 +11,15 @@ public class AutoRival extends Auto {
 
     private static final int MARCHA_ACTIVACION_NITRO = 3;
 
-    public AutoRival(float posX, float posY, float velocidadMaxima, float aceleracion, float traccion, int recompensa, String rutaSpriteSheet) {
-        super(posX, posY, velocidadMaxima, aceleracion, traccion, rutaSpriteSheet);
+    public AutoRival(float posX, float posY, float velocidadMaxima, float aceleracion, float traccion, int recompensa, String rutaSpriteSheet, Main mainGame) {
+        super(posX, posY, velocidadMaxima, aceleracion, traccion, rutaSpriteSheet, mainGame);
         this.recompensa = recompensa;
         this.capacidadNitro = 0f;
         this.nitroRestante = 0f;
     }
 
-    public AutoRival(float posX, float posY, RivalConfig config, int recompensa) {
-        super(posX, posY, config.getVelocidadMaxima(), config.getAceleracion(), config.getTraccion(), config.getRutaSprite());
+    public AutoRival(float posX, float posY, RivalConfig config, int recompensa, Main mainGame) {
+        super(posX, posY, config.getVelocidadMaxima(), config.getAceleracion(), config.getTraccion(), config.getRutaSprite(), mainGame);
         this.recompensa = recompensa;
         this.capacidadNitro = config.getNitroSegundos();
         this.nitroRestante = config.getNitroSegundos();

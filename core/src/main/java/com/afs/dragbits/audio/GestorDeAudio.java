@@ -97,6 +97,15 @@ public class GestorDeAudio implements Disposable {
         }
     }
 
+    public void setVolumenMusicaGlobal(float volumen) {
+        this.volumenMaestro = Math.max(0.0f, Math.min(1.0f, volumen));
+        actualizarVolumenMusica();
+    }
+
+    public float getVolumenMusicaGlobal() {
+        return volumenMaestro;
+    }
+
     public float getVolumenEfectivo() {
         if (muteado) return 0.0f;
         return volumenMaestro * modificadorPantalla;

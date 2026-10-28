@@ -1,6 +1,10 @@
 package com.afs.dragbits.autos;
 
+import com.afs.dragbits.Main;
+import com.afs.dragbits.audio.ProveedorMusica;
 import com.afs.dragbits.util.SpriteSheetLoader;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -46,6 +50,11 @@ public abstract class Auto {
     private float stateTime;
     private Texture texturaFallback;
 
+    private Sound sonidoMotor;
+    private long idMotor = -1;
+    private boolean estaAcelerando;
+    private Main mainGame;
+
     public static final float ESCALA_SPRITE = 2.8f;
     public static final float ANCHO_BASE = 280f;
 
@@ -60,12 +69,14 @@ public abstract class Auto {
     private static final float PERDIDA_MIN_PATINAJE = 0.45f;
     private static final float PERDIDA_MAX_PATINAJE = 0.85f;
 
-    public Auto(float posX, float posY, float velocidadMaxima, float aceleracion, float traccion, String rutaSpriteSheet) {
+    public Auto(float posX, float posY, float velocidadMaxima, float aceleracion, float traccion, String rutaSpriteSheet, Main mainGame) {
+        this.mainGame = mainGame;
         inicializarAtributos(posX, posY, velocidadMaxima, aceleracion, traccion);
         cargarSpriteSheet(rutaSpriteSheet);
     }
 
-    public Auto(float posX, float posY, float velocidadMaxima, float aceleracion, float traccion, Color colorFallback) {
+    public Auto(float posX, float posY, float velocidadMaxima, float aceleracion, float traccion, Color colorFallback, Main mainGame) {
+        this.mainGame = mainGame;
         inicializarAtributos(posX, posY, velocidadMaxima, aceleracion, traccion);
 
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -95,6 +106,9 @@ public abstract class Auto {
         this.nitroActivo = false;
         this.patinando = false;
         this.stateTime = 0f;
+
+        this.sonidoMotor = Gdx.audio.newSound(Gdx.files.internal("audio/Gameplay/motor_loop.wav"));
+        this.estaAcelerando = false;
     }
 
     private void cargarSpriteSheet(String ruta) {
@@ -118,6 +132,7 @@ public abstract class Auto {
     }
 
     public void acelerar(float delta) {
+        this.estaAcelerando = true;
         if (!embraguePresionado && marchaActual > 0) {
             int marchaValida = Math.min(marchaActual, relacionesTransmision.length - 1);
             float velMaxMarcha = velocidadMaxima * relacionesTransmision[marchaValida];
@@ -182,6 +197,7 @@ public abstract class Auto {
     }
 
     public void desacelerar(float delta) {
+        this.estaAcelerando = false;
         if (velocidad > 0) {
             velocidad -= (aceleracion * 0.3f) * delta;
             if (velocidad < 0) velocidad = 0;
@@ -194,9 +210,41 @@ public abstract class Auto {
         patinando = false;
     }
 
+    private void actualizarAudioMotor() {
+        if (estaAcelerando) {
+            if (idMotor == -1) {
+                idMotor = sonidoMotor.loop(0.5f);
+            }
+
+            float volumenGlobal = (
+                mainGame != null) ? mainGame.getVolumenGameplay() : 1.0f;
+
+            float ratioRpm = rpm / rpmMaximas;
+            float ratioMarcha = (float) marchaActual / (relacionesTransmision.length - 1);
+
+            float pitchBase = 0.5f + (ratioMarcha * 0.6f);
+            float pitchDinamico = pitchBase + (ratioRpm * 1.2f);
+            pitchDinamico = MathUtils.clamp(pitchDinamico, 0.5f, 2.2f);
+
+            float volumenBase = 0.4f + (ratioMarcha * 0.3f);
+            float volumenDinamico = volumenBase + (ratioRpm * 0.4f);
+            volumenDinamico = MathUtils.clamp(volumenDinamico, 0.4f, 1.0f);
+            volumenDinamico *= volumenGlobal;
+
+            sonidoMotor.setPitch(idMotor, pitchDinamico);
+            sonidoMotor.setVolume(idMotor, volumenDinamico);
+        } else {
+            if (idMotor != -1) {
+                sonidoMotor.stop(idMotor);
+                idMotor = -1;
+            }
+        }
+    }
+
     public void actualizar(float delta) {
         posX += (velocidad * FACTOR_MOVIMIENTO) * delta;
         stateTime += delta;
+        actualizarAudioMotor();
     }
 
     public boolean esCambioPerfecto() {
@@ -241,9 +289,21 @@ public abstract class Auto {
         }
     }
 
+    public void apagarMotor() {
+        this.estaAcelerando = false;
+        if (sonidoMotor != null && idMotor != -1) {
+            sonidoMotor.stop(idMotor);
+            idMotor = -1;
+        }
+    }
+
     public void dispose() {
+        apagarMotor();
         if (spriteSheet != null) spriteSheet.dispose();
         if (texturaFallback != null) texturaFallback.dispose();
+        if (sonidoMotor != null) {
+            sonidoMotor.dispose();
+        }
     }
 
     public float getVelocidad() { return velocidad; }
