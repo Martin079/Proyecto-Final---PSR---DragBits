@@ -2,14 +2,11 @@ package com.afs.dragbits.audio;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.ObjectMap;
 
 public class GestorDeAudio implements Disposable {
 
     private Music musicaFondo;
-    private final ObjectMap<String, Sound> SONIDOS;
 
     private float volumenMaestro = 1.0f;
     private float modificadorPantalla = 1.0f;
@@ -17,9 +14,7 @@ public class GestorDeAudio implements Disposable {
     private float volumenPrevioMute = 1.0f;
 
     public GestorDeAudio() {
-        SONIDOS = new ObjectMap<>();
         cargarMusicaPrincipal();
-        cargarEfectos();
     }
 
     private void cargarMusicaPrincipal() {
@@ -29,19 +24,6 @@ public class GestorDeAudio implements Disposable {
         }
     }
 
-    private void cargarEfectos() {
-        cargarSonidoSiExiste("cambio_marcha", "audio/Sonidos/cambio_marcha.wav");
-        cargarSonidoSiExiste("motor", "audio/Sonidos/motor.wav");
-        cargarSonidoSiExiste("patinaje", "audio/Sonidos/patinaje.wav");
-        cargarSonidoSiExiste("victoria", "audio/Sonidos/victoria.wav");
-        cargarSonidoSiExiste("derrota", "audio/Sonidos/derrota.wav");
-    }
-
-    private void cargarSonidoSiExiste(String clave, String ruta) {
-        if (Gdx.files.internal(ruta).exists()) {
-            SONIDOS.put(clave, Gdx.audio.newSound(Gdx.files.internal(ruta)));
-        }
-    }
 
     public void reproducirMusica() {
         if (musicaFondo != null) {
@@ -58,13 +40,6 @@ public class GestorDeAudio implements Disposable {
         }
     }
 
-    public void reproducirEfecto(String clave) {
-        if (muteado) return;
-        Sound sonido = SONIDOS.get(clave);
-        if (sonido != null) {
-            sonido.play(getVolumenEfectivo());
-        }
-    }
 
     public void setModificadorPantalla(float modificador) {
         this.modificadorPantalla = Math.max(0.0f, Math.min(1.0f, modificador));
@@ -119,9 +94,5 @@ public class GestorDeAudio implements Disposable {
         if (musicaFondo != null) {
             musicaFondo.dispose();
         }
-        for (Sound sonido : SONIDOS.values()) {
-            sonido.dispose();
-        }
-        SONIDOS.clear();
     }
 }

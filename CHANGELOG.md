@@ -12,6 +12,16 @@ Convención utilizada en todo el historial:
 
 ## [Unreleased]
 
+## [0.8.10] - 2026-11-02
+
+### Removed
+- Eliminado campo `SONIDOS` (ObjectMap<String, Sound>) de `GestorDeAudio`.
+- Eliminado método `cargarEfectos()` y su llamada en el constructor de `GestorDeAudio`.
+- Eliminado método `cargarSonidoSiExiste()` de `GestorDeAudio`.
+- Eliminado método `reproducirEfecto(String)` de `GestorDeAudio`.
+- Eliminados imports no utilizados `Sound` y `ObjectMap` de `GestorDeAudio`.
+- Actualizado método `dispose()` de `GestorDeAudio` para solo liberar recursos de música.
+
 ## [0.8.9] - 2026-10-09
 ### Updated
 - Combinado de forma manual la integracion e implementacion de los sonidos de la rama master a la rama main
