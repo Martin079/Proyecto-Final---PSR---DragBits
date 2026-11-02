@@ -14,6 +14,11 @@ Convención utilizada en todo el historial:
 
 ## [0.8.10] - 2026-11-02
 
+### Changed
+- Conectado volumen GAMEPLAY a `GestorDeAudio`: añadido campo `volumenGameplay`, métodos `setVolumenGameplay()` y `getVolumenGameplay()`, y modificado `getVolumenEfectivo()` para incluir `volumenGameplay` en el cálculo (volumenMaestro * modificadorPantalla * volumenGameplay).
+- `Main.setVolumenGameplay()` ahora propaga el valor a `gestorDeAudio.setVolumenGameplay()`.
+
+
 ### Removed
 - Eliminado campo `SONIDOS` (ObjectMap<String, Sound>) de `GestorDeAudio`.
 - Eliminado método `cargarEfectos()` y su llamada en el constructor de `GestorDeAudio`.

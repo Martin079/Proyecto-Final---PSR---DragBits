@@ -42,6 +42,9 @@ public class Main extends Game implements ProveedorMusica {
 
     public void setVolumenGameplay(float volumenGameplay) {
         this.volumenGameplay = Math.max(0.0f, Math.min(1.0f, volumenGameplay));
+        if (gestorDeAudio != null) {
+            gestorDeAudio.setVolumenGameplay(this.volumenGameplay);
+        }
     }
 
     @Override

@@ -10,6 +10,7 @@ public class GestorDeAudio implements Disposable {
 
     private float volumenMaestro = 1.0f;
     private float modificadorPantalla = 1.0f;
+    private float volumenGameplay = 1.0f;
     private boolean muteado = false;
     private float volumenPrevioMute = 1.0f;
 
@@ -83,11 +84,19 @@ public class GestorDeAudio implements Disposable {
 
     public float getVolumenEfectivo() {
         if (muteado) return 0.0f;
-        return volumenMaestro * modificadorPantalla;
+        return volumenMaestro * modificadorPantalla * volumenGameplay;
     }
 
     public float getVolumenMaestro() { return volumenMaestro; }
     public boolean isMuteado() { return muteado; }
+
+    public void setVolumenGameplay(float volumen) {
+        this.volumenGameplay = Math.max(0.0f, Math.min(1.0f, volumen));
+    }
+
+    public float getVolumenGameplay() {
+        return volumenGameplay;
+    }
 
     @Override
     public void dispose() {
