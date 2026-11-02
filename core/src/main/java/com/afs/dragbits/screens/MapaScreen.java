@@ -1,7 +1,6 @@
 package com.afs.dragbits.screens;
 
 import com.afs.dragbits.Main;
-import com.afs.dragbits.audio.ProveedorMusica;
 import com.afs.dragbits.ciudad.Burbuja;
 import com.afs.dragbits.ciudad.Interfaz;
 import com.afs.dragbits.funcionalidades.EntradaJugador;

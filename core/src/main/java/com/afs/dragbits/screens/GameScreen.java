@@ -1,7 +1,6 @@
 package com.afs.dragbits.screens;
 
 import com.afs.dragbits.Main;
-import com.afs.dragbits.audio.ProveedorMusica;
 import com.afs.dragbits.autos.Auto;
 import com.afs.dragbits.autos.AutoJugador;
 import com.afs.dragbits.autos.AutoRival;
@@ -116,8 +115,6 @@ public class GameScreen implements Screen {
         if (entradaJugador.consumirCancelar()) {
             if (estadoJuego == EstadoJuego.EN_CURSO) {
                 estadoJuego = EstadoJuego.PAUSADO;
-                autoJugador.apagarMotor();
-                autoRival.apagarMotor();
             } else if (estadoJuego == EstadoJuego.PAUSADO) {
                 estadoJuego = EstadoJuego.EN_CURSO;
             }
@@ -127,8 +124,6 @@ public class GameScreen implements Screen {
             Vector2 toque = entradaJugador.getCoordenadasToque(viewportHUD);
             if (hudBasicos.fueBotonPausaTocado(toque.x, toque.y)) {
                 estadoJuego = EstadoJuego.PAUSADO;
-                autoJugador.apagarMotor();
-                autoRival.apagarMotor();
             } else {
                 entradaJugador.descartarToque();
             }
@@ -145,8 +140,6 @@ public class GameScreen implements Screen {
                 if (cartelPausa.fueBotonReanudarTocado(toque.x, toque.y)) {
                     estadoJuego = EstadoJuego.EN_CURSO;
                 } else if (cartelPausa.fueBotonAbandonarTocado(toque.x, toque.y)) {
-                    autoJugador.apagarMotor();
-                    autoRival.apagarMotor();
                     Gdx.app.postRunnable(() -> GAME.setScreen(new MapaScreen(GAME, mainGame)));
                     return;
                 }
@@ -171,8 +164,6 @@ public class GameScreen implements Screen {
             if (entradaJugador.consumoToque()) {
                 Vector2 toque = entradaJugador.getCoordenadasToque(viewportHUD);
                 if (cartelResultado.fueBotonTocado(toque.x, toque.y)) {
-                    autoJugador.apagarMotor();
-                    autoRival.apagarMotor();
                     Gdx.app.postRunnable(() -> GAME.setScreen(new MapaScreen(GAME, mainGame)));
                     return;
                 } else {

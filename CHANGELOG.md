@@ -12,6 +12,10 @@ Convención utilizada en todo el historial:
 
 ## [Unreleased]
 
+## [0.8.9] - 2026-10-09
+### Updated
+- Combinado de forma manual la integracion e implementacion de los sonidos de la rama master a la rama main
+
 ## [0.8.8] - 2026-10-09
 
 ### Added
