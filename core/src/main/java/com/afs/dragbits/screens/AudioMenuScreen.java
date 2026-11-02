@@ -1,10 +1,10 @@
 package com.afs.dragbits.screens;
 
 import com.afs.dragbits.Main;
+import com.afs.dragbits.funcionalidades.EntradaJugador;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -28,6 +28,8 @@ public class AudioMenuScreen implements Screen {
     private BitmapFont fuenteTitulo;
     private BitmapFont fuenteOpciones;
     private GlyphLayout layoutTexto;
+
+    private EntradaJugador entrada;
 
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
@@ -58,60 +60,8 @@ public class AudioMenuScreen implements Screen {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean keyDown(int keycode) {
-                if (keycode == Input.Keys.UP) {
-                    indiceSeleccionado--;
-                    if (indiceSeleccionado < 0) indiceSeleccionado = TOTAL_OPCIONES - 1;
-                    return true;
-                }
-                if (keycode == Input.Keys.DOWN) {
-                    indiceSeleccionado++;
-                    if (indiceSeleccionado >= TOTAL_OPCIONES) indiceSeleccionado = 0;
-                    return true;
-                }
-                if (keycode == Input.Keys.LEFT) {
-                    ajustarVolumen(-0.1f);
-                    return true;
-                }
-                if (keycode == Input.Keys.RIGHT) {
-                    ajustarVolumen(0.1f);
-                    return true;
-                }
-                if (keycode == Input.Keys.ENTER || keycode == Input.Keys.ESCAPE) {
-                    if (indiceSeleccionado == OPCION_VOLVER) {
-                        GAME.setScreen(new MainMenuScreen(GAME, MAIN_GAME));
-                    }
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-                Vector2 toque = new Vector2(screenX, screenY);
-                viewport.unproject(toque);
-
-                float posicionYInicial = ALTO_VIRTUAL * 0.45f;
-                float espacioEntreOpciones = 80f;
-
-                for (int i = 0; i < TOTAL_OPCIONES; i++) {
-                    float opcionY = posicionYInicial - (i * espacioEntreOpciones);
-                    float hitboxHeight = 60f;
-
-                    if (toque.y >= opcionY - hitboxHeight && toque.y <= opcionY) {
-                        if (i == OPCION_VOLVER) {
-                            GAME.setScreen(new MainMenuScreen(GAME, MAIN_GAME));
-                        } else {
-                            indiceSeleccionado = i;
-                        }
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+        entrada = new EntradaJugador();
+        Gdx.input.setInputProcessor(entrada);
     }
 
     private void ajustarVolumen(float delta) {
@@ -129,6 +79,45 @@ public class AudioMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (entrada.consumirArriba()) {
+            indiceSeleccionado--;
+            if (indiceSeleccionado < 0) indiceSeleccionado = TOTAL_OPCIONES - 1;
+        }
+        if (entrada.consumirAbajo()) {
+            indiceSeleccionado++;
+            if (indiceSeleccionado >= TOTAL_OPCIONES) indiceSeleccionado = 0;
+        }
+        if (entrada.consumirIzquierda()) {
+            ajustarVolumen(-0.1f);
+        }
+        if (entrada.consumirDerecha()) {
+            ajustarVolumen(0.1f);
+        }
+        if (entrada.consumirConfirmar() || entrada.consumirCancelar()) {
+            if (indiceSeleccionado == OPCION_VOLVER) {
+                GAME.setScreen(new MainMenuScreen(GAME, MAIN_GAME));
+            }
+        }
+
+        if (entrada.consumoToque()) {
+            Vector2 toque = entrada.getCoordenadasToque(viewport);
+            float posicionYInicial = ALTO_VIRTUAL * 0.45f;
+            float espacioEntreOpciones = 80f;
+
+            for (int i = 0; i < TOTAL_OPCIONES; i++) {
+                float opcionY = posicionYInicial - (i * espacioEntreOpciones);
+                float hitboxHeight = 60f;
+
+                if (toque.y >= opcionY - hitboxHeight && toque.y <= opcionY) {
+                    if (i == OPCION_VOLVER) {
+                        GAME.setScreen(new MainMenuScreen(GAME, MAIN_GAME));
+                    } else {
+                        indiceSeleccionado = i;
+                    }
+                }
+            }
+        }
+
         for (int i = 0; i < TOTAL_OPCIONES; i++) {
             float escalaObjetivo = (i == indiceSeleccionado) ? ESCALA_SELECCIONADA : ESCALA_NORMAL;
             escalasActuales[i] = MathUtils.lerp(escalasActuales[i], escalaObjetivo, delta * 12f);

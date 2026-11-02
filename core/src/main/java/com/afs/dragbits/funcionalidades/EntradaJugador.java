@@ -22,7 +22,7 @@ public class EntradaJugador extends InputAdapter {
     private final Vector2 TOQUE_VIRTUAL = new Vector2();
     private boolean huboToque = false;
 
-    private boolean huboArriba, huboAbajo, huboConfirmar, huboCancelar, huboMovimientoMouse;
+    private boolean huboArriba, huboAbajo, huboIzquierda, huboDerecha, huboConfirmar, huboCancelar, huboMovimientoMouse;
     private int ultimoToqueX, ultimoToqueY;
 
 
@@ -55,6 +55,8 @@ public class EntradaJugador extends InputAdapter {
     public boolean keyDown(int keycode) {
         if (keycode == Input.Keys.UP) huboArriba = true;
         else if (keycode == Input.Keys.DOWN) huboAbajo = true;
+        else if (keycode == Input.Keys.LEFT) huboIzquierda = true;
+        else if (keycode == Input.Keys.RIGHT) huboDerecha = true;
         else if (keycode == Input.Keys.ENTER) huboConfirmar = true;
         else if (keycode == Input.Keys.ESCAPE) huboCancelar = true;
         return false;
@@ -109,6 +111,18 @@ public class EntradaJugador extends InputAdapter {
     public boolean consumirCancelar() {
         boolean r = huboCancelar;
         huboCancelar = false;
+        return r;
+    }
+
+    public boolean consumirIzquierda() {
+        boolean r = huboIzquierda;
+        huboIzquierda = false;
+        return r;
+    }
+
+    public boolean consumirDerecha() {
+        boolean r = huboDerecha;
+        huboDerecha = false;
         return r;
     }
 

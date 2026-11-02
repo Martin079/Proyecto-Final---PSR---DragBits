@@ -17,7 +17,8 @@ Convención utilizada en todo el historial:
 ### Changed
 - Conectado volumen GAMEPLAY a `GestorDeAudio`: añadido campo `volumenGameplay`, métodos `setVolumenGameplay()` y `getVolumenGameplay()`, y modificado `getVolumenEfectivo()` para incluir `volumenGameplay` en el cálculo (volumenMaestro * modificadorPantalla * volumenGameplay).
 - `Main.setVolumenGameplay()` ahora propaga el valor a `gestorDeAudio.setVolumenGameplay()`.
-
+- `EntradaJugador` agregó manejo de eventos LEFT/RIGHT con campos `huboIzquierda`/`huboDerecha` y métodos `consumirIzquierda()`/`consumirDerecha()`.
+- `AudioMenuScreen` refactorizado para usar `EntradaJugador` en lugar de polling: eliminado `InputAdapter` anónimo, lógica de navegación movida a `render()` usando métodos `consumir*()`, touch handling delegado a `consumoToque()` y `getCoordenadasToque()`.
 
 ### Removed
 - Eliminado campo `SONIDOS` (ObjectMap<String, Sound>) de `GestorDeAudio`.
@@ -27,7 +28,7 @@ Convención utilizada en todo el historial:
 - Eliminados imports no utilizados `Sound` y `ObjectMap` de `GestorDeAudio`.
 - Actualizado método `dispose()` de `GestorDeAudio` para solo liberar recursos de música.
 
-## [0.8.9] - 2026-10-09
+## [0.8.9] - 2026-10-23
 ### Updated
 - Combinado de forma manual la integracion e implementacion de los sonidos de la rama master a la rama main
 
