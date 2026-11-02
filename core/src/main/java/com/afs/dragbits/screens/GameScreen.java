@@ -130,10 +130,6 @@ public class GameScreen implements Screen {
         }
 
         if (estadoJuego == EstadoJuego.PAUSADO) {
-            if (entradaJugador.consumirCancelar()) {
-                estadoJuego = EstadoJuego.EN_CURSO;
-            }
-
             if (entradaJugador.consumoToque()) {
                 Vector2 toque = entradaJugador.getCoordenadasToque(viewportHUD);
 

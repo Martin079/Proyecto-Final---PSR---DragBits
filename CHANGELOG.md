@@ -20,6 +20,9 @@ Convención utilizada en todo el historial:
 - `EntradaJugador` agregó manejo de eventos LEFT/RIGHT con campos `huboIzquierda`/`huboDerecha` y métodos `consumirIzquierda()`/`consumirDerecha()`.
 - `AudioMenuScreen` refactorizado para usar `EntradaJugador` en lugar de polling: eliminado `InputAdapter` anónimo, lógica de navegación movida a `render()` usando métodos `consumir*()`, touch handling delegado a `consumoToque()` y `getCoordenadasToque()`.
 
+### Fixed
+- Eliminada llamada redundante a `consumirCancelar()` en `GameScreen` dentro del bloque PAUSADO. La primera llamada en línea 115 ya maneja tanto pausar (EN_CURSO → PAUSADO) como despausar (PAUSADO → EN_CURSO), evitando consumo doble de ESC.
+
 ### Removed
 - Eliminado campo `SONIDOS` (ObjectMap<String, Sound>) de `GestorDeAudio`.
 - Eliminado método `cargarEfectos()` y su llamada en el constructor de `GestorDeAudio`.
