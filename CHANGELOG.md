@@ -10,9 +10,7 @@ Convención utilizada en todo el historial:
 - Mientras el juego esté en desarrollo inicial se usan versiones `0.x.y`; la `1.0.0` se reserva para la entrega final.
 - Los cambios aún no versionados van en `[Unreleased]`.
 
-## [Unreleased]
-
-## [0.8.10] - 2026-11-02
+## [0.8.10] - 2026-11-2
 
 ### Changed
 - Conectado volumen GAMEPLAY a `GestorDeAudio`: añadido campo `volumenGameplay`, métodos `setVolumenGameplay()` y `getVolumenGameplay()`, y modificado `getVolumenEfectivo()` para incluir `volumenGameplay` en el cálculo (volumenMaestro * modificadorPantalla * volumenGameplay).
@@ -31,8 +29,8 @@ Convención utilizada en todo el historial:
 - Eliminados imports no utilizados `Sound` y `ObjectMap` de `GestorDeAudio`.
 - Actualizado método `dispose()` de `GestorDeAudio` para solo liberar recursos de música.
 
-## [0.8.9] - 2026-10-23
-### Updated
+## [0.8.9] - 2026-10-10
+### Changed
 - Combinado de forma manual la integracion e implementacion de los sonidos de la rama master a la rama main
 
 ## [0.8.8] - 2026-10-09
