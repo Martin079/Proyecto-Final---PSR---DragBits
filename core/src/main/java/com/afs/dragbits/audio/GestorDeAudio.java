@@ -69,7 +69,8 @@ public class GestorDeAudio implements Disposable {
 
     private void actualizarVolumenMusica() {
         if (musicaFondo != null) {
-            musicaFondo.setVolume(getVolumenEfectivo());
+            float volumen = muteado ? 0.0f : volumenMaestro * modificadorPantalla;
+            musicaFondo.setVolume(volumen);
         }
     }
 

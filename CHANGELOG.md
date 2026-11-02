@@ -20,6 +20,7 @@ Convención utilizada en todo el historial:
 
 ### Fixed
 - Eliminada llamada redundante a `consumirCancelar()` en `GameScreen` dentro del bloque PAUSADO. La primera llamada en línea 115 ya maneja tanto pausar (EN_CURSO → PAUSADO) como despausar (PAUSADO → EN_CURSO), evitando consumo doble de ESC.
+- Volumen de música ahora es independiente del slider GAMEPLAY: `actualizarVolumenMusica()` usa solo `volumenMaestro * modificadorPantalla` (respeta mute), mientras `getVolumenEfectivo()` incluye `volumenGameplay` para efectos futuros.
 
 ### Removed
 - Eliminado campo `SONIDOS` (ObjectMap<String, Sound>) de `GestorDeAudio`.
