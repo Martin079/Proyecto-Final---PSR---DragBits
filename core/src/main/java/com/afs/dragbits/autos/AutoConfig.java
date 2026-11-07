@@ -27,37 +27,37 @@ public class AutoConfig {
             AutoJugadorTipo.GOL,
             0,
             1,
-            180f,
-            12.5f,
-            0.7f,
-            3f,
-            3
+            160f,
+            9.5f,
+            0.6f,
+            0f,
+            0
         );
     }
 
     public static AutoConfig toyota() {
         return new AutoConfig(
             AutoJugadorTipo.TOYOTA,
-            5000,
-            3,
-            220f,
-            9.5f,
-            0.8f,
-            4f,
-            5
+            15000,
+            7,
+            205f,
+            6.8f,
+            0.75f,
+            2f,
+            1
         );
     }
 
     public static AutoConfig challenger() {
         return new AutoConfig(
             AutoJugadorTipo.CHALLENGER,
-            15000,
-            5,
-            280f,
-            6.5f,
-            0.9f,
-            5f,
-            7
+            45000,
+            14,
+            255f,
+            4.5f,
+            0.85f,
+            3f,
+            2
         );
     }
 

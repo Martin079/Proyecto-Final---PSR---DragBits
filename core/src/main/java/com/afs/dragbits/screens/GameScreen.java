@@ -92,7 +92,8 @@ public class GameScreen implements Screen {
         viewportMundo = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camaraJugador.getCamara());
         viewportHUD = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL);
 
-        autoJugador = new AutoJugador(pista.getPosicionSpawnX(), pista.getYJugador(), datosJugador.getConfigAutoActual(), mainGame);
+        AutoConfig configActual = datosJugador.getConfigAutoActual();
+        autoJugador = new AutoJugador(pista.getPosicionSpawnX(), pista.getYJugador(), configActual, mainGame);
         RivalConfig config = CatalogoRivales.obtener(TIPO_CARRERA, INDICE_RIVAL);
         autoRival = new AutoRival(pista.getPosicionSpawnX(), pista.getYRival(), config, config.getRecompensaBase(), mainGame);
 
