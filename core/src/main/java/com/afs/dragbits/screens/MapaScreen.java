@@ -54,7 +54,7 @@ public class MapaScreen implements Screen {
         this.GAME = game;
         this.MAIN_GAME = mainGame;
         this.REPOSITORIO_JUGADOR = new RepositorioJugador();
-        this.jugador = REPOSITORIO_JUGADOR.cargarJugador();
+        this.jugador = new Jugador();
     }
 
     @Override

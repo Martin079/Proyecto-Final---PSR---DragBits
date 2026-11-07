@@ -38,6 +38,7 @@ Convención utilizada en todo el historial:
   - Toyota: costo $15,000 (era $5,000), nivel requerido 7 (era 3), velocidad máxima 205 km/h (era 220), aceleración 6.8s (era 9.5s), tracción 75% (era 80%), nitro 1c/2s (era 5c/4s)
   - Challenger: costo $45,000 (era $15,000), nivel requerido 14 (era 5), velocidad máxima 255 km/h (era 280), aceleración 4.5s (era 6.5s), tracción 85% (era 90%), nitro 2c/3s (era 7c/5s)
 - Eliminada llamada duplicada a `comprarAuto()` en `MapaScreen`. La compra ya se ejecuta en `VentanaTiendaAutos` (línea 189), el callback ahora solo guarda el progreso y refresca la UI, evitando que el guardado falle por el segundo retorno false.
+- Eliminada carga de jugador en el constructor de `MapaScreen`. Ahora se crea un placeholder `new Jugador()` en el constructor y la carga real desde disco solo ocurre en `show()` mediante `REPOSITORIO_JUGADOR.cargarProgreso(jugador)`, evitando cargas prematuras antes de que la pantalla esté activa.
 
 
 ## [0.8.10] - 2026-11-2
