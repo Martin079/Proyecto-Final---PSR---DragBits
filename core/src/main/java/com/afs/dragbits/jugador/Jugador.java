@@ -1,7 +1,11 @@
 package com.afs.dragbits.jugador;
 
+import com.afs.dragbits.autos.AutoConfig;
+import com.afs.dragbits.autos.AutoJugadorTipo;
 import com.afs.dragbits.menurivales.TipoCarrera;
 import com.badlogic.gdx.Gdx;
+
+import java.util.EnumSet;
 
 public class Jugador {
 
@@ -11,6 +15,8 @@ public class Jugador {
     private long dinero;
     private int derrotadosLegales;
     private int derrotadosIlegales;
+    private AutoJugadorTipo autoActual;
+    private EnumSet<AutoJugadorTipo> autosComprados;
 
     public Jugador() {
         this(1, 0, 0);
@@ -23,6 +29,8 @@ public class Jugador {
         this.experienciaSiguienteNivel = calcularExperienciaRequerida(this.nivel);
         this.derrotadosLegales = 0;
         this.derrotadosIlegales = 0;
+        this.autoActual = AutoJugadorTipo.GOL;
+        this.autosComprados = EnumSet.of(AutoJugadorTipo.GOL);
     }
 
 
@@ -118,5 +126,66 @@ public class Jugador {
                 derrotadosIlegales++;
             }
         }
+    }
+
+    public boolean tieneAuto(AutoJugadorTipo tipo) {
+        return autosComprados.contains(tipo);
+    }
+
+    public boolean comprarAuto(AutoJugadorTipo tipo) {
+        AutoConfig config = obtenerConfig(tipo);
+        if (config == null) return false;
+        if (tieneAuto(tipo)) return false;
+        if (nivel < config.getNivelRequerido()) {
+            Gdx.app.log("Jugador", "Nivel insuficiente para comprar " + tipo.getNombre());
+            return false;
+        }
+        if (!restarDinero(config.getCosto())) {
+            Gdx.app.log("Jugador", "Dinero insuficiente para comprar " + tipo.getNombre());
+            return false;
+        }
+        autosComprados.add(tipo);
+        autoActual = tipo;
+        Gdx.app.log("Jugador", "Auto comprado: " + tipo.getNombre());
+        return true;
+    }
+
+    public boolean equiparAuto(AutoJugadorTipo tipo) {
+        if (!tieneAuto(tipo)) {
+            Gdx.app.log("Jugador", "No posees el auto " + tipo.getNombre());
+            return false;
+        }
+        autoActual = tipo;
+        Gdx.app.log("Jugador", "Auto equipado: " + tipo.getNombre());
+        return true;
+    }
+
+    public AutoConfig getConfigAutoActual() {
+        return obtenerConfig(autoActual);
+    }
+
+    private AutoConfig obtenerConfig(AutoJugadorTipo tipo) {
+        switch (tipo) {
+            case GOL: return AutoConfig.gol();
+            case TOYOTA: return AutoConfig.toyota();
+            case CHALLENGER: return AutoConfig.challenger();
+            default: return null;
+        }
+    }
+
+    public AutoJugadorTipo getAutoActual() {
+        return autoActual;
+    }
+
+    public void setAutoActual(AutoJugadorTipo autoActual) {
+        this.autoActual = autoActual;
+    }
+
+    public EnumSet<AutoJugadorTipo> getAutosComprados() {
+        return autosComprados;
+    }
+
+    public void setAutosComprados(EnumSet<AutoJugadorTipo> autosComprados) {
+        this.autosComprados = autosComprados;
     }
 }

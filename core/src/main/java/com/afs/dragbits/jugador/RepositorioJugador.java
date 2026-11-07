@@ -1,8 +1,11 @@
 package com.afs.dragbits.jugador;
 
+import com.afs.dragbits.autos.AutoJugadorTipo;
 import com.afs.dragbits.menurivales.TipoCarrera;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+
+import java.util.EnumSet;
 
 public class RepositorioJugador {
 
@@ -12,6 +15,8 @@ public class RepositorioJugador {
     private static final String KEY_DINERO = "dinero";
     private static final String KEY_DERROTADOS_LEGALES = "derrotadosLegales";
     private static final String KEY_DERROTADOS_ILEGALES = "derrotadosIlegales";
+    private static final String KEY_AUTO_ACTUAL = "autoActual";
+    private static final String KEY_AUTOS_COMPRADOS = "autosComprados";
 
 
     public void guardarProgreso(Jugador jugador) {
@@ -23,6 +28,8 @@ public class RepositorioJugador {
         prefs.putLong(KEY_DINERO, jugador.getDinero());
         prefs.putInteger(KEY_DERROTADOS_LEGALES, jugador.getDerrotados(TipoCarrera.LEGAL));
         prefs.putInteger(KEY_DERROTADOS_ILEGALES, jugador.getDerrotados(TipoCarrera.ILEGAL));
+        prefs.putInteger(KEY_AUTO_ACTUAL, jugador.getAutoActual().getId());
+        prefs.putString(KEY_AUTOS_COMPRADOS, enumSetToCsv(jugador.getAutosComprados()));
         prefs.flush();
 
         Gdx.app.log("RepositorioJugador", "Progreso guardado correctamente.");
@@ -39,12 +46,16 @@ public class RepositorioJugador {
             long dinero = prefs.getLong(KEY_DINERO, 0);
             int derrotadosLegales = prefs.getInteger(KEY_DERROTADOS_LEGALES, 0);
             int derrotadosIlegales = prefs.getInteger(KEY_DERROTADOS_ILEGALES, 0);
+            int autoActualId = prefs.getInteger(KEY_AUTO_ACTUAL, AutoJugadorTipo.GOL.getId());
+            String autosCompradosCsv = prefs.getString(KEY_AUTOS_COMPRADOS, "0");
 
             jugador.setNivel(nivel);
             jugador.setExperienciaActual(xpActual);
             jugador.setDinero(dinero);
             jugador.setDerrotados(TipoCarrera.LEGAL, derrotadosLegales);
             jugador.setDerrotados(TipoCarrera.ILEGAL, derrotadosIlegales);
+            jugador.setAutoActual(idToTipo(autoActualId));
+            jugador.setAutosComprados(csvToEnumSet(autosCompradosCsv));
 
             Gdx.app.log("RepositorioJugador", "Progreso cargado con exito.");
         }
@@ -62,5 +73,37 @@ public class RepositorioJugador {
         prefs.clear();
         prefs.flush();
         Gdx.app.log("RepositorioJugador", "Progreso borrado correctamente.");
+    }
+
+    private String enumSetToCsv(EnumSet<AutoJugadorTipo> set) {
+        StringBuilder sb = new StringBuilder();
+        for (AutoJugadorTipo tipo : set) {
+            if (sb.length() > 0) sb.append(",");
+            sb.append(tipo.getId());
+        }
+        return sb.toString();
+    }
+
+    private EnumSet<AutoJugadorTipo> csvToEnumSet(String csv) {
+        EnumSet<AutoJugadorTipo> set = EnumSet.noneOf(AutoJugadorTipo.class);
+        if (csv == null || csv.isEmpty()) return set;
+        String[] ids = csv.split(",");
+        for (String idStr : ids) {
+            try {
+                int id = Integer.parseInt(idStr.trim());
+                AutoJugadorTipo tipo = idToTipo(id);
+                if (tipo != null) set.add(tipo);
+            } catch (NumberFormatException e) {
+                Gdx.app.error("RepositorioJugador", "Error parsing auto ID: " + idStr, e);
+            }
+        }
+        return set;
+    }
+
+    private AutoJugadorTipo idToTipo(int id) {
+        for (AutoJugadorTipo tipo : AutoJugadorTipo.values()) {
+            if (tipo.getId() == id) return tipo;
+        }
+        return AutoJugadorTipo.GOL;
     }
 }

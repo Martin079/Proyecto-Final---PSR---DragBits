@@ -16,6 +16,13 @@ Convención utilizada en todo el historial:
 - Enum `AutoJugadorTipo` para identificar los autos del jugador (Gol, Toyota, Challenger) con ID, nombre y ruta de sprite.
 - Clase `AutoConfig` con configuración completa de estadísticas para cada auto: costo, nivel requerido, velocidad máxima, aceleración, tracción, capacidad de nitro y cargas de nitro.
 - Factory methods en `AutoConfig` para crear instancias preconfiguradas de cada auto (gol(), toyota(), challenger()).
+- Sistema de garage en `Jugador`: campos `autoActual` y `autosComprados` (EnumSet) para gestionar la colección de autos del jugador.
+- Método `tieneAuto(AutoJugadorTipo)` en `Jugador` para verificar si un auto está en el garage.
+- Método `comprarAuto(AutoJugadorTipo)` en `Jugador` para comprar autos validando nivel y dinero, añadiendo al garage y equipándolo automáticamente.
+- Método `equiparAuto(AutoJugadorTipo)` en `Jugador` para cambiar el auto activo solo si está comprado.
+- Método `getConfigAutoActual()` en `Jugador` para obtener las estadísticas del auto equipado.
+- Persistencia del garage en `RepositorioJugador`: claves `KEY_AUTO_ACTUAL` y `KEY_AUTOS_COMPRADOS` para guardar/cargar el auto equipado y la colección de autos comprados.
+- Métodos auxiliares `enumSetToCsv()` y `csvToEnumSet()` en `RepositorioJugador` para serializar/deserializar el EnumSet como string CSV.
 
 
 
