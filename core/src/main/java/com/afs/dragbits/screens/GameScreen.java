@@ -2,6 +2,7 @@ package com.afs.dragbits.screens;
 
 import com.afs.dragbits.Main;
 import com.afs.dragbits.autos.Auto;
+import com.afs.dragbits.autos.AutoConfig;
 import com.afs.dragbits.autos.AutoJugador;
 import com.afs.dragbits.autos.AutoRival;
 import com.afs.dragbits.camara.SeguimientoJugador;
@@ -91,7 +92,7 @@ public class GameScreen implements Screen {
         viewportMundo = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camaraJugador.getCamara());
         viewportHUD = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL);
 
-        autoJugador = new AutoJugador(pista.getPosicionSpawnX(), pista.getYJugador(), mainGame);
+        autoJugador = new AutoJugador(pista.getPosicionSpawnX(), pista.getYJugador(), datosJugador.getConfigAutoActual(), mainGame);
         RivalConfig config = CatalogoRivales.obtener(TIPO_CARRERA, INDICE_RIVAL);
         autoRival = new AutoRival(pista.getPosicionSpawnX(), pista.getYRival(), config, config.getRecompensaBase(), mainGame);
 

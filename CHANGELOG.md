@@ -23,6 +23,10 @@ Convención utilizada en todo el historial:
 - Método `getConfigAutoActual()` en `Jugador` para obtener las estadísticas del auto equipado.
 - Persistencia del garage en `RepositorioJugador`: claves `KEY_AUTO_ACTUAL` y `KEY_AUTOS_COMPRADOS` para guardar/cargar el auto equipado y la colección de autos comprados.
 - Métodos auxiliares `enumSetToCsv()` y `csvToEnumSet()` en `RepositorioJugador` para serializar/deserializar el EnumSet como string CSV.
+- Método helper `calcularAceleracionDesde0a100()` en `AutoJugador` para convertir tiempo 0-100 km/h a valor interno de aceleración.
+
+### Changed
+- Constructor de `AutoJugador` ahora recibe `AutoConfig` en lugar de valores hardcoded, inicializando velocidad máxima, aceleración, tracción, ruta de sprite y capacidad de nitro desde la configuración.
 
 
 
