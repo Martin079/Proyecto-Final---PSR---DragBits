@@ -10,6 +10,15 @@ Convención utilizada en todo el historial:
 - Mientras el juego esté en desarrollo inicial se usan versiones `0.x.y`; la `1.0.0` se reserva para la entrega final.
 - Los cambios aún no versionados van en `[Unreleased]`.
 
+## [0.8.11] - 2026-11-7
+
+### Added
+- Enum `AutoJugadorTipo` para identificar los autos del jugador (Gol, Toyota, Challenger) con ID, nombre y ruta de sprite.
+- Clase `AutoConfig` con configuración completa de estadísticas para cada auto: costo, nivel requerido, velocidad máxima, aceleración, tracción, capacidad de nitro y cargas de nitro.
+- Factory methods en `AutoConfig` para crear instancias preconfiguradas de cada auto (gol(), toyota(), challenger()).
+
+
+
 ## [0.8.10] - 2026-11-2
 
 ### Changed
