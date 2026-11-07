@@ -92,11 +92,9 @@ public class MapaScreen implements Screen {
                 Gdx.input.setInputProcessor(entradaJugador);
             },
             (tipo) -> {
-                if (jugador.comprarAuto(tipo)) {
-                    REPOSITORIO_JUGADOR.guardarProgreso(jugador);
-                    ventanaTienda.mostrar(jugador);
-                    Gdx.app.log("MapaScreen", "Auto comprado: " + tipo.getNombre());
-                }
+                REPOSITORIO_JUGADOR.guardarProgreso(jugador);
+                ventanaTienda.mostrar(jugador);
+                Gdx.app.log("MapaScreen", "Auto comprado: " + tipo.getNombre());
             }
         );
 
