@@ -193,6 +193,9 @@ public class MapaScreen implements Screen {
 
     @Override
     public void hide() {
+        if (jugador != null) {
+            REPOSITORIO_JUGADOR.guardarProgreso(jugador);
+        }
         Gdx.input.setInputProcessor(null);
         dispose();
     }
