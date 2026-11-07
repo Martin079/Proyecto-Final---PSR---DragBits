@@ -1,6 +1,7 @@
 package com.afs.dragbits.screens;
 
 import com.afs.dragbits.Main;
+import com.afs.dragbits.autos.AutoJugadorTipo;
 import com.afs.dragbits.ciudad.Burbuja;
 import com.afs.dragbits.ciudad.Interfaz;
 import com.afs.dragbits.funcionalidades.EntradaJugador;
@@ -8,6 +9,7 @@ import com.afs.dragbits.jugador.Jugador;
 import com.afs.dragbits.jugador.RepositorioJugador;
 import com.afs.dragbits.menurivales.TipoCarrera;
 import com.afs.dragbits.menurivales.VentanaSeleccionRival;
+import com.afs.dragbits.menutienda.VentanaTiendaAutos;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -41,6 +43,7 @@ public class MapaScreen implements Screen {
     private Interfaz interfazCiudad;
 
     private VentanaSeleccionRival ventanaRival;
+    private VentanaTiendaAutos ventanaTienda;
     private EntradaJugador entradaJugador;
     private TipoCarrera tipoSeleccionado = TipoCarrera.LEGAL;
 
@@ -83,6 +86,20 @@ public class MapaScreen implements Screen {
             }
         );
 
+        ventanaTienda = new VentanaTiendaAutos(
+            viewport,
+            () -> {
+                Gdx.input.setInputProcessor(entradaJugador);
+            },
+            (tipo) -> {
+                if (jugador.comprarAuto(tipo)) {
+                    REPOSITORIO_JUGADOR.guardarProgreso(jugador);
+                    ventanaTienda.mostrar(jugador);
+                    Gdx.app.log("MapaScreen", "Auto comprado: " + tipo.getNombre());
+                }
+            }
+        );
+
         Gdx.input.setInputProcessor(entradaJugador);
 
         mapaTexture = new Texture(Gdx.files.internal("sprites/Ciudad/Mapa.png"));
@@ -115,7 +132,9 @@ public class MapaScreen implements Screen {
         }));
 
         burbujas.add(new Burbuja(1015f - offsetX, 600f - offsetY, anchoBurbuja, altoBurbuja, frameMejoras, () -> {}));
-        burbujas.add(new Burbuja(350f - offsetX, 594f - offsetY, anchoBurbuja, altoBurbuja, frameAutos, () -> {}));
+        burbujas.add(new Burbuja(350f - offsetX, 594f - offsetY, anchoBurbuja, altoBurbuja, frameAutos, () -> {
+            abrirVentanaTienda();
+        }));
         burbujas.add(new Burbuja(1010f - offsetX, 180f - offsetY, anchoBurbuja, altoBurbuja, frameOnline, () -> {}));
     }
 
@@ -125,9 +144,14 @@ public class MapaScreen implements Screen {
         Gdx.input.setInputProcessor(ventanaRival.getStage());
     }
 
+    private void abrirVentanaTienda() {
+        ventanaTienda.mostrar(jugador);
+        Gdx.input.setInputProcessor(ventanaTienda.getStage());
+    }
+
     @Override
     public void render(float delta) {
-        if (!ventanaRival.isVisible()) {
+        if (!ventanaRival.isVisible() && !ventanaTienda.isVisible()) {
             if (entradaJugador.consumoToque()) {
                 Vector2 coords = entradaJugador.getCoordenadasToque(viewport);
                 for (Burbuja b : burbujas) {
@@ -153,6 +177,9 @@ public class MapaScreen implements Screen {
 
         interfazCiudad.render();
         ventanaRival.render(delta);
+        if (ventanaTienda.isVisible()) {
+            ventanaTienda.render(delta);
+        }
     }
 
     @Override
@@ -160,6 +187,7 @@ public class MapaScreen implements Screen {
         viewport.update(width, height, true);
         if (interfazCiudad != null) interfazCiudad.resize(width, height);
         if (ventanaRival != null) ventanaRival.resize(width, height);
+        if (ventanaTienda != null) ventanaTienda.resize(width, height);
     }
 
     @Override public void pause() {}
@@ -178,5 +206,6 @@ public class MapaScreen implements Screen {
         if (burbujasSheet != null) burbujasSheet.dispose();
         if (interfazCiudad != null) interfazCiudad.dispose();
         if (ventanaRival != null) ventanaRival.dispose();
+        if (ventanaTienda != null) ventanaTienda.dispose();
     }
 }

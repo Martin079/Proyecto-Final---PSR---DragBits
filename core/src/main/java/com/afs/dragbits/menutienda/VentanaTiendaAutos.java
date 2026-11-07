@@ -3,16 +3,21 @@ package com.afs.dragbits.menutienda;
 import com.afs.dragbits.autos.AutoConfig;
 import com.afs.dragbits.autos.AutoJugadorTipo;
 import com.afs.dragbits.jugador.Jugador;
+import com.afs.dragbits.util.SpriteSheetLoader;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -20,33 +25,39 @@ import java.util.function.Consumer;
 
 public class VentanaTiendaAutos implements com.badlogic.gdx.utils.Disposable {
 
-    private static final float ANCHO_VIRTUAL = 1920f;
-    private static final float ALTO_VIRTUAL = 1080f;
+    private static final float ANCHO_VIRTUAL = 1280f;
+    private static final float ALTO_VIRTUAL = 720f;
 
     private Stage stage;
     private Viewport viewport;
     private Table mainTable;
     private Table gridTable;
-    private ImageButton botonCerrar;
+    private Image botonCerrar;
     private Texture fondoTexture;
     private Texture iconosTexture;
     private Texture botonCerrarTexture;
 
     private Jugador jugador;
     private Consumer<AutoJugadorTipo> alComprarAuto;
+    private Runnable accionCerrar;
+    private boolean visible = false;
 
     private static final AutoJugadorTipo[] AUTOS_DISPONIBLES = {
         AutoJugadorTipo.TOYOTA,
         AutoJugadorTipo.CHALLENGER
     };
 
-    public VentanaTiendaAutos() {
-        viewport = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL);
-        stage = new Stage(viewport);
+    public VentanaTiendaAutos(Viewport viewport, Runnable accionCerrar, Consumer<AutoJugadorTipo> alComprarAuto) {
+        this.viewport = viewport;
+        this.stage = new Stage(viewport);
+        this.accionCerrar = accionCerrar;
+        this.alComprarAuto = alComprarAuto;
 
-        fondoTexture = new Texture(Gdx.files.internal("sprites/UI/FondoTienda.png"));
-        if (!fondoTexture.getTextureData().isPrepared()) {
-            fondoTexture.getTextureData().prepare();
+        try {
+            fondoTexture = new Texture(Gdx.files.internal("sprites/UI/FondoTienda.png"));
+        } catch (Exception e) {
+            Gdx.app.error("VentanaTiendaAutos", "No se pudo cargar FondoTienda.png, usando fallback", e);
+            fondoTexture = TexturaSolidaFactory.crearTextura((int) ANCHO_VIRTUAL, (int) ALTO_VIRTUAL, new Color(0.1f, 0.1f, 0.1f, 0.85f));
         }
 
         try {
@@ -57,42 +68,45 @@ public class VentanaTiendaAutos implements com.badlogic.gdx.utils.Disposable {
         }
 
         try {
-            botonCerrarTexture = new Texture(Gdx.files.internal("sprites/UI/Boton cerrar.png"));
+            botonCerrarTexture = SpriteSheetLoader.cargarTextura("sprites/Botones/Boton cerrar.png");
         } catch (Exception e) {
             Gdx.app.error("VentanaTiendaAutos", "No se pudo cargar Boton cerrar.png", e);
             botonCerrarTexture = null;
         }
 
+        Table root = new Table();
+        root.setFillParent(true);
+
         mainTable = new Table();
-        mainTable.setFillParent(true);
         mainTable.setBackground(new TextureRegionDrawable(new TextureRegion(fondoTexture)));
-        stage.addActor(mainTable);
-
-        gridTable = new Table();
-        mainTable.add(gridTable).pad(100f).grow().row();
-
-        Table botonCerrarTable = new Table();
-        mainTable.add(botonCerrarTable).pad(20f);
+        mainTable.pad(20);
+        root.add(mainTable).width(900).height(600);
+        stage.addActor(root);
 
         if (botonCerrarTexture != null) {
-            ImageButton.ImageButtonStyle cerrarStyle = new ImageButton.ImageButtonStyle();
-            cerrarStyle.imageUp = new TextureRegionDrawable(new TextureRegion(botonCerrarTexture));
-            botonCerrar = new ImageButton(cerrarStyle);
-            botonCerrarTable.add(botonCerrar).size(80f, 80f);
+            botonCerrar = new Image(botonCerrarTexture);
+            botonCerrar.setScaling(Scaling.fit);
 
-            botonCerrar.addListener(new com.badlogic.gdx.scenes.scene2d.InputListener() {
+            botonCerrar.addListener(new ClickListener() {
                 @Override
-                public boolean touchDown(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y, int pointer, int button) {
+                public void clicked(InputEvent event, float x, float y) {
                     ocultar();
-                    return true;
                 }
             });
+
+            Table topBar = new Table();
+            topBar.add().expandX();
+            topBar.add(botonCerrar).size(80, 80).right();
+            mainTable.add(topBar).growX().padBottom(15).row();
         }
+
+        gridTable = new Table();
+        mainTable.add(gridTable).expand().center();
     }
 
-    public void mostrar(Jugador jugador, Consumer<AutoJugadorTipo> alComprarAuto) {
+    public void mostrar(Jugador jugador) {
         this.jugador = jugador;
-        this.alComprarAuto = alComprarAuto;
+        this.visible = true;
 
         gridTable.clear();
         gridTable.defaults().pad(30f).width(400f).height(500f);
@@ -176,7 +190,7 @@ public class VentanaTiendaAutos implements com.badlogic.gdx.utils.Disposable {
                         if (alComprarAuto != null) {
                             alComprarAuto.accept(tipo);
                         }
-                        mostrar(jugador, alComprarAuto);
+                        mostrar(jugador);
                     }
                     return true;
                 }
@@ -211,7 +225,11 @@ public class VentanaTiendaAutos implements com.badlogic.gdx.utils.Disposable {
     }
 
     public void ocultar() {
-        Gdx.input.setInputProcessor(null);
+        if (!visible) return;
+        this.visible = false;
+        if (accionCerrar != null) {
+            accionCerrar.run();
+        }
     }
 
     public void render(float delta) {
@@ -221,6 +239,14 @@ public class VentanaTiendaAutos implements com.badlogic.gdx.utils.Disposable {
 
     public void resize(int width, int height) {
         viewport.update(width, height, true);
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public boolean isVisible() {
+        return visible;
     }
 
     @Override

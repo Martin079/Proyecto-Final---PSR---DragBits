@@ -26,10 +26,11 @@ Convención utilizada en todo el historial:
 - Método helper `calcularAceleracionDesde0a100()` en `AutoJugador` para convertir tiempo 0-100 km/h a valor interno de aceleración.
 - Clase `VentanaTiendaAutos` con interfaz de tienda de autos usando Stage2D, grid 1x2 para Toyota y Challenger, overlay de color según estado (verde=adquirido, gris=comprar, rojo=no disponible), labels con stats y botón cerrar.
 - Callback `Consumer<AutoJugadorTipo>` en `VentanaTiendaAutos` para notificar compras exitosas y recargar la UI dinámicamente.
+- Integración de `VentanaTiendaAutos` en `MapaScreen`: burbuja de autos ahora abre la tienda, método `abrirVentanaTienda()` con callback de compra que guarda progreso y refresca UI.
 
 ### Changed
 - Constructor de `AutoJugador` ahora recibe `AutoConfig` en lugar de valores hardcoded, inicializando velocidad máxima, aceleración, tracción, ruta de sprite y capacidad de nitro desde la configuración.
-
+- `GameScreen` actualizado para usar `datosJugador.getConfigAutoActual()` al instanciar `AutoJugador`, aplicando las estadísticas del auto equipado del jugador.
 
 
 ## [0.8.10] - 2026-11-2
