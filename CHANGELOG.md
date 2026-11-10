@@ -17,6 +17,7 @@ Convención utilizada en todo el historial:
 - Activación de nitro mediante tecla N en `EntradaJugador`: constante `teclaNitro`, campo `huboNitro`, handler en `keyDown()` y método `consumirNitro()`.
 - Lógica de activación de nitro en `Acelerador.actualizar()`: verifica capacidad y nitro restante del auto antes de activar.
 - Getter `getCapacidadNitro()` en `Auto` para permitir verificación de capacidad de nitro desde `Acelerador`.
+- Indicador de nitro en HUD (`Basicos`): muestra porcentaje de nitro restante con colores (verde >25%, amarillo 1-25%, rojo 0%), solo visible si el auto tiene capacidad de nitro.
 
 
 ### Changed
