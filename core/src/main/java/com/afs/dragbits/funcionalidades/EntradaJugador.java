@@ -16,13 +16,14 @@ public class EntradaJugador extends InputAdapter {
     private int teclaPalancaAbajo = Input.Keys.DOWN;
     private int teclaPalancaIzquierda = Input.Keys.LEFT;
     private int teclaPalancaDerecha = Input.Keys.RIGHT;
+    private int teclaNitro = Input.Keys.N;
 
 
     private final Vector3 TEMP_CORDS = new Vector3();
     private final Vector2 TOQUE_VIRTUAL = new Vector2();
     private boolean huboToque = false;
 
-    private boolean huboArriba, huboAbajo, huboIzquierda, huboDerecha, huboConfirmar, huboCancelar, huboMovimientoMouse;
+    private boolean huboArriba, huboAbajo, huboIzquierda, huboDerecha, huboConfirmar, huboCancelar, huboMovimientoMouse, huboNitro;
     private int ultimoToqueX, ultimoToqueY;
 
 
@@ -59,6 +60,7 @@ public class EntradaJugador extends InputAdapter {
         else if (keycode == Input.Keys.RIGHT) huboDerecha = true;
         else if (keycode == Input.Keys.ENTER) huboConfirmar = true;
         else if (keycode == Input.Keys.ESCAPE) huboCancelar = true;
+        else if (keycode == Input.Keys.N) huboNitro = true;
         return false;
     }
 
@@ -129,6 +131,12 @@ public class EntradaJugador extends InputAdapter {
     public boolean consumoMovimientoMouse() {
         boolean r = huboMovimientoMouse;
         huboMovimientoMouse = false;
+        return r;
+    }
+
+    public boolean consumirNitro() {
+        boolean r = huboNitro;
+        huboNitro = false;
         return r;
     }
 

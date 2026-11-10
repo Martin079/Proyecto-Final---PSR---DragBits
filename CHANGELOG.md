@@ -10,7 +10,14 @@ Convención utilizada en todo el historial:
 - Mientras el juego esté en desarrollo inicial se usan versiones `0.x.y`; la `1.0.0` se reserva para la entrega final.
 - Los cambios aún no versionados van en `[Unreleased]`.
 
+
 ## [0.8.12] - 2026-11-10
+
+### Added
+- Activación de nitro mediante tecla N en `EntradaJugador`: constante `teclaNitro`, campo `huboNitro`, handler en `keyDown()` y método `consumirNitro()`.
+- Lógica de activación de nitro en `Acelerador.actualizar()`: verifica capacidad y nitro restante del auto antes de activar.
+- Getter `getCapacidadNitro()` en `Auto` para permitir verificación de capacidad de nitro desde `Acelerador`.
+
 
 ### Changed
 - Ventana de tienda de autos (`VentanaTiendaAutos`) reducida  de 900x600 a 750x500, celdas del grid de 400x500 a 340x420 con padding reducido de 30f a 20f.

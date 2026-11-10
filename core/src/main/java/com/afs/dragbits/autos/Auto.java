@@ -326,6 +326,7 @@ public abstract class Auto {
     public float getVelocidadMaxima() { return velocidadMaxima; }
     public void setVelocidadMaxima(float velocidadMaxima) { this.velocidadMaxima = velocidadMaxima; }
     public float getNitroRestante() { return nitroRestante; }
+    public float getCapacidadNitro() { return capacidadNitro; }
     public boolean isPatinando() { return patinando; }
     public void setZonaSincronizacion(float zona) { this.zonaSincronizacion = zona; }
 
