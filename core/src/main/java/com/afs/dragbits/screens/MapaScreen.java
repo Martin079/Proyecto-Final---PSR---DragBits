@@ -129,7 +129,7 @@ public class MapaScreen implements Screen {
             abrirVentanaRival(TipoCarrera.ILEGAL, jugador.getMaxRivalDesbloqueado(TipoCarrera.ILEGAL));
         }));
 
-        burbujas.add(new Burbuja(1015f - offsetX, 600f - offsetY, anchoBurbuja, altoBurbuja, frameMejoras, () -> {}));
+        burbujas.add(new Burbuja(915f - offsetX, 600f - offsetY, anchoBurbuja, altoBurbuja, frameMejoras, () -> {}));
         burbujas.add(new Burbuja(350f - offsetX, 594f - offsetY, anchoBurbuja, altoBurbuja, frameAutos, () -> {
             abrirVentanaTienda();
         }));

@@ -96,8 +96,8 @@ public class VentanaTiendaAutos implements com.badlogic.gdx.utils.Disposable {
 
             Table topBar = new Table();
             topBar.add().expandX();
-            topBar.add(botonCerrar).size(60, 60).padRight(15).padTop(25).right();
-            mainTable.add(topBar).growX().padBottom(15).row();
+            topBar.add(botonCerrar).size(60, 60).padRight(15).padTop(15).right();
+            mainTable.add(topBar).growX().padBottom(-15).row();
         }
 
         gridTable = new Table();
