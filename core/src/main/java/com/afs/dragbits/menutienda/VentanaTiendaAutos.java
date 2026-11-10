@@ -61,7 +61,7 @@ public class VentanaTiendaAutos implements com.badlogic.gdx.utils.Disposable {
         }
 
         try {
-            iconosTexture = new Texture(Gdx.files.internal("sprites/UI/Iconos autos-sheet.png"));
+            iconosTexture = new Texture(Gdx.files.internal("sprites/MenuAutos/Iconos autos-sheet.png"));
         } catch (Exception e) {
             Gdx.app.error("VentanaTiendaAutos", "No se pudo cargar iconos autos-sheet.png", e);
             iconosTexture = null;
@@ -155,7 +155,7 @@ public class VentanaTiendaAutos implements com.badlogic.gdx.utils.Disposable {
             TextureRegion iconoRegion = obtenerIconoAuto(tipo);
             if (iconoRegion != null) {
                 ImageButton iconoBtn = new ImageButton(new TextureRegionDrawable(iconoRegion));
-                iconoBtn.getImageCell().size(200f, 150f);
+                iconoBtn.getImageCell().size(180f, 180f);
                 celda.add(iconoBtn).padTop(20f).row();
             }
         }
@@ -164,9 +164,6 @@ public class VentanaTiendaAutos implements com.badlogic.gdx.utils.Disposable {
         labelStyle.font = new com.badlogic.gdx.graphics.g2d.BitmapFont();
         labelStyle.fontColor = Color.WHITE;
 
-        Label nombreLabel = new Label(tipo.getNombre(), labelStyle);
-        nombreLabel.setFontScale(2f);
-        celda.add(nombreLabel).padTop(20f).row();
 
         String stats = String.format("V-Max: %.0f km/h\n0-100: %.1fs\nTracción: %.1f\nNitro: %.1fs",
             config.getVelocidadMaxima(),
@@ -203,13 +200,13 @@ public class VentanaTiendaAutos implements com.badlogic.gdx.utils.Disposable {
     private TextureRegion obtenerIconoAuto(AutoJugadorTipo tipo) {
         if (iconosTexture == null) return null;
 
-        int anchoFrame = iconosTexture.getWidth() / 3;
+        int anchoFrame = iconosTexture.getWidth() / 14; // 14 frames en total
         int altoFrame = iconosTexture.getHeight();
 
         int indice;
         switch (tipo) {
-            case TOYOTA: indice = 0; break;
-            case CHALLENGER: indice = 1; break;
+            case TOYOTA: indice = 11; break;
+            case CHALLENGER: indice = 12; break;
             default: indice = 0;
         }
 

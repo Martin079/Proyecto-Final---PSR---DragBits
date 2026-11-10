@@ -15,7 +15,8 @@ Convención utilizada en todo el historial:
 ### Changed
 - Ventana de tienda de autos (`VentanaTiendaAutos`) reducida  de 900x600 a 750x500, celdas del grid de 400x500 a 340x420 con padding reducido de 30f a 20f.
 - Botón de cerrar en ventana de tienda reducido de 80x80 a 60x60 para mantener proporción con la ventana más pequeña, y reajustado su padding.
-- Contenido de celdas de autos ajustado al tamaño reducido: overlay de 400x500 a 320x400, icono de 200x150 a 160x120, escalas de fuente reducidas (nombre 2f→1.6f, stats 1.2f→1f, estado 1.5f→1.3f), paddings internos reducidos (20f→8f, 15f→10f).
+- Contenido de celdas de autos ajustado: overlay de 400x500, icono de 200x150 a 180x180, eliminado label de nombre (ahora se muestra la imagen del auto), escalas de fuente reducidas (stats 1.2f→1f, estado 1.5f→1.3f), paddings internos reducidos (20f→8f, 15f→10f).
+- Iconos de autos en tienda actualizados para usar frames 11 y 12 del sprite sheet.
 
 ## [0.8.11] - 2026-11-7
 
