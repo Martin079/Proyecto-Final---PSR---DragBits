@@ -10,6 +10,12 @@ Convención utilizada en todo el historial:
 - Mientras el juego esté en desarrollo inicial se usan versiones `0.x.y`; la `1.0.0` se reserva para la entrega final.
 - Los cambios aún no versionados van en `[Unreleased]`.
 
+## [0.8.12] - 2026-11-10
+
+### Changed
+- Ventana de tienda de autos (`VentanaTiendaAutos`) reducida  de 900x600 a 750x500, celdas del grid de 400x500 a 340x420 con padding reducido de 30f a 20f.
+- Botón de cerrar en ventana de tienda reducido de 80x80 a 60x60 para mantener proporción con la ventana más pequeña, y reajustado su padding en 15px.
+
 ## [0.8.11] - 2026-11-7
 
 ### Added

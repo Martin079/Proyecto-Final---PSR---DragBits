@@ -80,7 +80,7 @@ public class VentanaTiendaAutos implements com.badlogic.gdx.utils.Disposable {
         mainTable = new Table();
         mainTable.setBackground(new TextureRegionDrawable(new TextureRegion(fondoTexture)));
         mainTable.pad(20);
-        root.add(mainTable).width(900).height(600);
+        root.add(mainTable).width(750).height(500);
         stage.addActor(root);
 
         if (botonCerrarTexture != null) {
@@ -96,7 +96,7 @@ public class VentanaTiendaAutos implements com.badlogic.gdx.utils.Disposable {
 
             Table topBar = new Table();
             topBar.add().expandX();
-            topBar.add(botonCerrar).size(80, 80).right();
+            topBar.add(botonCerrar).size(60, 60).padRight(15).padTop(25).right();
             mainTable.add(topBar).growX().padBottom(15).row();
         }
 
@@ -109,7 +109,7 @@ public class VentanaTiendaAutos implements com.badlogic.gdx.utils.Disposable {
         this.visible = true;
 
         gridTable.clear();
-        gridTable.defaults().pad(30f).width(400f).height(500f);
+        gridTable.defaults().pad(20f).width(340f).height(420f);
 
         for (AutoJugadorTipo tipo : AUTOS_DISPONIBLES) {
             AutoConfig config = obtenerConfig(tipo);
