@@ -37,11 +37,21 @@ public class Basicos extends ElementoHUD {
         String embragueStr = auto.isEmbraguePresionado() ? " [EMBRAGUE]" : "";
 
         float posX = anchoPantalla - 310f;
-        float posY = 110f;
+        float posY = 160f;
 
         FUENTE.draw(batch, "VEL: " + velKmH + " Km/h", posX, posY);
         FUENTE.draw(batch, "RPM: " + rpm, posX, posY - 35f);
         FUENTE.draw(batch, "MARCHA: " + marchaStr + embragueStr, posX, posY - 70f);
+
+        // Indicador de nitro (solo si el auto tiene capacidad de nitro > 0)
+        if (auto.getCapacidadNitro() > 0) {
+            int porcentajeNitro = (int) ((auto.getNitroRestante() / auto.getCapacidadNitro()) * 100);
+            String nitroStr = "NITRO: " + porcentajeNitro + "%";
+            Color colorNitro = porcentajeNitro > 25 ? Color.GREEN : (porcentajeNitro > 0 ? Color.YELLOW : Color.RED);
+            FUENTE.setColor(colorNitro);
+            FUENTE.draw(batch, nitroStr, posX, posY - 105f);
+            FUENTE.setColor(Color.valueOf("4DA6FF")); // restaurar color original
+        }
 
         if (dibujarBotonPausa) {
             batch.draw(TEXTURA_BOTON_PAUSA, BOUNDS_BOTON_PAUSA.x, BOUNDS_BOTON_PAUSA.y, BOUNDS_BOTON_PAUSA.width, BOUNDS_BOTON_PAUSA.height);
