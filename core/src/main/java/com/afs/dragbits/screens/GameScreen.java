@@ -152,7 +152,7 @@ public class GameScreen implements Screen {
             autoRival.actualizarIA(delta, semaforo.getEstadoActual());
             semaforo.actualizar(autoJugador, delta);
 
-            controladorCarrera.actualizar();
+            controladorCarrera.actualizar(semaforo.huboSalidaTemprana());
             if (controladorCarrera.isCarreraFinalizada()) {
                 estadoJuego = EstadoJuego.FINALIZADO;
             }
@@ -192,6 +192,7 @@ public class GameScreen implements Screen {
             cartelResultado.dibujar(batch, controladorCarrera.isJugadorGano(),
                 TIPO_CARRERA, controladorCarrera.getRecompensaObtenida(),
                 controladorCarrera.isPrimeraVictoria(), controladorCarrera.isSubioDeNivel(),
+                controladorCarrera.isSalidaTemprana(),
                 datosJugador, ANCHO_VIRTUAL, ALTO_VIRTUAL);
         }
         batch.end();

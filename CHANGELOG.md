@@ -23,6 +23,12 @@ Convención utilizada en todo el historial:
 - Nuevo estado `EstadoAuto.PATINANDO` con animación dedicada (`assets/sprites/Autos/Jugador/patinaje.png`).
 - Renderizado en capas: sprite del auto + overlay de humo en `Auto.dibujar()`.
 
+### Changed
+- Salida temprana (jump start) ahora finaliza la carrera con derrota inmediata en lugar de reiniciar la secuencia de luces.
+- `CartelResultado` muestra subtítulo "SALIDA TEMPRANA" bajo "DERROTA" cuando la carrera termina por anticipada.
+- `Semaforo` pasa a estado `FINALIZADO` directamente al detectar salida temprana (eliminado el reset de posición).
+- `ControladorCarrera.actualizar()` ahora recibe flag de salida temprana del semáforo.
+
 ### Removed
 - Eliminado campo `zonaSincronizacion` de `Auto` (código muerto no utilizado).
 - Eliminado método `esCambioPerfecto()` de `Auto` (código muerto no utilizado).

@@ -23,6 +23,7 @@ public class ControladorCarrera {
     private int recompensaObtenida;
     private boolean primeraVictoria;
     private boolean subioDeNivel;
+    private boolean salidaTemprana;
 
     public ControladorCarrera(Pista pista, AutoJugador autoJugador, AutoRival autoRival, Jugador datosJugador, TipoCarrera tipoCarrera, int indiceRival) {
         this.PISTA = pista;
@@ -39,10 +40,19 @@ public class ControladorCarrera {
         this.recompensaObtenida = 0;
         this.primeraVictoria = false;
         this.subioDeNivel = false;
+        this.salidaTemprana = false;
     }
 
-    public void actualizar() {
+    public void actualizar(boolean semaforoSalidaTemprana) {
         if (carreraFinalizada) return;
+
+        if (semaforoSalidaTemprana) {
+            carreraFinalizada = true;
+            jugadorGano = false;
+            salidaTemprana = true;
+            recompensaObtenida = 0;
+            return;
+        }
 
         float metaX = PISTA.getPosicionLineaMeta();
         boolean jugadorCruzo = AUTO_JUGADOR.getFrenteX() >= metaX;
@@ -56,13 +66,13 @@ public class ControladorCarrera {
                 primeraVictoria = DATOS_JUGADOR.esPrimeraVictoria(TIPO_CARRERA, INDICE_RIVAL);
                 int base = AUTO_RIVAL.getRecompensa();
                 recompensaObtenida = primeraVictoria ? Math.round(base * 1.5f) : base;
-                
+
                 if (TIPO_CARRERA == TipoCarrera.LEGAL) {
                     DATOS_JUGADOR.sumarDinero(recompensaObtenida);
                 } else {
                     subioDeNivel = DATOS_JUGADOR.sumarExperiencia(recompensaObtenida);
                 }
-                
+
                 DATOS_JUGADOR.registrarVictoria(TIPO_CARRERA, INDICE_RIVAL);
                 REPOSITORIO_JUGADOR.guardarProgreso(DATOS_JUGADOR);
                 recompensaOtorgada = true;
@@ -90,5 +100,9 @@ public class ControladorCarrera {
 
     public boolean isSubioDeNivel() {
         return subioDeNivel;
+    }
+
+    public boolean isSalidaTemprana() {
+        return salidaTemprana;
     }
 }

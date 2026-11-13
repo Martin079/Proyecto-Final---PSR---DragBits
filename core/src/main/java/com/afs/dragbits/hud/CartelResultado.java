@@ -38,7 +38,7 @@ public class CartelResultado extends ElementoHUD {
     }
 
 
-    public void dibujar(SpriteBatch batch, boolean gano, TipoCarrera tipo, int recompensa, boolean primeraVictoria, boolean subioDeNivel, Jugador jugador, float anchoPantalla, float altoPantalla) {
+    public void dibujar(SpriteBatch batch, boolean gano, TipoCarrera tipo, int recompensa, boolean primeraVictoria, boolean subioDeNivel, boolean salidaTemprana, Jugador jugador, float anchoPantalla, float altoPantalla) {
         float cartelX = (anchoPantalla - ANCHO_CARTEL) / 2f;
         float cartelY = (altoPantalla - ALTO_CARTEL) / 2f;
 
@@ -95,6 +95,14 @@ public class CartelResultado extends ElementoHUD {
             yPos -= 60f;
 
             FUENTE_TEXTO.getData().setScale(1.8f);
+
+            if (salidaTemprana) {
+                FUENTE_TEXTO.setColor(Color.ORANGE);
+                layout.setText(FUENTE_TEXTO, "SALIDA TEMPRANA");
+                FUENTE_TEXTO.draw(batch, "SALIDA TEMPRANA", cartelX + (ANCHO_CARTEL - layout.width) / 2f, yPos);
+                yPos -= 40f;
+            }
+
             FUENTE_TEXTO.setColor(Color.WHITE);
             if (tipo == TipoCarrera.LEGAL) {
                 layout.setText(FUENTE_TEXTO, "Recompensa: +$0");

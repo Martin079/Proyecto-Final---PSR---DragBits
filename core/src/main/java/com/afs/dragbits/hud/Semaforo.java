@@ -19,6 +19,7 @@ public class Semaforo extends ElementoHUD {
 
 
     private float posXInicialAuto;
+    private boolean huboSalidaTemprana = false;
 
     public Semaforo(float posXInicialAuto) {
         super();
@@ -45,8 +46,8 @@ public class Semaforo extends ElementoHUD {
 
         if (estadoActual != EstadoSemaforo.VERDE && estadoActual != EstadoSemaforo.SALIDA_FALSO) {
             if (auto.getVelocidad() > 0) {
-                estadoActual = EstadoSemaforo.SALIDA_FALSO;
-                resetearAuto(auto);
+                huboSalidaTemprana = true;
+                estadoActual = EstadoSemaforo.FINALIZADO;
                 return;
             }
         }
@@ -131,5 +132,9 @@ public class Semaforo extends ElementoHUD {
 
     public EstadoSemaforo getEstadoActual() {
         return estadoActual;
+    }
+
+    public boolean huboSalidaTemprana() {
+        return huboSalidaTemprana;
     }
 }
