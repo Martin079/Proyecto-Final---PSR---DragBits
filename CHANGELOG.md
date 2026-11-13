@@ -13,6 +13,11 @@ Convención utilizada en todo el historial:
 
 ## [0.8.13] - 2026-11-13
 
+### Added
+- Multiplicador de potencia por marcha en `Auto`: 1ra=2.5x, 2da=1.8x, 3ra=1.2x, 4ta=0.85x, 5ta=0.55x.
+- Constante `MULTIPLICADOR_POTENCIA_POR_MARCHA` para ajustar aceleración según marcha actual.
+- Lógica aplicada en `acelerar()` que combina multiplicador de marcha con factor de tracción existente.
+
 ### Removed
 - Eliminado campo `zonaSincronizacion` de `Auto` (código muerto no utilizado).
 - Eliminado método `esCambioPerfecto()` de `Auto` (código muerto no utilizado).

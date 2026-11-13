@@ -37,6 +37,18 @@ public abstract class Auto {
     protected boolean nitroActivo;
     protected float[] relacionesTransmision = {0f, 0.30f, 0.50f, 0.70f, 0.85f, 1.0f};
 
+    // NUEVO: multiplicador de par motor / potencia efectiva por marcha
+    // 1ra = 2.5x, 2da = 1.8x, 3ra = 1.2x, 4ta = 0.85x, 5ta = 0.55x
+    // Valores elegidos para que arrancar en 5ta sea ~5x más lento que en 1ra
+    private static final float[] MULTIPLICADOR_POTENCIA_POR_MARCHA = {
+        1.0f,   // 0 = neutro (no se usa)
+        2.50f,  // 1ra
+        1.80f,  // 2da
+        1.20f,  // 3ra
+        0.85f,  // 4ta
+        0.55f   // 5ta
+    };
+
     protected boolean patinando;
 
 
@@ -135,7 +147,9 @@ public abstract class Auto {
             int marchaValida = Math.min(marchaActual, relacionesTransmision.length - 1);
             float velMaxMarcha = velocidadMaxima * relacionesTransmision[marchaValida];
 
-            float aceleracionEfectiva = aceleracion * calcularFactorTraccion(marchaValida);
+            float aceleracionEfectiva = aceleracion
+                * calcularFactorTraccion(marchaValida)
+                * MULTIPLICADOR_POTENCIA_POR_MARCHA[marchaValida];
 
             if (velocidad < UMBRAL_ARRANQUE) {
                 aceleracionEfectiva *= FACTOR_ARRANQUE;
