@@ -9,6 +9,8 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -46,6 +48,7 @@ public class MainMenuScreen implements Screen {
     private static final float ALTURA_HITBOX_OPCION = 60f;
 
     private Texture texturaControles;
+    private Texture texturaFondoBoton;
     private boolean estaMostrandoControles = false;
 
     private EntradaJugador entradaJugador;
@@ -63,6 +66,12 @@ public class MainMenuScreen implements Screen {
         fuenteOpciones = new BitmapFont();
 
         texturaControles = new Texture(Gdx.files.internal("sprites/MenuPrincipal/Controles.png"));
+
+        Pixmap pixmap = new Pixmap(200, 60, Pixmap.Format.RGBA8888);
+        pixmap.setColor(new Color(0.2f, 0.2f, 0.2f, 1.0f));
+        pixmap.fill();
+        texturaFondoBoton = new Texture(pixmap);
+        pixmap.dispose();
     }
 
     @Override
@@ -126,12 +135,16 @@ public class MainMenuScreen implements Screen {
         fuenteOpciones.getData().setScale(ESCALA_NORMAL);
         layoutTexto.setText(fuenteOpciones, "MENU");
 
-        float margenDerecho = 30f;
         float margenSuperior = 30f;
-        float botonMenuX = viewport.getWorldWidth() - layoutTexto.width - margenDerecho;
-        float botonMenuY = viewport.getWorldHeight() - margenSuperior;
+        float anchoBoton = 200f;
+        float altoBoton = 60f;
+        float botonMenuX = (viewport.getWorldWidth() - anchoBoton) / 2f;
+        float botonMenuY = viewport.getWorldHeight() - margenSuperior - altoBoton;
 
-        fuenteOpciones.draw(batch, "MENU", botonMenuX, botonMenuY);
+        batch.draw(texturaFondoBoton, botonMenuX, botonMenuY, anchoBoton, altoBoton);
+
+        float textoX = (viewport.getWorldWidth() - layoutTexto.width) / 2f;
+        fuenteOpciones.draw(batch, "MENU", textoX, botonMenuY + altoBoton - 15f);
     }
 
     private void dibujarMenuPrincipal(float delta) {
@@ -177,9 +190,13 @@ public class MainMenuScreen implements Screen {
             }
             if (entradaJugador.consumoToque()) {
                 Vector2 pos = entradaJugador.getCoordenadasToque(viewport);
-                float areaBotonX = viewport.getWorldWidth() - 200f;
-                float areaBotonY = viewport.getWorldHeight() - 100f;
-                if (pos.x > areaBotonX && pos.y > areaBotonY) {
+                float margenSuperior = 30f;
+                float anchoBoton = 200f;
+                float altoBoton = 60f;
+                float botonMenuX = (viewport.getWorldWidth() - anchoBoton) / 2f;
+                float botonMenuY = viewport.getWorldHeight() - margenSuperior - altoBoton;
+                if (pos.x >= botonMenuX && pos.x <= botonMenuX + anchoBoton &&
+                    pos.y >= botonMenuY && pos.y <= botonMenuY + altoBoton) {
                     estaMostrandoControles = false;
                 }
             }
