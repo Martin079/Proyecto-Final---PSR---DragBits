@@ -57,6 +57,8 @@ public abstract class Auto {
     private Animation<TextureRegion> animAvanzando;
     private Animation<TextureRegion> animCambio;
     private Animation<TextureRegion> animNitro;
+    private static Animation<TextureRegion> animPatinaje;
+    private static Texture texturaPatinaje;
 
     private float stateTime;
     private Texture texturaFallback;
@@ -139,6 +141,18 @@ public abstract class Auto {
         animCambio = new Animation<>(0.15f, frames[3], frames[4]);
 
         animNitro = new Animation<>(0.10f, frames[5], frames[6]);
+
+        cargarAnimacionPatinaje();
+    }
+
+    private static void cargarAnimacionPatinaje() {
+        if (animPatinaje == null) {
+            texturaPatinaje = SpriteSheetLoader.cargarTextura("sprites/Autos/Jugador/patinaje.png");
+            int anchoFrame = texturaPatinaje.getWidth() / 7;
+            int altoFrame = texturaPatinaje.getHeight();
+            TextureRegion[] frames = SpriteSheetLoader.recortar(texturaPatinaje, anchoFrame, altoFrame);
+            animPatinaje = new Animation<>(0.08f, frames);
+        }
     }
 
     public void acelerar(float delta) {
@@ -264,6 +278,8 @@ public abstract class Auto {
             return EstadoAuto.NITRO;
         } else if (embraguePresionado) {
             return EstadoAuto.CAMBIANDO_MARCHA;
+        } else if (patinando && estaAcelerando) {
+            return EstadoAuto.PATINANDO;
         } else if (velocidad > 0) {
             return EstadoAuto.AVANZANDO;
         } else {
@@ -282,6 +298,18 @@ public abstract class Auto {
                 case CAMBIANDO_MARCHA:
                     frameActual = animCambio.getKeyFrame(stateTime, true);
                     break;
+                case PATINANDO:
+                    frameActual = animAvanzando.getKeyFrame(stateTime, true);
+                    batch.draw(frameActual, posX, posY, ancho, alto);
+                    if (animPatinaje != null) {
+                        TextureRegion frameHumo = animPatinaje.getKeyFrame(stateTime, true);
+                        float offsetX = ancho * 0.15f;
+                        float offsetY = alto * 0.1f;
+                        batch.draw(frameHumo, posX + offsetX, posY + offsetY,
+                                   frameHumo.getRegionWidth() * ESCALA_SPRITE,
+                                   frameHumo.getRegionHeight() * ESCALA_SPRITE);
+                    }
+                    return;
                 case AVANZANDO:
                     frameActual = animAvanzando.getKeyFrame(stateTime, true);
                     break;
@@ -311,6 +339,11 @@ public abstract class Auto {
         if (texturaFallback != null) texturaFallback.dispose();
         if (sonidoMotor != null) {
             sonidoMotor.dispose();
+        }
+        if (texturaPatinaje != null) {
+            texturaPatinaje.dispose();
+            texturaPatinaje = null;
+            animPatinaje = null;
         }
     }
 

@@ -4,5 +4,6 @@ public enum EstadoAuto {
     ESTATICO,
     AVANZANDO,
     CAMBIANDO_MARCHA,
-    NITRO
+    NITRO,
+    PATINANDO
 }
