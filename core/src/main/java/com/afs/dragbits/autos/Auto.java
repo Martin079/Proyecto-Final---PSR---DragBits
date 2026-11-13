@@ -63,7 +63,7 @@ public abstract class Auto {
 
     private Sound sonidoMotor;
     private long idMotor = -1;
-    private boolean estaAcelerando;
+    protected boolean estaAcelerando;
     private Main mainGame;
 
     public static final float ESCALA_SPRITE = 2.8f;
@@ -72,9 +72,9 @@ public abstract class Auto {
     private static final float FACTOR_MOVIMIENTO = 4.2f;
 
 
-    private static final float UMBRAL_ARRANQUE = 25f;
-    private static final float FACTOR_ARRANQUE = 1.25f;
-    private static final float PISO_CURVA_ACELERACION = 0.4f;
+    protected static final float UMBRAL_ARRANQUE = 25f;
+    protected static final float FACTOR_ARRANQUE = 1.25f;
+    protected static final float PISO_CURVA_ACELERACION = 0.4f;
 
     private static final float UMBRAL_PATINAJE = 1.2f;
     private static final float PERDIDA_MIN_PATINAJE = 0.45f;
@@ -190,7 +190,7 @@ public abstract class Auto {
         }
     }
 
-    private float calcularFactorTraccion(int marchaValida) {
+    protected float calcularFactorTraccion(int marchaValida) {
         if (marchaValida > 2 || traccion <= 0f) {
             patinando = false;
             return 1f;

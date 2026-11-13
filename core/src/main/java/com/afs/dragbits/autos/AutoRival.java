@@ -3,6 +3,7 @@ package com.afs.dragbits.autos;
 import com.afs.dragbits.Main;
 import com.afs.dragbits.hud.EstadoSemaforo;
 import com.afs.dragbits.rivales.RivalConfig;
+import com.badlogic.gdx.math.MathUtils;
 
 public class AutoRival extends Auto {
 
@@ -25,6 +26,54 @@ public class AutoRival extends Auto {
         this.nitroRestante = config.getNitroSegundos();
     }
 
+
+    @Override
+    public void acelerar(float delta) {
+        this.estaAcelerando = true;
+        if (!embraguePresionado && marchaActual > 0) {
+            int marchaValida = Math.min(marchaActual, relacionesTransmision.length - 1);
+            float velMaxMarcha = velocidadMaxima * relacionesTransmision[marchaValida];
+
+            // IA usa aceleración BASE sin multiplicador de potencia por marcha
+            float aceleracionEfectiva = aceleracion * calcularFactorTraccion(marchaValida);
+
+            if (velocidad < UMBRAL_ARRANQUE) {
+                aceleracionEfectiva *= FACTOR_ARRANQUE;
+            }
+
+            if (velMaxMarcha > 0f) {
+                float margen = MathUtils.clamp((velMaxMarcha - velocidad) / velMaxMarcha, PISO_CURVA_ACELERACION, 1f);
+                aceleracionEfectiva *= margen;
+            }
+
+            if (nitroActivo && nitroRestante > 0) {
+                aceleracionEfectiva *= potenciaNitro;
+                velMaxMarcha *= 1.15f;
+                nitroRestante -= delta;
+                if (nitroRestante <= 0) {
+                    nitroRestante = 0;
+                    nitroActivo = false;
+                }
+            }
+
+            if (velocidad < velMaxMarcha) {
+                velocidad += aceleracionEfectiva * delta;
+                if (velocidad > velMaxMarcha) velocidad = velMaxMarcha;
+            }
+        }
+
+        if (embraguePresionado || marchaActual == 0) {
+            rpm += 5500f * delta;
+            if (rpm > rpmMaximas) rpm = rpmMaximas;
+        } else {
+            int marchaValida = Math.min(marchaActual, relacionesTransmision.length - 1);
+            float velMaxMarcha = velocidadMaxima * relacionesTransmision[marchaValida];
+            if (velMaxMarcha > 0) {
+                rpm = 800f + (velocidad / velMaxMarcha) * (rpmMaximas - 800f);
+            }
+            if (rpm > rpmMaximas) rpm = rpmMaximas;
+        }
+    }
 
     public void actualizarIA(float delta, EstadoSemaforo estadoSemaforo) {
         if (estadoSemaforo == EstadoSemaforo.VERDE && marchaActual == 0) {
