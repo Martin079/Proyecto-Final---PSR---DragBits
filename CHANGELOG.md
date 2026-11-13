@@ -11,6 +11,14 @@ Convención utilizada en todo el historial:
 - Los cambios aún no versionados van en `[Unreleased]`.
 
 
+## [0.8.13] - 2026-11-13
+
+### Removed
+- Eliminado campo `zonaSincronizacion` de `Auto` (código muerto no utilizado).
+- Eliminado método `esCambioPerfecto()` de `Auto` (código muerto no utilizado).
+- Eliminado setter `setZonaSincronizacion()` de `Auto` (código muerto no utilizado).
+
+
 ## [0.8.12] - 2026-11-10
 
 ### Added

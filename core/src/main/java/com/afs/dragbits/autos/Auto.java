@@ -27,7 +27,6 @@ public abstract class Auto {
     protected float potenciaNitro;
     protected float capacidadNitro;
     protected float nitroRestante;
-    protected float zonaSincronizacion;
 
     protected float rpm;
     protected float rpmMaximas;
@@ -96,7 +95,6 @@ public abstract class Auto {
         this.potenciaNitro = 1.5f;
         this.capacidadNitro = 3.0f;
         this.nitroRestante = capacidadNitro;
-        this.zonaSincronizacion = 400f;
 
         this.velocidad = 0f;
         this.rpm = 800f;
@@ -247,10 +245,6 @@ public abstract class Auto {
         actualizarAudioMotor();
     }
 
-    public boolean esCambioPerfecto() {
-        return (rpm >= (rpmMaximas - zonaSincronizacion));
-    }
-
     public EstadoAuto getEstadoActual() {
         if (nitroActivo && nitroRestante > 0) {
             return EstadoAuto.NITRO;
@@ -328,7 +322,6 @@ public abstract class Auto {
     public float getNitroRestante() { return nitroRestante; }
     public float getCapacidadNitro() { return capacidadNitro; }
     public boolean isPatinando() { return patinando; }
-    public void setZonaSincronizacion(float zona) { this.zonaSincronizacion = zona; }
 
     public float getX() { return posX; }
     public float getY() { return posY; }
