@@ -9,9 +9,10 @@ public class AutoConfig {
     private final float traccion;
     private final float capacidadNitro;
     private final int cargasNitro;
+    private final float potenciaNitro;
 
     private AutoConfig(AutoJugadorTipo tipo, long costo, int nivelRequerido, float velocidadMaxima,
-                      float aceleracion, float traccion, float capacidadNitro, int cargasNitro) {
+                      float aceleracion, float traccion, float capacidadNitro, int cargasNitro, float potenciaNitro) {
         this.tipo = tipo;
         this.costo = costo;
         this.nivelRequerido = nivelRequerido;
@@ -20,6 +21,7 @@ public class AutoConfig {
         this.traccion = traccion;
         this.capacidadNitro = capacidadNitro;
         this.cargasNitro = cargasNitro;
+        this.potenciaNitro = potenciaNitro;
     }
 
     public static AutoConfig gol() {
@@ -31,7 +33,8 @@ public class AutoConfig {
             9.5f,
             0.6f,
             0f,
-            0
+            0,
+            1f
         );
     }
 
@@ -44,7 +47,8 @@ public class AutoConfig {
             6.8f,
             0.75f,
             2f,
-            1
+            1,
+            1f
         );
     }
 
@@ -57,7 +61,8 @@ public class AutoConfig {
             4.5f,
             0.85f,
             3f,
-            2
+            2,
+            1f
         );
     }
 
@@ -91,5 +96,33 @@ public class AutoConfig {
 
     public int getCargasNitro() {
         return cargasNitro;
+    }
+
+    public float getPotenciaNitro() {
+        return potenciaNitro;
+    }
+
+    public AutoConfig withVelocidadMaxima(float velocidadMaxima) {
+        return new AutoConfig(tipo, costo, nivelRequerido, velocidadMaxima, aceleracion, traccion, capacidadNitro, cargasNitro, potenciaNitro);
+    }
+
+    public AutoConfig withAceleracion(float aceleracion) {
+        return new AutoConfig(tipo, costo, nivelRequerido, velocidadMaxima, aceleracion, traccion, capacidadNitro, cargasNitro, potenciaNitro);
+    }
+
+    public AutoConfig withTraccion(float traccion) {
+        return new AutoConfig(tipo, costo, nivelRequerido, velocidadMaxima, aceleracion, traccion, capacidadNitro, cargasNitro, potenciaNitro);
+    }
+
+    public AutoConfig withCapacidadNitro(float capacidadNitro) {
+        return new AutoConfig(tipo, costo, nivelRequerido, velocidadMaxima, aceleracion, traccion, capacidadNitro, cargasNitro, potenciaNitro);
+    }
+
+    public AutoConfig withCargasNitro(int cargasNitro) {
+        return new AutoConfig(tipo, costo, nivelRequerido, velocidadMaxima, aceleracion, traccion, capacidadNitro, cargasNitro, potenciaNitro);
+    }
+
+    public AutoConfig withPotenciaNitro(float potenciaNitro) {
+        return new AutoConfig(tipo, costo, nivelRequerido, velocidadMaxima, aceleracion, traccion, capacidadNitro, cargasNitro, potenciaNitro);
     }
 }
