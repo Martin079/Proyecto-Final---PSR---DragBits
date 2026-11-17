@@ -13,6 +13,21 @@ Convención utilizada en todo el historial:
 
 
 
+## [0.9.0] - 2026-11-16
+
+### Added
+- Sistema completo de tienda de mejoras con 5 categorías (Aceleración, Velocidad Máxima, Tracción, Nitro, Potencia Nitro) y 23 niveles totales
+- Enum `TipoMejora` y clase `MejoraConfig` con datos calibrados según NOTAS.md
+- Sistema de compra y persistencia de mejoras en `Jugador` y `RepositorioJugador` 
+- Aplicación automática de mejoras al auto equipado al iniciar carrera
+- `VentanaTiendaMejoras` con UI tipo grid: columna de tipos + cuadrados por nivel (gris=comprar, rojo=bloqueado, verde=adquirido) con costo
+- Integración en `MapaScreen`: burbuja de mejoras ahora abre la tienda
+
+
+### Changed
+- `AutoJugador` ahora recibe stats con mejoras aplicadas desde `Jugador.aplicarMejorasAAuto()` 
+- `RepositorioJugador` serializa/deserializa mapa de mejoras compradas
+
 ## [0.8.13] - 2026-11-13
 
 ### Added
