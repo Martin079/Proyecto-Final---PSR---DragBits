@@ -197,6 +197,14 @@ public class Jugador {
         this.autosComprados = autosComprados;
     }
 
+    public EnumMap<TipoMejora, Integer> getMejorasCompradas() {
+        return mejorasCompradas;
+    }
+
+    public void setMejorasCompradas(EnumMap<TipoMejora, Integer> mejorasCompradas) {
+        this.mejorasCompradas = mejorasCompradas;
+    }
+
     public int getNivelMejora(TipoMejora tipo) {
         return mejorasCompradas.getOrDefault(tipo, 0);
     }

@@ -2,9 +2,11 @@ package com.afs.dragbits.jugador;
 
 import com.afs.dragbits.autos.AutoJugadorTipo;
 import com.afs.dragbits.menurivales.TipoCarrera;
+import com.afs.dragbits.mejoras.TipoMejora;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 
+import java.util.EnumMap;
 import java.util.EnumSet;
 
 public class RepositorioJugador {
@@ -17,6 +19,7 @@ public class RepositorioJugador {
     private static final String KEY_DERROTADOS_ILEGALES = "derrotadosIlegales";
     private static final String KEY_AUTO_ACTUAL = "autoActual";
     private static final String KEY_AUTOS_COMPRADOS = "autosComprados";
+    private static final String KEY_MEJORAS = "mejoras";
 
 
     public void guardarProgreso(Jugador jugador) {
@@ -30,6 +33,7 @@ public class RepositorioJugador {
         prefs.putInteger(KEY_DERROTADOS_ILEGALES, jugador.getDerrotados(TipoCarrera.ILEGAL));
         prefs.putInteger(KEY_AUTO_ACTUAL, jugador.getAutoActual().getId());
         prefs.putString(KEY_AUTOS_COMPRADOS, enumSetToCsv(jugador.getAutosComprados()));
+        prefs.putString(KEY_MEJORAS, enumMapToCsv(jugador.getMejorasCompradas()));
         prefs.flush();
 
         Gdx.app.log("RepositorioJugador", "Progreso guardado correctamente.");
@@ -56,6 +60,8 @@ public class RepositorioJugador {
             jugador.setDerrotados(TipoCarrera.ILEGAL, derrotadosIlegales);
             jugador.setAutoActual(idToTipo(autoActualId));
             jugador.setAutosComprados(csvToEnumSet(autosCompradosCsv));
+            String mejorasCsv = prefs.getString(KEY_MEJORAS, "");
+            jugador.setMejorasCompradas(csvToEnumMap(mejorasCsv));
 
             Gdx.app.log("RepositorioJugador", "Progreso cargado con exito.");
         }
@@ -105,5 +111,47 @@ public class RepositorioJugador {
             if (tipo.getId() == id) return tipo;
         }
         return AutoJugadorTipo.GOL;
+    }
+
+    private String enumMapToCsv(EnumMap<TipoMejora, Integer> map) {
+        StringBuilder sb = new StringBuilder();
+        for (TipoMejora tipo : map.keySet()) {
+            int nivel = map.get(tipo);
+            if (sb.length() > 0) sb.append(",");
+            sb.append(tipo.getOrden()).append(":").append(nivel);
+        }
+        return sb.toString();
+    }
+
+    private EnumMap<TipoMejora, Integer> csvToEnumMap(String csv) {
+        EnumMap<TipoMejora, Integer> map = new EnumMap<>(TipoMejora.class);
+        // Initialize all improvements to 0 by default
+        for (TipoMejora tipo : TipoMejora.values()) {
+            map.put(tipo, 0);
+        }
+        if (csv == null || csv.isEmpty()) return map;
+        String[] pairs = csv.split(",");
+        for (String pair : pairs) {
+            try {
+                String[] parts = pair.split(":");
+                if (parts.length != 2) continue;
+                int orden = Integer.parseInt(parts[0].trim());
+                int nivel = Integer.parseInt(parts[1].trim());
+                TipoMejora tipo = ordenToTipo(orden);
+                if (tipo != null) {
+                    map.put(tipo, nivel);
+                }
+            } catch (NumberFormatException e) {
+                Gdx.app.error("RepositorioJugador", "Error parsing mejora pair: " + pair, e);
+            }
+        }
+        return map;
+    }
+
+    private TipoMejora ordenToTipo(int orden) {
+        for (TipoMejora tipo : TipoMejora.values()) {
+            if (tipo.getOrden() == orden) return tipo;
+        }
+        return null;
     }
 }
