@@ -8,12 +8,15 @@ import com.afs.dragbits.util.TexturaSolidaFactory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -27,7 +30,7 @@ public class VentanaTiendaMejoras implements com.badlogic.gdx.utils.Disposable {
 
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
-    private static final int TAMANO_CUADRADO = 40;
+    private static final int TAMANO_CUADRADO = 56; // agrandado de 40 a 56
 
     private Stage stage;
     private Viewport viewport;
@@ -43,6 +46,11 @@ public class VentanaTiendaMejoras implements com.badlogic.gdx.utils.Disposable {
     private Runnable accionCerrar;
     private boolean visible = false;
 
+    // Fonts compartidos
+    private BitmapFont fontNombre;
+    private BitmapFont fontCosto;
+    private BitmapFont fontNivel;
+
     public VentanaTiendaMejoras(Viewport viewport, Runnable accionCerrar, Consumer<Void> alComprarMejora, Jugador jugador) {
         this.viewport = viewport;
         this.stage = new Stage(viewport);
@@ -50,12 +58,15 @@ public class VentanaTiendaMejoras implements com.badlogic.gdx.utils.Disposable {
         this.alComprarMejora = alComprarMejora;
         this.jugador = jugador;
 
-        try {
-            fondoTexture = new Texture(Gdx.files.internal("sprites/UI/FondoTienda.png"));
-        } catch (Exception e) {
-            Gdx.app.error("VentanaTiendaMejoras", "No se pudo cargar FondoTienda.png, usando fallback", e);
-            fondoTexture = TexturaSolidaFactory.crearTextura((int) ANCHO_VIRTUAL, (int) ALTO_VIRTUAL, new Color(0.1f, 0.1f, 0.1f, 0.85f));
-        }
+        // Inicializar fonts
+        fontNombre = new BitmapFont();
+        fontNombre.getData().setScale(1.15f);
+        fontCosto = new BitmapFont();
+        fontCosto.getData().setScale(0.85f);
+        fontNivel = new BitmapFont();
+        fontNivel.getData().setScale(0.75f);
+
+        fondoTexture = TexturaSolidaFactory.crearTextura((int) ANCHO_VIRTUAL, (int) ALTO_VIRTUAL, new Color(0.1f, 0.1f, 0.1f, 0.85f));
 
         try {
             botonCerrarTexture = SpriteSheetLoader.cargarTextura("sprites/Botones/Boton cerrar.png");
@@ -70,7 +81,7 @@ public class VentanaTiendaMejoras implements com.badlogic.gdx.utils.Disposable {
         mainTable = new Table();
         mainTable.setBackground(new TextureRegionDrawable(new TextureRegion(fondoTexture)));
         mainTable.pad(20);
-        root.add(mainTable).width(800).height(550);
+        root.add(mainTable).width(860).height(580);
         stage.addActor(root);
 
         if (botonCerrarTexture != null) {
@@ -91,7 +102,7 @@ public class VentanaTiendaMejoras implements com.badlogic.gdx.utils.Disposable {
         }
 
         contentTable = new Table();
-        contentTable.defaults().pad(15f);
+        contentTable.defaults().pad(8f);
 
         scrollPane = new ScrollPane(contentTable);
         scrollPane.setFadeScrollBars(false);
@@ -104,7 +115,7 @@ public class VentanaTiendaMejoras implements com.badlogic.gdx.utils.Disposable {
         this.visible = true;
 
         contentTable.clear();
-        contentTable.defaults().pad(15f);
+        contentTable.defaults().pad(8f);
 
         for (TipoMejora tipo : TipoMejora.values()) {
             Table filaMejora = crearFilaMejora(tipo);
@@ -116,18 +127,14 @@ public class VentanaTiendaMejoras implements com.badlogic.gdx.utils.Disposable {
 
     private Table crearFilaMejora(TipoMejora tipo) {
         Table fila = new Table();
-        fila.defaults().pad(10f);
+        fila.defaults().pad(4f);
 
-        Label.LabelStyle labelStyle = new Label.LabelStyle();
-        labelStyle.font = new com.badlogic.gdx.graphics.g2d.BitmapFont();
-        labelStyle.fontColor = Color.WHITE;
-
-        Label nombreLabel = new Label(tipo.getNombreMostrar(), labelStyle);
-        nombreLabel.setFontScale(1.3f);
-        fila.add(nombreLabel).left().padRight(30f).width(180f);
+        Label.LabelStyle nombreStyle = new Label.LabelStyle(fontNombre, Color.WHITE);
+        Label nombreLabel = new Label(tipo.getNombreMostrar(), nombreStyle);
+        fila.add(nombreLabel).left().padRight(25f).width(190f);
 
         Table nivelesTable = new Table();
-        nivelesTable.defaults().pad(5f);
+        nivelesTable.defaults().pad(6f);
 
         int maxNivel = obtenerMaxNivel(tipo);
         for (int nivel = 1; nivel <= maxNivel; nivel++) {
@@ -145,24 +152,29 @@ public class VentanaTiendaMejoras implements com.badlogic.gdx.utils.Disposable {
 
         boolean tieneMejora = jugador.tieneMejora(tipo, nivel);
         boolean puedeComprar = jugador.puedeComprarMejora(tipo, nivel);
+        int nivelActual = jugador.getNivelMejora(tipo);
+        boolean esSiguienteNivel = (nivel == nivelActual + 1);
+        boolean estaBloqueadoPorNivel = (nivel > nivelActual + 1) || (nivel < nivelActual); // niveles sin mejora se ignoran
 
         Color colorCuadrado;
         if (tieneMejora) {
-            colorCuadrado = new Color(0f, 0.8f, 0f, 1f);
-        } else if (puedeComprar) {
-            colorCuadrado = new Color(0.6f, 0.6f, 0.6f, 1f);
+            colorCuadrado = new Color(0f, 0.8f, 0f, 1f); // verde
+        } else if (puedeComprar && esSiguienteNivel) {
+            colorCuadrado = new Color(0.6f, 0.6f, 0.6f, 1f); // gris
         } else {
-            colorCuadrado = new Color(0.8f, 0f, 0f, 1f);
+            colorCuadrado = new Color(0.8f, 0f, 0f, 1f); // rojo
         }
 
         Texture cuadradoTexture = TexturaSolidaFactory.crearTextura(TAMANO_CUADRADO, TAMANO_CUADRADO, colorCuadrado);
         Image cuadrado = new Image(cuadradoTexture);
 
-        if (puedeComprar) {
+        if (puedeComprar && esSiguienteNivel) {
+            final int nivelFinal = nivel;
+            final TipoMejora tipoFinal = tipo;
             cuadrado.addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if (jugador.comprarMejora(tipo, nivel)) {
+                    if (jugador.comprarMejora(tipoFinal, nivelFinal)) {
                         if (alComprarMejora != null) {
                             alComprarMejora.accept(null);
                         }
@@ -172,17 +184,26 @@ public class VentanaTiendaMejoras implements com.badlogic.gdx.utils.Disposable {
             });
         }
 
-        celda.add(cuadrado).size(TAMANO_CUADRADO, TAMANO_CUADRADO).row();
+        // Cuadrado con label del nivel de jugador requerido DENTRO (centrado)
+        Stack stackCuadrado = new Stack();
+        stackCuadrado.add(cuadrado);
+        stackCuadrado.setSize(TAMANO_CUADRADO, TAMANO_CUADRADO);
 
         MejoraConfig config = obtenerConfigMejora(tipo, nivel);
-        if (config != null) {
-            Label.LabelStyle costoStyle = new Label.LabelStyle();
-            costoStyle.font = new com.badlogic.gdx.graphics.g2d.BitmapFont();
-            costoStyle.fontColor = Color.WHITE;
+        Label.LabelStyle nivelStyle = new Label.LabelStyle(fontNivel, Color.WHITE);
+        String nivelTexto = (config != null) ? "Lvl" + config.getNivelJugadorRequerido() : "";
+        Label nivelLabel = new Label(nivelTexto, nivelStyle);
+        nivelLabel.setAlignment(Align.center);
+        stackCuadrado.add(nivelLabel);
 
+        celda.add(stackCuadrado).row();
+
+        // Costo más grande y visible
+        if (config != null) {
+            Label.LabelStyle costoStyle = new Label.LabelStyle(fontCosto, Color.WHITE);
             Label costoLabel = new Label("$" + config.getCosto(), costoStyle);
-            costoLabel.setFontScale(0.7f);
-            celda.add(costoLabel).row();
+            costoLabel.setAlignment(Align.center);
+            celda.add(costoLabel).padTop(2f).row();
         }
 
         return celda;
@@ -281,5 +302,8 @@ public class VentanaTiendaMejoras implements com.badlogic.gdx.utils.Disposable {
         if (stage != null) stage.dispose();
         if (fondoTexture != null) fondoTexture.dispose();
         if (botonCerrarTexture != null) botonCerrarTexture.dispose();
+        if (fontNombre != null) fontNombre.dispose();
+        if (fontCosto != null) fontCosto.dispose();
+        if (fontNivel != null) fontNivel.dispose();
     }
 }

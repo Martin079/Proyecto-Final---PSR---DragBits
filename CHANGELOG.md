@@ -13,6 +13,14 @@ Convención utilizada en todo el historial:
 
 
 
+## [0.9.1] - 2026-11-17
+
+### Changed
+- `VentanaTiendaMejoras`: reducido padding entre mejoras (contentTable 12f→8f, filas 8f→4f) para reducir espacio vertical y que nitro se vea completo
+- `VentanaTiendaMejoras`: eliminada carga de sprite de fondo inexistente, ahora usa directamente fondo sólido
+- `VentanaTiendaMejoras`: texto dentro del cuadro ahora muestra nivel de jugador requerido (ej: "Lvl5") en lugar de nivel de mejora
+- `VentanaTiendaMejoras`: implementado Stack para superponer texto del nivel sobre el cuadrado de compra
+
 ## [0.9.0] - 2026-11-16
 
 ### Added
