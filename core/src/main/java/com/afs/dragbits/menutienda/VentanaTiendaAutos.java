@@ -200,7 +200,7 @@ public class VentanaTiendaAutos implements com.badlogic.gdx.utils.Disposable {
     private TextureRegion obtenerIconoAuto(AutoJugadorTipo tipo) {
         if (iconosTexture == null) return null;
 
-        int anchoFrame = iconosTexture.getWidth() / 14; // 14 frames en total
+        int anchoFrame = iconosTexture.getWidth() / 14;
         int altoFrame = iconosTexture.getHeight();
 
         int indice;

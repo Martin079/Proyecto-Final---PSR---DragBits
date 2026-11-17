@@ -11,7 +11,6 @@ public class PistaCiudad implements Pista {
     private static final float ANCHO_SECCION = 1080f;
     private static final int CANTIDAD_INTERMEDIAS = 5;
 
-    // Zona de asfalto de la imagen ya escalada a 1080 de alto (aprox., ajustar a ojo)
     private static final float Y_RUTA_MIN = 83f;
     private static final float Y_RUTA_MAX = 426f;
 
@@ -28,11 +27,9 @@ public class PistaCiudad implements Pista {
 
     @Override
     public void dibujar(SpriteBatch batch, float altoPantalla) {
-        // Mismo rango que Picodromo: de -1 a CANTIDAD_INTERMEDIAS + 2
         for (int i = -1; i <= CANTIDAD_INTERMEDIAS + 2; i++) {
             batch.draw(fondo, i * ANCHO_SECCION, 0, ANCHO_SECCION, altoPantalla);
         }
-        // Línea de meta provisoria
         batch.draw(texturaMeta, getPosicionLineaMeta(), Y_RUTA_MIN, 12f, Y_RUTA_MAX - Y_RUTA_MIN);
     }
 
@@ -46,7 +43,6 @@ public class PistaCiudad implements Pista {
         return ANCHO_SECCION * 0.45f;
     }
 
-    // Rival en el carril de arriba, jugador en el de abajo (separados por la línea amarilla)
     @Override
     public float getYJugador() { return 130f; }
 

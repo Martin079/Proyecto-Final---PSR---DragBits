@@ -169,7 +169,6 @@ public class MainMenuScreen implements Screen {
             float opcionX = (viewport.getWorldWidth() - layoutTexto.width) / 2;
             float opcionY = posicionYInicial - (i * espacioEntreOpciones);
 
-            // Guardar datos de limites
             posicionesYOpciones[i] = opcionY;
             posicionesXOpciones[i] = opcionX;
             anchosOpciones[i] = layoutTexto.width;

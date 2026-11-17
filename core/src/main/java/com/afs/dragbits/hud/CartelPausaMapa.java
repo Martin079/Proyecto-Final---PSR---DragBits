@@ -34,7 +34,7 @@ public class CartelPausaMapa extends ElementoHUD {
     private static final float ANCHO_CARTEL = 500f;
     private static final float ALTO_CARTEL = 480f;
     private static final float ANCHO_BOTON = 320f;
-    private static final float ANCHO_BOTON_CONFIRM = 220f; // Botones confirmación más angostos
+    private static final float ANCHO_BOTON_CONFIRM = 220f;
     private static final float ALTO_BOTON = 60f;
     private static final float ESPACIO_ENTRE_BOTONES = 18f;
 
@@ -47,7 +47,6 @@ public class CartelPausaMapa extends ElementoHUD {
     private final RepositorioJugador repositorioJugador;
     private final Game GAME;
 
-    // Colores grises
     private static final Color GRIS_OSCURO = new Color(0.2f, 0.2f, 0.2f, 1f);
     private static final Color GRIS_MEDIO = new Color(0.35f, 0.35f, 0.35f, 1f);
     private static final Color GRIS_CLARO = new Color(0.5f, 0.5f, 0.5f, 1f);
@@ -76,7 +75,6 @@ public class CartelPausaMapa extends ElementoHUD {
         FUENTE_TITULO = new BitmapFont();
         FUENTE_TITULO.setColor(BLANCO);
 
-        // Inicializar bounds en posición por defecto (se actualizan en dibujar)
         actualizarBounds(anchoPantalla, altoPantalla);
     }
 
@@ -84,8 +82,6 @@ public class CartelPausaMapa extends ElementoHUD {
         float cartelX = (anchoPantalla - ANCHO_CARTEL) / 2f;
         float cartelY = (altoPantalla - ALTO_CARTEL) / 2f;
 
-        // Centrar grupo de botones verticalmente en el cartel
-        // 5 botones: altura total = 5 * ALTO_BOTON + 4 * ESPACIO_ENTRE_BOTONES
         float alturaTotalBotones = 5 * ALTO_BOTON + 4 * ESPACIO_ENTRE_BOTONES;
         float inicioY = cartelY + (ALTO_CARTEL + alturaTotalBotones) / 2f - ALTO_BOTON;
 
@@ -97,7 +93,6 @@ public class CartelPausaMapa extends ElementoHUD {
         boundsMenu = new Rectangle(centroX, inicioY - 3 * (ALTO_BOTON + ESPACIO_ENTRE_BOTONES), ANCHO_BOTON, ALTO_BOTON);
         boundsSalir = new Rectangle(centroX, inicioY - 4 * (ALTO_BOTON + ESPACIO_ENTRE_BOTONES), ANCHO_BOTON, ALTO_BOTON);
 
-        // Botones de confirmación (centrados en la parte inferior del cartel, más angostos para no solaparse)
         float confirmY = cartelY + 80f;
         float gapEntreConfirm = 30f;
         float confirmTotalWidth = 2 * ANCHO_BOTON_CONFIRM + gapEntreConfirm;
@@ -107,10 +102,8 @@ public class CartelPausaMapa extends ElementoHUD {
     }
 
     public void dibujar(SpriteBatch batch, float anchoPantalla, float altoPantalla, float mouseX, float mouseY) {
-        // Actualizar bounds por si cambió la resolución
         actualizarBounds(anchoPantalla, altoPantalla);
 
-        // Actualizar timer del mensaje de guardado
         if (mostrarMensajeGuardado) {
             tiempoMensajeGuardado += Gdx.graphics.getDeltaTime();
             if (tiempoMensajeGuardado >= DURACION_MENSAJE_GUARDADO) {
@@ -127,7 +120,6 @@ public class CartelPausaMapa extends ElementoHUD {
         GlyphLayout layout = new GlyphLayout();
 
         if (mostrandoConfirmacionEliminar) {
-            // Pantalla de confirmación para eliminar progreso
             FUENTE_TITULO.getData().setScale(2.2f);
             FUENTE_TITULO.setColor(Color.valueOf("e74c3c"));
             layout.setText(FUENTE_TITULO, "ELIMINAR PROGRESO");
@@ -145,7 +137,6 @@ public class CartelPausaMapa extends ElementoHUD {
             FUENTE_TEXTO.setColor(Color.valueOf("e74c3c"));
             FUENTE_TEXTO.draw(batch, "Esta acción NO se puede deshacer.", cartelX + (ANCHO_CARTEL - layout.width) / 2f, cartelY + 180f);
 
-            // Botón CONFIRMAR (rojo) - "SÍ, ELIMINAR"
             boolean hoverConfirmar = boundsConfirmar.contains(mouseX, mouseY);
             batch.draw(hoverConfirmar ? TEXTURA_BOTON_PELIGRO_HOVER : TEXTURA_BOTON_PELIGRO,
                 boundsConfirmar.x, boundsConfirmar.y, boundsConfirmar.width, boundsConfirmar.height);
@@ -155,7 +146,6 @@ public class CartelPausaMapa extends ElementoHUD {
             FUENTE_TEXTO.draw(batch, "SÍ, ELIMINAR",
                 boundsConfirmar.x + (ANCHO_BOTON_CONFIRM - layout.width) / 2f, boundsConfirmar.y + 38f);
 
-            // Botón CANCELAR (gris)
             boolean hoverCancelar = boundsCancelar.contains(mouseX, mouseY);
             batch.draw(hoverCancelar ? TEXTURA_BOTON_HOVER : TEXTURA_BOTON_NORMAL,
                 boundsCancelar.x, boundsCancelar.y, boundsCancelar.width, boundsCancelar.height);
@@ -163,7 +153,6 @@ public class CartelPausaMapa extends ElementoHUD {
             FUENTE_TEXTO.draw(batch, "CANCELAR",
                 boundsCancelar.x + (ANCHO_BOTON_CONFIRM - layout.width) / 2f, boundsCancelar.y + 38f);
         } else {
-            // Menú principal de pausa
             FUENTE_TITULO.getData().setScale(2.5f);
             FUENTE_TITULO.setColor(Color.valueOf("3498db"));
             layout.setText(FUENTE_TITULO, "PAUSA");
@@ -172,18 +161,12 @@ public class CartelPausaMapa extends ElementoHUD {
             FUENTE_TEXTO.getData().setScale(1.5f);
             FUENTE_TEXTO.setColor(BLANCO);
 
-            // Botón REANUDAR
             dibujarBoton(batch, boundsReanudar, "REANUDAR", false, false, layout, mouseX, mouseY);
-            // Botón GUARDAR PROGRESO - verde si mostrando mensaje
             dibujarBoton(batch, boundsGuardar, "GUARDAR PROGRESO", false, mostrarMensajeGuardado, layout, mouseX, mouseY);
-            // Botón ELIMINAR PROGRESO (rojo)
             dibujarBoton(batch, boundsEliminar, "ELIMINAR PROGRESO", true, false, layout, mouseX, mouseY);
-            // Botón VOLVER AL MENÚ
             dibujarBoton(batch, boundsMenu, "VOLVER AL MENÚ", false, false, layout, mouseX, mouseY);
-            // Botón SALIR AL ESCRITORIO
             dibujarBoton(batch, boundsSalir, "SALIR AL ESCRITORIO", false, false, layout, mouseX, mouseY);
 
-            // Mensaje de guardado encima del botón
             if (mostrarMensajeGuardado) {
                 FUENTE_TEXTO.getData().setScale(1.2f);
                 FUENTE_TEXTO.setColor(Color.valueOf("2ecc71"));
@@ -210,7 +193,6 @@ public class CartelPausaMapa extends ElementoHUD {
             bounds.x + (ANCHO_BOTON - layout.width) / 2f, bounds.y + 38f);
     }
 
-    // Métodos de detección usando bounds actualizados
     public boolean fueBotonReanudarTocado(float x, float y) {
         return !mostrandoConfirmacionEliminar && boundsReanudar.contains(x, y);
     }
@@ -279,7 +261,6 @@ public class CartelPausaMapa extends ElementoHUD {
     }
 
     public void resize(int width, int height) {
-        // Se recalculan en dibujar()
     }
 
     @Override

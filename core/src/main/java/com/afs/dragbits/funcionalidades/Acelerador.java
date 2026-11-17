@@ -11,7 +11,6 @@ public class Acelerador {
             auto.desacelerar(delta);
         }
 
-        // Activar nitro con tecla N (solo si el auto tiene capacidad de nitro)
         if (entrada.consumirNitro() && auto.getCapacidadNitro() > 0 && auto.getNitroRestante() > 0) {
             auto.setNitroActivo(true);
         }

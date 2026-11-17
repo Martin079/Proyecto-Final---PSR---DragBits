@@ -23,16 +23,14 @@ public class VentanaSeleccionRival implements Disposable {
     private Stage stage;
     private boolean visible = false;
     private Runnable accionCerrar;
-    private Consumer<Integer> alSeleccionarRival; // Callback para notificar la selección del rival
+    private Consumer<Integer> alSeleccionarRival;
 
-    // Recursos
     private Texture fondoOscuroTexture;
     private Texture menuAutosSheet;
     private Texture botonCerrarTexture;
     private TextureRegion[] framesRival;
     private TextureRegion frameBloqueado;
 
-    // Interface
     private Table ventanaTable;
 
     public VentanaSeleccionRival(Viewport viewport, Runnable accionCerrar, Consumer<Integer> alSeleccionarRival) {
@@ -44,18 +42,14 @@ public class VentanaSeleccionRival implements Disposable {
     }
 
     private void cargarRecursos() {
-        // gris oscuro semitransparente
         fondoOscuroTexture = TexturaSolidaFactory.crearTextura(new Color(0.1f, 0.1f, 0.1f, 0.90f));
 
-        // sheet de 14 cuadros de 200x200 px
         menuAutosSheet = SpriteSheetLoader.cargarTextura("sprites/MenuAutos/Iconos autos-sheet.png");
         TextureRegion[] todosLosFrames = SpriteSheetLoader.recortar(menuAutosSheet, 200, 200, 14);
 
-        // primeros 10 frames rivales
         framesRival = new TextureRegion[10];
         System.arraycopy(todosLosFrames, 0, framesRival, 0, 10);
 
-        // auto bloqueado
         frameBloqueado = todosLosFrames[13];
 
         botonCerrarTexture = SpriteSheetLoader.cargarTextura("sprites/Botones/Boton cerrar.png");
@@ -92,14 +86,11 @@ public class VentanaSeleccionRival implements Disposable {
         topBar.add(btnCerrar).size(80, 80).right();
         ventanaTable.add(topBar).growX().padBottom(15).row();
 
-        // (3 Arriba / 2 Abajo)
         Table grillaRivales = new Table();
 
-        // FILA SUPERIOR (3 rivales)
         Table filaArriba = crearFilaRivales(0, 3, tipoCarrera, maxRivalDesbloqueado);
         grillaRivales.add(filaArriba).padBottom(15).row();
 
-        // FILA INFERIOR (2 rivales)
         Table filaAbajo = crearFilaRivales(3, 5, tipoCarrera, maxRivalDesbloqueado);
         grillaRivales.add(filaAbajo).row();
 
@@ -124,7 +115,7 @@ public class VentanaSeleccionRival implements Disposable {
                     public void clicked(InputEvent event, float x, float y) {
                         ocultar();
                         if (alSeleccionarRival != null) {
-                            alSeleccionarRival.accept(indiceRival); // Notifica el ID/indice del rival seleccionado
+                            alSeleccionarRival.accept(indiceRival);
                         }
                     }
                 });

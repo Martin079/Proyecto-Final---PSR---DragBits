@@ -34,7 +34,6 @@ public class AutoRival extends Auto {
             int marchaValida = Math.min(marchaActual, relacionesTransmision.length - 1);
             float velMaxMarcha = velocidadMaxima * relacionesTransmision[marchaValida];
 
-            // IA usa aceleración BASE sin multiplicador de potencia por marcha
             float aceleracionEfectiva = aceleracion * calcularFactorTraccion(marchaValida);
 
             if (velocidad < UMBRAL_ARRANQUE) {

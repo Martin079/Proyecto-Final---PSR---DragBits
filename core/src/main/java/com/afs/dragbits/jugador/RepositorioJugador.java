@@ -125,7 +125,6 @@ public class RepositorioJugador {
 
     private EnumMap<TipoMejora, Integer> csvToEnumMap(String csv) {
         EnumMap<TipoMejora, Integer> map = new EnumMap<>(TipoMejora.class);
-        // Initialize all improvements to 0 by default
         for (TipoMejora tipo : TipoMejora.values()) {
             map.put(tipo, 0);
         }
