@@ -65,7 +65,7 @@ public class ControladorCarrera {
             if (jugadorGano && !recompensaOtorgada) {
                 primeraVictoria = DATOS_JUGADOR.esPrimeraVictoria(TIPO_CARRERA, INDICE_RIVAL);
                 int base = AUTO_RIVAL.getRecompensa();
-                recompensaObtenida = primeraVictoria ? Math.round(base * 1.5f) : base;
+                recompensaObtenida = primeraVictoria ? Math.round(base * 2.0f) : base;
 
                 if (TIPO_CARRERA == TipoCarrera.LEGAL) {
                     DATOS_JUGADOR.sumarDinero(recompensaObtenida);
