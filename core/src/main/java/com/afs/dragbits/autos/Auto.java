@@ -145,7 +145,7 @@ public abstract class Auto {
     private static void cargarAnimacionPatinaje() {
         if (animPatinaje == null) {
             texturaPatinaje = SpriteSheetLoader.cargarTextura("sprites/Autos/Jugador/patinaje.png");
-            int anchoFrame = texturaPatinaje.getWidth() / 7;
+            int anchoFrame = texturaPatinaje.getWidth() / 4;
             int altoFrame = texturaPatinaje.getHeight();
             TextureRegion[] frames = SpriteSheetLoader.recortar(texturaPatinaje, anchoFrame, altoFrame);
             animPatinaje = new Animation<>(0.08f, frames);
@@ -300,11 +300,9 @@ public abstract class Auto {
                     batch.draw(frameActual, posX, posY, ancho, alto);
                     if (animPatinaje != null) {
                         TextureRegion frameHumo = animPatinaje.getKeyFrame(stateTime, true);
-                        float offsetX = ancho * 0.15f;
-                        float offsetY = alto * 0.1f;
-                        batch.draw(frameHumo, posX + offsetX, posY + offsetY,
-                                   frameHumo.getRegionWidth() * ESCALA_SPRITE,
-                                   frameHumo.getRegionHeight() * ESCALA_SPRITE);
+                        float anchoPatinaje = frameHumo.getRegionWidth() * ESCALA_SPRITE;
+                        float altoPatinaje = frameHumo.getRegionHeight() * ESCALA_SPRITE;
+                        batch.draw(frameHumo, posX, posY, anchoPatinaje, altoPatinaje);
                     }
                     return;
                 case AVANZANDO:
