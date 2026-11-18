@@ -268,7 +268,7 @@ public class Jugador {
         if (nivel < 1) return false;
         if (tieneMejora(tipo, nivel)) return false;
         if (nivel != getNivelMejora(tipo) + 1) return false;
-        if (nivel < config.getNivelJugadorRequerido()) return false;
+        if (this.nivel < config.getNivelJugadorRequerido()) return false;
         if (dinero < config.getCosto()) return false;
         return true;
     }

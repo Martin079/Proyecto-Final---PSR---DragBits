@@ -194,6 +194,7 @@ public class VentanaTiendaMejoras implements com.badlogic.gdx.utils.Disposable {
         String nivelTexto = (config != null) ? "Lvl" + config.getNivelJugadorRequerido() : "";
         Label nivelLabel = new Label(nivelTexto, nivelStyle);
         nivelLabel.setAlignment(Align.center);
+        nivelLabel.setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.disabled);
         stackCuadrado.add(nivelLabel);
 
         celda.add(stackCuadrado).row();
