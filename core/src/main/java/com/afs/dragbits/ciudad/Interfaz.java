@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -32,6 +33,8 @@ public class Interfaz implements Disposable {
     private Label labelDinero;
     private Label labelNivel;
     private BitmapFont font;
+    private Texture texturaBotonPausa;
+    private Rectangle boundsBotonPausa;
 
     private int nivelAnterior;
     private boolean animandoSubidaNivel = false;
@@ -58,8 +61,16 @@ public class Interfaz implements Disposable {
         nivelSheetTexture = SpriteSheetLoader.cargarTextura("sprites/Ciudad/Nivel-sheet.png");
         framesNivel = SpriteSheetLoader.recortar(nivelSheetTexture, 41, 41, 9);
 
+        texturaBotonPausa = SpriteSheetLoader.cargarTextura("sprites/Botones/Boton pausa.png");
+
         font = new BitmapFont();
         font.getData().setScale(1.2f);
+    }
+
+    public void actualizarBoundsBotonPausa(float anchoPantalla, float altoPantalla) {
+        float btnX = anchoPantalla - 80f;
+        float btnY = altoPantalla - 60f;
+        boundsBotonPausa = new Rectangle(btnX, btnY, 60f, 40f);
     }
 
     private void crearInterfaz() {
@@ -143,6 +154,14 @@ public class Interfaz implements Disposable {
         stage.draw();
     }
 
+    public void dibujarBotonPausa(SpriteBatch batch) {
+        batch.draw(texturaBotonPausa, boundsBotonPausa.x, boundsBotonPausa.y, boundsBotonPausa.width, boundsBotonPausa.height);
+    }
+
+    public boolean fueBotonPausaTocado(float x, float y) {
+        return boundsBotonPausa.contains(x, y);
+    }
+
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
     }
@@ -157,6 +176,7 @@ public class Interfaz implements Disposable {
         fondoGrisTexture.dispose();
         billeteTexture.dispose();
         nivelSheetTexture.dispose();
+        texturaBotonPausa.dispose();
         font.dispose();
     }
 }

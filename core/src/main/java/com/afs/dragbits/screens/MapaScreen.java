@@ -5,6 +5,7 @@ import com.afs.dragbits.autos.AutoJugadorTipo;
 import com.afs.dragbits.ciudad.Burbuja;
 import com.afs.dragbits.ciudad.Interfaz;
 import com.afs.dragbits.funcionalidades.EntradaJugador;
+import com.afs.dragbits.hud.CartelPausaMapa;
 import com.afs.dragbits.jugador.Jugador;
 import com.afs.dragbits.jugador.RepositorioJugador;
 import com.afs.dragbits.menurivales.TipoCarrera;
@@ -47,7 +48,9 @@ public class MapaScreen implements Screen {
     private VentanaTiendaAutos ventanaTienda;
     private VentanaTiendaMejoras ventanaTiendaMejoras;
     private EntradaJugador entradaJugador;
+    private CartelPausaMapa cartelPausaMapa;
     private TipoCarrera tipoSeleccionado = TipoCarrera.LEGAL;
+    private boolean pausado = false;
 
     private static final float ANCHO_VIRTUAL = 1280f;
     private static final float ALTO_VIRTUAL = 720f;
@@ -76,6 +79,8 @@ public class MapaScreen implements Screen {
         viewport = new FitViewport(ANCHO_VIRTUAL, ALTO_VIRTUAL, camara);
 
         interfazCiudad = new Interfaz(batch, jugador);
+        cartelPausaMapa = new CartelPausaMapa(ANCHO_VIRTUAL, ALTO_VIRTUAL, GAME);
+        interfazCiudad.actualizarBoundsBotonPausa(ANCHO_VIRTUAL, ALTO_VIRTUAL);
 
 
         ventanaRival = new VentanaSeleccionRival(
@@ -171,13 +176,40 @@ public class MapaScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        if (!ventanaRival.isVisible() && !ventanaTienda.isVisible() && !ventanaTiendaMejoras.isVisible()) {
+        if (entradaJugador.consumirCancelar()) {
+            if (!pausado) {
+                pausado = true;
+            } else {
+                pausado = false;
+            }
+        }
+
+        if (!pausado && !ventanaRival.isVisible() && !ventanaTienda.isVisible() && !ventanaTiendaMejoras.isVisible()) {
             if (entradaJugador.consumoToque()) {
                 Vector2 coords = entradaJugador.getCoordenadasToque(viewport);
-                for (Burbuja b : burbujas) {
-                    if (b.verificarClic(coords.x, coords.y)) {
-                        break;
+                if (interfazCiudad.fueBotonPausaTocado(coords.x, coords.y)) {
+                    pausado = true;
+                } else {
+                    for (Burbuja b : burbujas) {
+                        if (b.verificarClic(coords.x, coords.y)) {
+                            break;
+                        }
                     }
+                }
+            }
+        }
+
+        if (pausado) {
+            if (entradaJugador.consumoToque()) {
+                Vector2 coords = entradaJugador.getCoordenadasToque(viewport);
+                if (cartelPausaMapa.fueBotonReanudarTocado(coords.x, coords.y)) {
+                    pausado = false;
+                } else if (cartelPausaMapa.fueBotonMenuTocado(coords.x, coords.y)) {
+                    cartelPausaMapa.volverAlMenuPrincipal();
+                    return;
+                } else if (cartelPausaMapa.fueBotonSalirTocado(coords.x, coords.y)) {
+                    cartelPausaMapa.salirAlEscritorio();
+                    return;
                 }
             }
         }
@@ -196,12 +228,21 @@ public class MapaScreen implements Screen {
         batch.end();
 
         interfazCiudad.render();
+        batch.begin();
+        interfazCiudad.dibujarBotonPausa(batch);
+        batch.end();
         ventanaRival.render(delta);
         if (ventanaTienda.isVisible()) {
             ventanaTienda.render(delta);
         }
         if (ventanaTiendaMejoras.isVisible()) {
             ventanaTiendaMejoras.render(delta);
+        }
+
+        if (pausado) {
+            batch.begin();
+            cartelPausaMapa.dibujar(batch, ANCHO_VIRTUAL, ALTO_VIRTUAL);
+            batch.end();
         }
     }
 
@@ -235,5 +276,6 @@ public class MapaScreen implements Screen {
         if (ventanaRival != null) ventanaRival.dispose();
         if (ventanaTienda != null) ventanaTienda.dispose();
         if (ventanaTiendaMejoras != null) ventanaTiendaMejoras.dispose();
+        if (cartelPausaMapa != null) cartelPausaMapa.dispose();
     }
 }
