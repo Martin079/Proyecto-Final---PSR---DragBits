@@ -187,7 +187,8 @@ public class MapaScreen implements Screen {
         if (!pausado && !ventanaRival.isVisible() && !ventanaTienda.isVisible() && !ventanaTiendaMejoras.isVisible()) {
             if (entradaJugador.consumoToque()) {
                 Vector2 coords = entradaJugador.getCoordenadasToque(viewport);
-                if (interfazCiudad.fueBotonPausaTocado(coords.x, coords.y)) {
+                Vector2 stageCoords = interfazCiudad.getStage().screenToStageCoordinates(new com.badlogic.gdx.math.Vector2(Gdx.input.getX(), Gdx.input.getY()));
+                if (interfazCiudad.fueBotonPausaTocado(stageCoords.x, stageCoords.y)) {
                     pausado = true;
                 } else {
                     for (Burbuja b : burbujas) {

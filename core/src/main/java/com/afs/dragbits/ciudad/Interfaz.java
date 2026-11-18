@@ -68,9 +68,9 @@ public class Interfaz implements Disposable {
     }
 
     public void actualizarBoundsBotonPausa(float anchoPantalla, float altoPantalla) {
-        float btnX = anchoPantalla - 80f;
-        float btnY = altoPantalla - 60f;
-        boundsBotonPausa = new Rectangle(btnX, btnY, 60f, 40f);
+        float btnX = anchoPantalla - 50f;
+        float btnY = altoPantalla + 5f;
+        boundsBotonPausa = new Rectangle(btnX, btnY, 50f, 30f);
     }
 
     private void crearInterfaz() {
