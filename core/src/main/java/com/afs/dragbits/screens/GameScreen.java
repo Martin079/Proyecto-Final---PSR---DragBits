@@ -6,8 +6,6 @@ import com.afs.dragbits.autos.AutoConfig;
 import com.afs.dragbits.autos.AutoJugador;
 import com.afs.dragbits.autos.AutoRival;
 import com.afs.dragbits.camara.SeguimientoJugador;
-import com.afs.dragbits.funcionalidades.Acelerador;
-import com.afs.dragbits.funcionalidades.CajaDeCambios;
 import com.afs.dragbits.funcionalidades.ControladorCarrera;
 import com.afs.dragbits.funcionalidades.EntradaJugador;
 import com.afs.dragbits.hud.Basicos;
@@ -52,8 +50,6 @@ public class GameScreen implements Screen {
     private Viewport viewportMundo;
     private Viewport viewportHUD;
 
-    private Acelerador acelerador;
-    private CajaDeCambios cajaDeCambios;
     private Semaforo semaforo;
     private Basicos hudBasicos;
     private Palanca hudPalanca;
@@ -103,8 +99,6 @@ public class GameScreen implements Screen {
 
         controladorCarrera = new ControladorCarrera(pista, autoJugador, autoRival, datosJugador, TIPO_CARRERA, INDICE_RIVAL);
 
-        acelerador = new Acelerador();
-        cajaDeCambios = new CajaDeCambios();
         semaforo = new Semaforo(pista.getPosicionSpawnX());
         hudBasicos = new Basicos(ANCHO_VIRTUAL, ALTO_VIRTUAL);
         hudPalanca = new Palanca();
@@ -146,8 +140,7 @@ public class GameScreen implements Screen {
         }
 
         if (!controladorCarrera.isCarreraFinalizada() && estadoJuego == EstadoJuego.EN_CURSO) {
-            cajaDeCambios.actualizar(autoJugador, entradaJugador);
-            acelerador.actualizar(autoJugador, entradaJugador, delta);
+            autoJugador.aplicarInput(entradaJugador, delta);
             autoJugador.actualizar(delta);
 
             autoRival.actualizarIA(delta, semaforo.getEstadoActual());
@@ -187,7 +180,7 @@ public class GameScreen implements Screen {
         batch.setProjectionMatrix(viewportHUD.getCamera().combined);
         batch.begin();
         hudBasicos.dibujar(batch, autoJugador, ANCHO_VIRTUAL, estadoJuego != EstadoJuego.FINALIZADO);
-        hudPalanca.dibujar(batch, cajaDeCambios, ANCHO_VIRTUAL);
+        hudPalanca.dibujar(batch, autoJugador, ANCHO_VIRTUAL);
         semaforo.dibujar(batch, ANCHO_VIRTUAL, ALTO_VIRTUAL);
         if (controladorCarrera.isCarreraFinalizada()) {
             cartelResultado.dibujar(batch, controladorCarrera.isJugadorGano(),

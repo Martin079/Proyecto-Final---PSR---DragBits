@@ -2,6 +2,10 @@ package com.afs.dragbits.autos;
 
 import com.afs.dragbits.Main;
 import com.afs.dragbits.audio.ProveedorMusica;
+import com.afs.dragbits.funcionalidades.EntradaJugador;
+import com.afs.dragbits.network.AutoState;
+import com.afs.dragbits.network.Input;
+import com.afs.dragbits.network.PhysicsEngine;
 import com.afs.dragbits.util.SpriteSheetLoader;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -36,6 +40,10 @@ public abstract class Auto {
     protected boolean embraguePresionado;
     protected boolean nitroActivo;
     protected float[] relacionesTransmision = {0f, 0.30f, 0.50f, 0.70f, 0.85f, 1.0f};
+
+    // Posición visual de la palanca de cambios (para HUD)
+    protected int palancaX = 0;
+    protected int palancaY = 0;
 
     private static final float[] MULTIPLICADOR_POTENCIA_POR_MARCHA = {
         1.0f,
@@ -79,15 +87,24 @@ public abstract class Auto {
     private static final float PERDIDA_MIN_PATINAJE = 0.45f;
     private static final float PERDIDA_MAX_PATINAJE = 0.85f;
 
+    // Estado de física compartido (para sincronización con PhysicsEngine)
+    protected final AutoState physicsState;
+
     public Auto(float posX, float posY, float velocidadMaxima, float aceleracion, float traccion, String rutaSpriteSheet, Main mainGame) {
         this.mainGame = mainGame;
-        inicializarAtributos(posX, posY, velocidadMaxima, aceleracion, traccion);
+        this.physicsState = new AutoState(posX, posY, velocidadMaxima, aceleracion, traccion, 3.0f, 1.5f);
+        this.physicsState.nitroCapacity = 3.0f;
+        this.physicsState.nitroPower = 1.5f;
+        sincronizarDesdePhysics();
         cargarSpriteSheet(rutaSpriteSheet);
     }
 
     public Auto(float posX, float posY, float velocidadMaxima, float aceleracion, float traccion, Color colorFallback, Main mainGame) {
         this.mainGame = mainGame;
-        inicializarAtributos(posX, posY, velocidadMaxima, aceleracion, traccion);
+        this.physicsState = new AutoState(posX, posY, velocidadMaxima, aceleracion, traccion, 3.0f, 1.5f);
+        this.physicsState.nitroCapacity = 3.0f;
+        this.physicsState.nitroPower = 1.5f;
+        sincronizarDesdePhysics();
 
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(colorFallback);
@@ -96,28 +113,39 @@ public abstract class Auto {
         pixmap.dispose();
     }
 
-    private void inicializarAtributos(float posX, float posY, float velocidadMaxima, float aceleracion, float traccion) {
-        this.posX = posX;
-        this.posY = posY;
-        this.velocidadMaxima = velocidadMaxima;
-        this.aceleracion = aceleracion;
-        this.traccion = traccion;
+    protected void sincronizarDesdePhysics() {
+        this.posX = physicsState.posX;
+        this.posY = physicsState.posY;
+        this.velocidadMaxima = physicsState.maxVelocity;
+        this.aceleracion = physicsState.acceleration;
+        this.traccion = physicsState.traction;
+        this.potenciaNitro = physicsState.nitroPower;
+        this.capacidadNitro = physicsState.nitroCapacity;
+        this.nitroRestante = physicsState.nitroRemaining;
 
-        this.potenciaNitro = 1.5f;
-        this.capacidadNitro = 3.0f;
-        this.nitroRestante = capacidadNitro;
-
-        this.velocidad = 0f;
-        this.rpm = 800f;
-        this.rpmMaximas = 7000f;
-        this.marchaActual = 0;
-        this.embraguePresionado = false;
-        this.nitroActivo = false;
-        this.patinando = false;
+        this.velocidad = physicsState.velocity;
+        this.rpm = physicsState.rpm;
+        this.rpmMaximas = physicsState.RPM_MAXIMAS;
+        this.marchaActual = physicsState.gear;
+        this.embraguePresionado = physicsState.clutchPressed;
+        this.nitroActivo = physicsState.nitroActive;
+        this.patinando = physicsState.spinning;
         this.stateTime = 0f;
 
         this.sonidoMotor = Gdx.audio.newSound(Gdx.files.internal("audio/Gameplay/motor_loop.wav"));
         this.estaAcelerando = false;
+    }
+
+    private void sincronizarHaciaPhysics() {
+        physicsState.posX = this.posX;
+        physicsState.posY = this.posY;
+        physicsState.velocity = this.velocidad;
+        physicsState.rpm = this.rpm;
+        physicsState.gear = this.marchaActual;
+        physicsState.clutchPressed = this.embraguePresionado;
+        physicsState.nitroActive = this.nitroActivo;
+        physicsState.nitroRemaining = this.nitroRestante;
+        physicsState.spinning = this.patinando;
     }
 
     private void cargarSpriteSheet(String ruta) {
@@ -153,84 +181,29 @@ public abstract class Auto {
     }
 
     public void acelerar(float delta) {
+        // Delegar en PhysicsEngine para consistencia cliente-servidor
+        Input input = new Input(true, embraguePresionado, 0, 0, false);
+        PhysicsEngine.step(physicsState, input, delta);
+        sincronizarDesdePhysics();
         this.estaAcelerando = true;
-        if (!embraguePresionado && marchaActual > 0) {
-            int marchaValida = Math.min(marchaActual, relacionesTransmision.length - 1);
-            float velMaxMarcha = velocidadMaxima * relacionesTransmision[marchaValida];
-
-            float aceleracionEfectiva = aceleracion
-                * calcularFactorTraccion(marchaValida)
-                * MULTIPLICADOR_POTENCIA_POR_MARCHA[marchaValida];
-
-            if (velocidad < UMBRAL_ARRANQUE) {
-                aceleracionEfectiva *= FACTOR_ARRANQUE;
-            }
-
-            if (velMaxMarcha > 0f) {
-                float margen = MathUtils.clamp((velMaxMarcha - velocidad) / velMaxMarcha, PISO_CURVA_ACELERACION, 1f);
-                aceleracionEfectiva *= margen;
-            }
-
-            if (nitroActivo && nitroRestante > 0) {
-                aceleracionEfectiva *= potenciaNitro;
-                velMaxMarcha *= 1.15f;
-                nitroRestante -= delta;
-                if (nitroRestante <= 0) {
-                    nitroRestante = 0;
-                    nitroActivo = false;
-                }
-            }
-
-            if (velocidad < velMaxMarcha) {
-                velocidad += aceleracionEfectiva * delta;
-                if (velocidad > velMaxMarcha) velocidad = velMaxMarcha;
-            }
-        }
-
-        if (embraguePresionado || marchaActual == 0) {
-            rpm += 5500f * delta;
-            if (rpm > rpmMaximas) rpm = rpmMaximas;
-        } else {
-            int marchaValida = Math.min(marchaActual, relacionesTransmision.length - 1);
-            float velMaxMarcha = velocidadMaxima * relacionesTransmision[marchaValida];
-
-            if (velMaxMarcha > 0) {
-                rpm = 800f + (velocidad / velMaxMarcha) * (rpmMaximas - 800f);
-            }
-            if (rpm > rpmMaximas) rpm = rpmMaximas;
-        }
-    }
-
-    protected float calcularFactorTraccion(int marchaValida) {
-        if (marchaValida > 2 || traccion <= 0f) {
-            patinando = false;
-            return 1f;
-        }
-
-        float relacionPotenciaAgarre = aceleracion / traccion;
-
-        if (relacionPotenciaAgarre <= UMBRAL_PATINAJE) {
-            patinando = false;
-            return 1f;
-        }
-
-        patinando = true;
-        float exceso = relacionPotenciaAgarre - UMBRAL_PATINAJE;
-        return MathUtils.clamp(1f - exceso * 0.5f, PERDIDA_MIN_PATINAJE, PERDIDA_MAX_PATINAJE);
     }
 
     public void desacelerar(float delta) {
+        Input input = new Input(false, embraguePresionado, 0, 0, false);
+        PhysicsEngine.step(physicsState, input, delta);
+        sincronizarDesdePhysics();
         this.estaAcelerando = false;
-        if (velocidad > 0) {
-            velocidad -= (aceleracion * 0.3f) * delta;
-            if (velocidad < 0) velocidad = 0;
-        }
+    }
 
-        if (rpm > 800f) {
-            rpm -= 3500f * delta;
-            if (rpm < 800f) rpm = 800f;
+    public void actualizarConInput(Input input, float delta) {
+        // Actualizar posición visual de la palanca
+        if (input.clutch && (input.leverX != 0 || input.leverY != 0)) {
+            this.palancaX = input.leverX;
+            this.palancaY = input.leverY;
         }
-        patinando = false;
+        PhysicsEngine.step(physicsState, input, delta);
+        sincronizarDesdePhysics();
+        this.estaAcelerando = input.accelerator;
     }
 
     private void actualizarAudioMotor() {
@@ -268,6 +241,17 @@ public abstract class Auto {
         posX += (velocidad * FACTOR_MOVIMIENTO) * delta;
         stateTime += delta;
         actualizarAudioMotor();
+    }
+
+    public void aplicarInput(EntradaJugador entrada, float delta) {
+        Input input = new Input(
+            entrada.estaAcelerando(),
+            entrada.estaEmbragado(),
+            entrada.seMovioPalancaIzquierda() ? -1 : (entrada.seMovioPalancaDerecha() ? 1 : 0),
+            entrada.seMovioPalancaArriba() ? 1 : (entrada.seMovioPalancaAbajo() ? -1 : 0),
+            entrada.consumirNitro()
+        );
+        actualizarConInput(input, delta);
     }
 
     public EstadoAuto getEstadoActual() {
@@ -347,23 +331,30 @@ public abstract class Auto {
     public float getPosX() { return posX; }
     public float getPosY() { return posY; }
     public int getMarchaActual() { return marchaActual; }
-    public void setMarchaActual(int marcha) { this.marchaActual = marcha; }
+    public void setMarchaActual(int marcha) { this.marchaActual = marcha; physicsState.gear = marcha; }
     public boolean isEmbraguePresionado() { return embraguePresionado; }
-    public void setEmbraguePresionado(boolean embrague) { this.embraguePresionado = embrague; }
+    public void setEmbraguePresionado(boolean embrague) { this.embraguePresionado = embrague; physicsState.clutchPressed = embrague; }
     public boolean isNitroActivo() { return nitroActivo; }
-    public void setNitroActivo(boolean nitroActivo) { this.nitroActivo = nitroActivo; }
-    public void setPosX(float posX) { this.posX = posX; }
-    public void setVelocidad(float velocidad) { this.velocidad = velocidad; }
+    public void setNitroActivo(boolean nitroActivo) { this.nitroActivo = nitroActivo; physicsState.nitroActive = nitroActivo; }
+    public void setPosX(float posX) { this.posX = posX; physicsState.posX = posX; }
+    public void setVelocidad(float velocidad) { this.velocidad = velocidad; physicsState.velocity = velocidad; }
 
     public float getTraccion() { return traccion; }
-    public void setTraccion(float traccion) { this.traccion = traccion; }
+    public void setTraccion(float traccion) { this.traccion = traccion; physicsState.traction = traccion; }
     public float getAceleracion() { return aceleracion; }
-    public void setAceleracion(float aceleracion) { this.aceleracion = aceleracion; }
+    public void setAceleracion(float aceleracion) { this.aceleracion = aceleracion; physicsState.acceleration = aceleracion; }
     public float getVelocidadMaxima() { return velocidadMaxima; }
-    public void setVelocidadMaxima(float velocidadMaxima) { this.velocidadMaxima = velocidadMaxima; }
+    public void setVelocidadMaxima(float velocidadMaxima) { this.velocidadMaxima = velocidadMaxima; physicsState.maxVelocity = velocidadMaxima; }
     public float getNitroRestante() { return nitroRestante; }
     public float getCapacidadNitro() { return capacidadNitro; }
     public boolean isPatinando() { return patinando; }
+
+    public AutoState getPhysicsState() {
+        return physicsState.copy();
+    }
+
+    public int getPalancaX() { return palancaX; }
+    public int getPalancaY() { return palancaY; }
 
     public float getX() { return posX; }
     public float getY() { return posY; }

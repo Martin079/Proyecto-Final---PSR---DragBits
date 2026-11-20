@@ -1,6 +1,6 @@
 package com.afs.dragbits.hud;
 
-import com.afs.dragbits.funcionalidades.CajaDeCambios;
+import com.afs.dragbits.autos.Auto;
 import com.afs.dragbits.util.SpriteSheetLoader;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -31,15 +31,15 @@ public class Palanca extends ElementoHUD {
         frameDerecha   = frames[3];
     }
 
-    public void dibujar(SpriteBatch batch, CajaDeCambios caja, float anchoPantalla) {
+    public void dibujar(SpriteBatch batch, Auto auto, float anchoPantalla) {
         float posX = anchoPantalla - 560f;
         float posY = 20f;
 
         batch.draw(frameEsquema, posX, posY, ancho, alto);
 
         TextureRegion perillaActual;
-        int pX = caja.getPalancaX();
-        int pY = caja.getPalancaY();
+        int pX = auto.getPalancaX();
+        int pY = auto.getPalancaY();
 
         float offsetX = 0f;
 

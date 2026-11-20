@@ -14,6 +14,9 @@ public class AutoJugador extends Auto {
               mainGame);
         this.capacidadNitro = config.getCapacidadNitro();
         this.nitroRestante = config.getCapacidadNitro();
+        this.physicsState.nitroCapacity = config.getCapacidadNitro();
+        this.physicsState.nitroRemaining = config.getCapacidadNitro();
+        this.physicsState.nitroPower = config.getPotenciaNitro();
     }
 
     private static float calcularAceleracionDesde0a100(float segundos0a100) {

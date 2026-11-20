@@ -2,8 +2,9 @@ package com.afs.dragbits.autos;
 
 import com.afs.dragbits.Main;
 import com.afs.dragbits.hud.EstadoSemaforo;
+import com.afs.dragbits.network.Input;
+import com.afs.dragbits.network.PhysicsEngine;
 import com.afs.dragbits.rivales.RivalConfig;
-import com.badlogic.gdx.math.MathUtils;
 
 public class AutoRival extends Auto {
 
@@ -17,6 +18,8 @@ public class AutoRival extends Auto {
         this.recompensa = recompensa;
         this.capacidadNitro = 0f;
         this.nitroRestante = 0f;
+        this.physicsState.nitroCapacity = 0f;
+        this.physicsState.nitroRemaining = 0f;
     }
 
     public AutoRival(float posX, float posY, RivalConfig config, int recompensa, Main mainGame) {
@@ -24,79 +27,57 @@ public class AutoRival extends Auto {
         this.recompensa = recompensa;
         this.capacidadNitro = config.getNitroSegundos();
         this.nitroRestante = config.getNitroSegundos();
+        this.physicsState.nitroCapacity = config.getNitroSegundos();
+        this.physicsState.nitroRemaining = config.getNitroSegundos();
     }
 
 
     @Override
     public void acelerar(float delta) {
+        Input input = new Input(true, embraguePresionado, 0, 0, false);
+        PhysicsEngine.step(physicsState, input, delta);
+        sincronizarDesdePhysics();
         this.estaAcelerando = true;
-        if (!embraguePresionado && marchaActual > 0) {
-            int marchaValida = Math.min(marchaActual, relacionesTransmision.length - 1);
-            float velMaxMarcha = velocidadMaxima * relacionesTransmision[marchaValida];
-
-            float aceleracionEfectiva = aceleracion * calcularFactorTraccion(marchaValida);
-
-            if (velocidad < UMBRAL_ARRANQUE) {
-                aceleracionEfectiva *= FACTOR_ARRANQUE;
-            }
-
-            if (velMaxMarcha > 0f) {
-                float margen = MathUtils.clamp((velMaxMarcha - velocidad) / velMaxMarcha, PISO_CURVA_ACELERACION, 1f);
-                aceleracionEfectiva *= margen;
-            }
-
-            if (nitroActivo && nitroRestante > 0) {
-                aceleracionEfectiva *= potenciaNitro;
-                velMaxMarcha *= 1.15f;
-                nitroRestante -= delta;
-                if (nitroRestante <= 0) {
-                    nitroRestante = 0;
-                    nitroActivo = false;
-                }
-            }
-
-            if (velocidad < velMaxMarcha) {
-                velocidad += aceleracionEfectiva * delta;
-                if (velocidad > velMaxMarcha) velocidad = velMaxMarcha;
-            }
-        }
-
-        if (embraguePresionado || marchaActual == 0) {
-            rpm += 5500f * delta;
-            if (rpm > rpmMaximas) rpm = rpmMaximas;
-        } else {
-            int marchaValida = Math.min(marchaActual, relacionesTransmision.length - 1);
-            float velMaxMarcha = velocidadMaxima * relacionesTransmision[marchaValida];
-            if (velMaxMarcha > 0) {
-                rpm = 800f + (velocidad / velMaxMarcha) * (rpmMaximas - 800f);
-            }
-            if (rpm > rpmMaximas) rpm = rpmMaximas;
-        }
     }
 
     public void actualizarIA(float delta, EstadoSemaforo estadoSemaforo) {
         if (estadoSemaforo == EstadoSemaforo.VERDE && marchaActual == 0) {
             marchaActual = 1;
+            physicsState.gear = 1;
         }
 
         if (marchaActual > 0) {
+            boolean usarNitro = !nitroActivo && nitroRestante > 0 && marchaActual >= MARCHA_ACTIVACION_NITRO;
+            int leverX = 0, leverY = 0;
+            boolean embrague = false;
+
             if (embraguePresionado) {
                 tiempoSiguienteCambio -= delta;
                 if (tiempoSiguienteCambio <= 0) {
                     embraguePresionado = false;
+                    physicsState.clutchPressed = false;
                 }
+                embrague = true;
             } else {
-                if (!nitroActivo && nitroRestante > 0 && marchaActual >= MARCHA_ACTIVACION_NITRO) {
-                    nitroActivo = true;
-                }
-                acelerar(delta);
-
                 if (rpm >= (rpmMaximas - 600f) && marchaActual < (relacionesTransmision.length - 1)) {
                     marchaActual++;
+                    physicsState.gear = marchaActual;
                     embraguePresionado = true;
+                    physicsState.clutchPressed = true;
                     tiempoSiguienteCambio = 0.15f;
+                    embrague = true;
                 }
             }
+
+            Input input = new Input(true, embrague, leverX, leverY, usarNitro);
+            if (usarNitro) {
+                physicsState.nitroActive = true;
+            }
+            PhysicsEngine.step(physicsState, input, delta);
+            sincronizarDesdePhysics();
+            this.estaAcelerando = true;
+        } else {
+            this.estaAcelerando = false;
         }
 
         actualizar(delta);
